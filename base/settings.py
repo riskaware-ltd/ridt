@@ -1,5 +1,6 @@
 import sys
 import inspect
+import builtins
 
 from typing import TypeVar
 from abc import ABC
@@ -78,7 +79,8 @@ class Settings:
         """:obj:`list`(:obj:`type`) : a list of built in types.
 
         """
-        return [t for t in __builtins__.values() if inspect.isclass(t)]
+        return [getattr(builtins, d) for d in dir(builtins) if
+                isinstance(getattr(builtins, d), type)]
 
     def distribute(self, values: dict):
         """The method which loops over the attribute/type pairs in the derived
