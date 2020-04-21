@@ -99,14 +99,18 @@ class Settings:
 
         Raises
         ------
-        SettingNotFoundError
+        :class:`~.SettingNotFoundError`
             If one of the derived class' attributes cannot be found in
             `values`.
 
-        SettingTypeError
+        :class:`~.SettingTypeError`
             If one of the type of one of the settings found in `values`
             is not of the required type, as defined in the derived class'
             constructor.
+        
+        :class:`~.AssignError`
+            If a check error is caught when assigning a setting to a
+            :class:`~.Terminus` instance.
 
         Note
         ----
@@ -123,7 +127,10 @@ class Settings:
             if value is None:
                 setattr(self, setting, value)
             elif setting_type not in self.primitive:
-                setattr(self, setting, setting_type(value))
+                try:
+                    setattr(self, setting, setting_type(value))
+                except CheckError as e:
+                    raise AssignError(setting, e)
             else:
                 if isinstance(value, setting_type):
                     setattr(self, setting, value)
@@ -142,6 +149,52 @@ class Settings:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
+
+class CheckError(Error):
+    """The exception raised when a :class:`Terminus` fails its value check.
+
+    """
+    def __init__(self, raised_exception, value: T):
+        """The constructor for the :class:`CheckError` class.
+
+        Parameters
+        ----------
+        raised_exception 
+            The exception raised by the test.
+        value : T
+            The value which failed the check.
+        """
+        self.exception = raised_exception
+        self.value = value
+        msg = "A value passed to the initialiser of a Terminus class instance"\
+              " has failed its check."
+        super().__init__(msg)
+
+
+class AssignError(Error):
+    """The exception raised when a :class:`Settings` class catches a
+    :class:`~.CheckError` exception when assigning a value.
+
+    """
+    def __init__(self, setting: str, check_error: CheckError):
+        """The constructor for the :class:`AssignError` class.
+
+        Parameters
+        ----------
+        setting: :obj:`str`
+            The setting for which the exception is being raised.
+
+        check_error: :class:`CheckError`
+            The check error instance raised by the :class:`~.Terminus`
+            instance.
+
+        """
+        print(check_error.exception)
+        msg = f"When assigning the '{setting}' setting, the passed value "\
+              f"'{check_error.value}' failed the value check with the "\
+              f"following error: {check_error.exception}" 
+        super().__init__(msg)
 
 
 class Terminus(ABC):
@@ -201,7 +254,7 @@ class Terminus(ABC):
         def wrapper(self, *args):
             method(self, *args)
             self.distribute(*args)
-            self.action(self.check())
+            self.action(self.check)
         return wrapper
 
     @abstractmethod
@@ -209,37 +262,43 @@ class Terminus(ABC):
         """An abstract method that defines the value checks to be performed on
         the settings stored in this class.
 
-        Returns
-        -------
-        bool
-            The success or failure of the check.
+        Raises
+        ------
+        :obj:`TypeError`
+            If the passed value is of the wrong type.
+        
+        :obj:`ValueError`
+            If the passed value is outside acceptable bounds.
 
         """
         pass
 
-    def action(self, result: bool):
+    def action(self, check_method):
         """Method that handles the return value of the :meth:`Terminus.check`
         function.
 
         Parameters
         ----------
-        result : :obj:`bool`
-            The return value of the :meth:`Terminus.check` method.
+        check_method
+            The abstract check method implementation to be called.
 
         Raises
         ------
-        CheckError
-            If the result is False.
+        :class:`~.CheckError`
+            If the check function raises any exceptions.
 
         """
-        if not result:
-            raise CheckError(self.__class__.__name__, self.value)
+        try:
+            self.check()
+        except TypeError as e:
+            raise CheckError(e, self.value)
+        except ValueError as e:
+            raise CheckError(e, self.value)
 
     def distribute(self, value: T):
         """Method called by the decorator :meth:`Terminus.assign` that
         tries to assign the value passed to the constructor of the
-        :class:`Terminus` derived class to the attribute/type pair in the
-        derived class' constructor
+        :class:`Terminus` derived class.
 
         Parameters
         ----------
@@ -249,16 +308,12 @@ class Terminus(ABC):
 
         Raises
         ------
-        SettingTypeError
+        :class:`~.SettingTypeError`
             If `value` is not of the required type, as defined in the derived
             class' constructor.
 
         """
-
-        if isinstance(value, self.value):
-            self.value = value
-        else:
-            SettingTypeError(self.__class__.__name__, self.value)
+        self.value = value
 
     @property
     def value(self):
@@ -279,24 +334,6 @@ class MultiplicityError(Error):
         """The constructor for the :class:`MultiplicityError` class.
         """
         msg = f"More than one setting value defined in a {Terminus} instance."
-        super().__init__(msg)
-
-
-class CheckError(Error):
-    """The exception raised when a :class:`Terminus` fails its value check.
-
-    """
-    def __init__(self, derived_class: Terminus, value: T):
-        """The constructor for the :class:`CheckError` class.
-
-        Parameters
-        ----------
-        derived_class : :class:`Terminus`
-            The :class:`Terminus` derived class which failed the test.
-        value : T
-            The value which failed the check.
-        """
-        msg = f"A {derived_class} class has failed its check. Value: {value}"
         super().__init__(msg)
 
 
