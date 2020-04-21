@@ -113,6 +113,25 @@ class StringTypeError(Error):
         super().__init__(msg)
 
 
+class IntTypeError(Error):
+    """The exception raised if a value is not a :obj:`int`, when it was
+    expected to be.
+
+    """
+
+    def __init__(self, obj):
+        """The constructor for the :class:`IntTypeError` class
+
+        Parameters
+        ----------
+        obj
+            The object which is not a :obj:`int`.
+
+        """
+        msg = f"The passed value {obj} was not {int}"
+        super().__init__(msg)
+
+
 class UUIDNotFoundError(Error):
     """The exception raised if a uuid is not cannot be found in a particular
     register.
@@ -129,4 +148,21 @@ class UUIDNotFoundError(Error):
 
         """
         msg = f"The uuid {uuid} could not be found."
+        super().__init__(msg)
+
+
+class DimensionError(Error):
+    """The exception raised if a value is not of the desired dimension.
+    """
+
+    def __init__(self, obj, dim_required: int):
+        """The constructor for the :class:`DimensionError` class
+
+        Parameters
+        ----------
+        obj
+            The object which is not a :obj:`int`.
+
+        """
+        msg = f"The dimension of {obj} is not {dim_required}"
         super().__init__(msg)
