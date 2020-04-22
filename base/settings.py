@@ -2,6 +2,8 @@ import sys
 import inspect
 import builtins
 
+from collections.abc import Iterable
+
 from typing import TypeVar
 from abc import ABC
 from abc import abstractmethod
@@ -129,6 +131,8 @@ class Settings:
             elif setting_type not in self.primitive:
                 try:
                     setattr(self, setting, setting_type(value))
+                except SettingListTypeError as e:
+                    raise SettingTypeError(setting, e.setting_type)
                 except CheckError as e:
                     raise AssignError(setting, e)
             else:
@@ -324,6 +328,145 @@ class Terminus(ABC):
         return list(self.__dict__.values())[0]
 
 
+class List:
+    """A base class for a list of settings classes.
+
+    This class is used to store a number of identical :class:`~.Settings` or
+    :class:`~.Terminus` derived settings.
+
+    It can have only ONE class attribute.  If more are added, the
+    MultiplicityError is raised.
+
+    The implementation of the derived class constructor should be as follows::
+
+        @TerminusSet.assign
+        def __init__(self, values: list):
+            self.value = type
+    
+    Where `type` is the type of the objects that will be in the list.
+
+    """
+
+    @property
+    def primitive(self):
+        """:obj:`list`(:obj:`type`) : a list of built in types.
+
+        """
+        return [getattr(builtins, d) for d in dir(builtins) if
+                isinstance(getattr(builtins, d), type)]
+
+    def __setattr__(self, name: str, value: T):
+        """The setter method for :class:`TerminusSet` instances.
+
+        Parameters
+        ----------
+        name : :obj:`str`
+            The name of the attribute to be set.
+
+        value: T
+            The value to be assigned to the attribute.
+
+        Raises
+        ------
+        MultiplicityError
+            If the passed name is not the same as the existing attribute name.
+
+        """
+        if len(self.__dict__) > 1:
+            raise MultiplicityError()
+        else:
+            self.__dict__[name] = value
+
+    @staticmethod
+    def assign(method):
+        """A decorator that applies the :meth:`List.distribute` to
+        parameter of the constructor of the derived class.
+
+        """
+        @wraps(method)
+        def wrapper(self, *args):
+            method(self, *args)
+            self.distribute(*args)
+        return wrapper
+
+    def distribute(self, values: list):
+        """Method called by the decorator :meth:`List.assign` that
+        tries to assign the values passed to the constructor of the
+        :class:`List` derived class.
+
+        Parameters
+        ----------
+        values : :obj:`list`
+            The values passed to the constructor of the :class:`List`
+            derived class.
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.SettingTypeError`
+            If `values` is not a :obj:`list`.
+        
+        :class:`~.SettingsListTypeError`
+            If any of the items in `values` are not of the required type,
+            as specified in the derived class.
+
+        """
+        if not isinstance(values, list):
+            raise SettingTypeError(values, list)
+
+        setting_type = self.value
+        self.value = list()
+
+        if setting_type not in self.primitive:
+            for item in values:
+                self.value.append(setting_type(item))
+        else:
+            for item in values:
+                if not isinstance(item, setting_type):
+                    raise SettingListTypeError(setting_type)
+                self.value.append(item)
+
+    @property
+    def value(self):
+        """`value` property that accesses the single class attribute,
+        regardless of that attribute's name.
+
+        """
+        return list(self.__dict__.values())[0]
+    
+    def __getitem__(self, key):
+        """An overload of the list get item method.
+
+        Returns the list or sub list or entry depending on `key`. If the items
+        stored in the list are :class:`~.Terminus` derived, then it will return
+        a list or value which are the `value` attribute of the terminus
+        instances.
+
+        """
+        rv = self.value[key]
+        if Terminus in self.value[0].__class__.__bases__:
+            if isinstance(rv, Iterable):
+                return [item.value for item in rv] 
+            else:
+                return rv.value
+        else:
+            return rv
+    
+    def __len__(self):
+        """Mapping __len__ to attibute `value` __len__.
+        
+        Returns
+        -------
+        :obj:`int`
+            The length of the stored list.
+
+        """
+        return len(self.value)
+
+
 class MultiplicityError(Error):
     """The exception raised when more than one attribute are assigned to a
     :class:`Terminus` instance.
@@ -378,3 +521,21 @@ class SettingTypeError(Error):
         """
         msg = f"The found setting {setting} was not of type {setting_type}."
         super().__init__(msg)
+
+
+class SettingListTypeError(Error):
+    """The exception raised when the setting found in the passed :obj:`dict`
+    is of the wrong type, when intantiating a :class:`~.List` object.
+
+    """
+    def __init__(self, setting_type: type):
+        """The constructor for the :class::`SettingListTypeError` class.
+
+        Parameters
+        ----------
+        setting_type : :obj:`type`
+            The expected type of the setting.
+
+        """
+        self.setting_type = setting_type
+        super().__init__()
