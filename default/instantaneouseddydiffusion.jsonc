@@ -1,187 +1,170 @@
 {
-  // Choice of dispersion_model, can be either eddy_diffusion or well_mixed.
-  "dispersion_model": "eddy_diffusion",
-  "eddy_diffusion": {
-    "source_terms": {
-      // Number of sources of release of the material. Can be up to 10.
-      "number_of_sources": 0,
-      // Type of release, can be instantaneous, fixed_duration, infinite_duration
-      "release_type": "instantaneous"
+    // Choice of dispersion_model, can be either eddy_diffusion or well_mixed.
+    "dispersion_model": "eddy_diffusion",
+    // Type of release, can be instantaneous, fixed_duration, infinite_duration
+    "release_type": "instantaneous/infinteduration/fixedduration",
+
+    // The total time of the simulation.
+    "total_time": 100.0,
+    // The total change of air going in and out of the room.
+    "total_air_change_rate": 0.0,
+    // The total amount of fresh air going in and out of the room.
+    "fresh_air_change_rate": 0.0,
+
+    "instantaneous": {
+        // The container for the sources of the material.
+        "sources": {
+            // A source of the material.
+            "source_1": {
+                // The x location of the source.
+                "x": 1.0,
+                // The y location of the source.
+                "y": 1.0,
+                // The z location of the source.
+                "z": 1.0,
+                // The mass of the material being emitted.
+                "mass": 10.0,
+                // The time at which the source begins to emit.
+                "time": 12.0
+            }
+        }
     },
-    "inputs": {
-      // The dimensions of the container.
-      "container": {
-        "length": 1,
-        "width": 1,
-        "height": 1
-      },
-      // The total change of air going in and out of the room.
-      "total_total_air_change_rate": 0.0,
-      // The total amount of fresh air going in and out of the room.
-      "fresh_room_air_change_rate": 0.0,
-      // The locations of the sources that are emitting the material.
-      "source_locations": [
-        [
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0
-        ]
-      ],
-      "instantaneous": {
-        // The amount of mass released from the source.
-        "release_mass": 0.0,
-        // The time at which the mass is released.
-        "release_time": 0.0
-      },
-      "infinite_duration": {
-        // The amount of mass released per second.
-        "release_rate": 0.0,
-        // The time at which the source starts to emit.
-        "release_time": 0.0
-      },
-      "fixed_duration": {
-        // The amount of mass released per second.
-        "release_mass": 0.0,
-        // The time at which the source starts to emit.
-        "release_time": 0.0,
-        // The time at which the source stops emitting material.
-        "end_time": 1.0
-      },
-      // Duration of time that the entire simulation runs for. Must be greater than the release time.
-      "analysis_period": 0.0,
-      // Locations of the points which are monitoring the material. Should only lie on a single horizontal plane.
-      "monitor_locations": [
-        [
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0
-        ]
-      ],
-      "contour_plots": {
-        // Whether or not we have contour plots.
-        "contour": true,
-        // Show contour plots of the concentration value.
-        "concentration": true,
-        // Show the contour plots of the exposure value.
-        "exposure": true,
-        // The planes where the contour plots are located.
-        "planes": {
-          // The axis which we wish the plane to lie on.
-          "axis": "xy/xz/zy",
-          // How far along the axis we wish the plane to lie.
-          "distance": 5
+
+    "infinite_duration": {
+        "sources": {
+            "source_1": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0,
+                // The rate at which the material is being emitted in kg/s.
+                "rate": 10.0,
+                // The time at which the source begins to emit.
+                "time": 12.0
+            }
+        }
+    },
+
+    "fixed_duration": {
+        "sources": {
+            "source_1": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0,
+                // The rate at which the material is being emitted in kg/s.
+                "rate": 10.0,
+                // The time at which the source begins to emit.
+                "start_time": 12.0,
+                // The time at which the source stops emitting.
+                "end_time": 13.0
+            }
+        }
+    },
+    // Locations of the points which are monitoring the material. Should only lie on a single horizontal plane.
+    "monitor_locations": {
+        // The x, y, z coordinates of the monitors.
+        "monitor_1": {
+            "x": 1.0,
+            "y": 2.0,
+            "z": 3.0
         },
-        // How often we wish to create a contour plot of each plane in 1/s.
-        "frequency_of_contour_creation": 0.01,
-        // Specify the contour range for the plots. Or "auto" to have them automatically assigned.
-        "contour_range": "auto"
-      },
-      // The units of the concentration and exposure.
-      "output_units": {
+        "monitor_2": {
+            "x": 1.0,
+            "y": 2.0,
+            "z": 3.0
+        }
+    },
+
+    // The threshold values of the concentration and exposure.
+    "thresholds": {
+        "concentration": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ],
+        "exposure": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+
+    // The units of the concentration and exposure
+    "output_units": {
         // Choices are kgm-3, mgm-3, ppm, ppb, ppt.
         "concentration": "kgm-3",
         // Choices are mgminm-3, kgsm-3.
         "exposure": "mgminm-3"
-      },
-      // Concentration and exposure thresholds.
-      "thresholds": {
-        "concentration": [
-          0.0,
-          1.0,
-          2.0,
-          3.0,
-          4.0
-        ],
-        "exposure": [
-          0.0,
-          1.0,
-          2.0,
-          3.0,
-          4.0
-        ]
-      },
-      // The outputs for the eddy diffusion model.
-      "outputs": {
-        // The parameters for the eddy_diffusion image sources.
-        "image_sources": {
-          // The total number of image sources.
-          "quantity": 0,
-          // The max error allowed when changing the number of image sources by 1.
-          "location_max_error": 1.0
-        },
-        // Either give own coefficient with "EXPLICIT" then set below or use the TKEB relationship to calculate.
-        "coefficient_calculation": "TKEB/EXPLICIT",
-        // If set as EXPLICIT above, give the eddy diffusion coefficient.
-        "coefficient_value": 1.0,
-        // The Turbulent Kinetic Energy Balance relationship.
-        "tkeb": {
-          // The total supply flow rate of the system (Q).
-          "total_supply_flow_rate": 1.0,
-          // The number of supply vents in the system (N).
-          "number_of_supply_vents": 1
-        }
-      }
-    }
-  },
-
-  "well_mixed": {
-    "source_terms": {
-      "number_of_sources": 0,
-      "release_type": "instantaneous"
     },
-    "inputs": {
-      // The volume of the room being modeled.
-      "room_volume": 1,
-      "total_total_air_change_rate": 0.0,
-      "fresh_room_air_change_rate": 0.0,
-      "source_locations": [
-        [
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0
-        ]
-      ],
-      "instantaneous": {
-        "release_mass": 0.0,
-        "release_time": 0.0
-      },
-      "infinite_duration": {
-        "release_rate": 0.0,
-        "release_time": 0.0
-      },
-      "fixed_duration": {
-        "release_mass": 0.0,
-        "release_time": 0.0,
-        "end_time": 1.0
-      },
-      "analysis_period": 0.0,
-      "monitor_locations": [
-        [
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0
-        ]
-      ]
+
+    "eddy_diffusion": {
+        // The dimensions of the container.
+        "dimensions": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+
+        "coefficient": {
+            // Either give own coefficient with "EXPLICIT" then set below or use the TKEB relationship to calculate.
+            "calculation": "TKEB/EXPLICIT",
+            // If set as EXPLICIT above, give the eddy diffusion coefficient.
+            "value": 1.0,
+            // The Turbulent Kinetic Energy Balance relationship.
+            "tkeb": {
+                // The number of supply vents in the system (N).
+                "number_of_supply_vents": 1
+            }
+        },
+        // The parameters for the eddy_diffusion image sources.
+        "images": {
+            // The total number of image sources.
+            "quantity": 0,
+            // The max error allowed when changing the number of image sources by 1.
+            "max_error": 1.0
+        },
+
+        "contour_plots": {
+            // Whether or not we have contour plots.
+            "contour": true,
+            // Show contour plots of the concentration value.
+            "concentration": true,
+            // Show the contour plots of the exposure value.
+            "exposure": true,
+            // The planes where the contour plots are located.
+            "planes": {
+                "plane_1": {
+                    // The axis which we wish the plane to lie on.
+                    "axis": "xy/xz/zy",
+                    // How far along the axis we wish the plane to lie.
+                    "distance": 5
+                },
+                "plane_2": {
+                    "axis": "xy/xz/zy",
+                    "distance": 5
+                }
+            },
+            // How often we wish to create a contour plot of each plane in 1/s.
+            "creation_frequency": 0.01,
+            // Specify the contour range for the plots. Or "auto" to have them automatically assigned.
+            "contour_range": "auto/manual",
+            // The values we with the contours to lie on.
+            "manual_contours": [
+                0.0,
+                5.0,
+                10.0,
+                20.0
+            ]
+        }
+
+    },
+
+    "well_mixed": {
+        // The volume of the room being modeled.
+        "volume": 1.0
     }
-  }
+
 }
