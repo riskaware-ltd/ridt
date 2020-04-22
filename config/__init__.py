@@ -1,0 +1,1 @@
+from .idmfconfig import IDMFConfig

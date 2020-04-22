@@ -1,9 +1,8 @@
-from ..base import Settings
-from ..base import Terminus
-from ..base import ListTypeError
-from ..base import FloatTypeError
-from ..base import IntTypeError
-from ..base import DimensionError
+from base.settings import Settings
+from base.settings import Terminus
+from base.exceptions import ListTypeError
+from base.exceptions import FloatTypeError
+from base.exceptions import DimensionError
 
 
 class IDMFConfig(Settings):
