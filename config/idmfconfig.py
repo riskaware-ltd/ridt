@@ -1,8 +1,7 @@
 from base.settings import Settings
 from base.settings import Terminus
-from base.exceptions import ListTypeError
-from base.exceptions import FloatTypeError
-from base.exceptions import DimensionError
+from base.settings import List
+from base.settings import Dict
 
 
 class IDMFConfig(Settings):
@@ -10,105 +9,92 @@ class IDMFConfig(Settings):
     @Settings.assign
     def __int__(self, values: dict):
         self.dispersion_model = str
-        self.source_terms = SourceTerms
-        self.inputs = Inputs
-
-
-class SourceTerms(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.number_of_sources = int
         self.release_type = str
 
+        self.total_time = float
+        self.total_air_change_rate = float
+        self.fresh_air_change_rate = float
 
-class Inputs(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.room_total_air_change_rate = float
-        self.room_fresh_air_change_rate = float
-        self.source_locations = CoordinatesList
-        self.instantaneous = Instantaneous
-        self.infinite_duration = InfiniteDuration
-        self.fixed_duration = FixedDuration
-        self.duration_of_analysis_period = float
-        self.location_of_monitor_points = CoordinatesList
-        self.contour_plots = ContourPlots
-        self.output_units = OutputUnits
+        self.instantaneous = InstantaneousSources
+        self.infinite_duration = InfiniteDurationSources
+        self.fixed_duration = FixedDurationSources
+        self.monitor_locations = MonitorLocations
         self.thresholds = Thresholds
+        self.output_units = OutputUnits
+
         self.eddy_diffusion = EddyDiffusion
+        self.well_mixed = WellMixed
 
 
-class Instantaneous(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.release_mass = float
-        self.release_time = float
-
-
-class InfiniteDuration(Settings):
+class InstantaneousSources(Dict):
 
     @Settings.assign
     def __init__(self, values: dict):
-        self.release_rate = float
-        self.release_time = float
+        self.sources = InstantaneousSourceDict
 
 
-class FixedDuration(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.release_mass = float
-        self.release_time = float
-        self.end_time = float
-
-
-class ContourPlots(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.contour = bool
-        self.concentration = bool
-        self.exposure = bool
-        self.planes = Planes
-        self.frequency_of_contour_creation = float
-        self.contour_range = str
-
-
-class Planes(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.vertical = Vertical
-        self.horizontal = Horizontal
-
-
-class Vertical(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.enable = bool
-        self.number_of_planes = int
-        self.point_planes_passes_through = CoordinatesList
-
-
-class Horizontal(Settings):
+class InstantaneousSourceDict(Settings):
 
     @Settings.assign
     def __int__(self, values: dict):
-        self.enable = bool
-        self.number_of_planes = int
-        self.point_planes_passes_through = CoordinatesList
+        self.x = CoordinateValue
+        self.y = CoordinateValue
+        self.z = CoordinateValue
+        self.mass = Mass
+        self.time = Time
 
 
-class OutputUnits(Settings):
+class InfiniteDurationSources(Dict):
+
+    @Dict.assign
+    def __int__(self, values: dict):
+        self.sources = InfiniteDurationsSourceDict
+
+
+class InfiniteDurationsSourceDict(Settings):
 
     @Settings.assign
     def __int__(self, values: dict):
-        self.concentration = str
-        self.exposure = str
+        self.x = CoordinateValue
+        self.y = CoordinateValue
+        self.z = CoordinateValue
+        self.rate = NonNegativeFloat
+        self.time = Time
+
+
+class FixedDurationSources(Dict):
+
+    @Dict.assign
+    def __int__(self, values: dict):
+        self.sources = FixedDurationSourceDict
+
+
+class FixedDurationSourceDict(Settings):
+
+    @Settings.assign
+    def __int__(self, values: dict):
+        self.x = CoordinateValue
+        self.y = CoordinateValue
+        self.z = CoordinateValue
+        self.rate = NonNegativeFloat
+        self.start_time = Time
+        self.end_time = Time
+
+
+class MonitorLocations(Dict):
+
+    @Dict.assign
+    def __int__(self, values: dict):
+        self.value = Monitor
+
+
+class Monitor(Settings):
+
+    @Settings.assign
+    def __int__(self, values: dict):
+        self.x = CoordinateValue
+        self.y = CoordinateValue
+        self.z = CoordinateValue
 
 
 class Thresholds(Settings):
@@ -119,65 +105,192 @@ class Thresholds(Settings):
         self.exposure = ThresholdList
 
 
+class ThresholdList(List):
+
+    @List.assign
+    def __int__(self, values: list):
+        self.values = Threshold
+
+
+class OutputUnits(Settings):
+
+    @Settings.assign
+    def __int__(self, values: dict):
+        self.concentration = str
+        self.exposure = str
+
+
 class EddyDiffusion(Settings):
 
     @Settings.assign
     def __int__(self, values: dict):
-        self.image_sources = ImageSources
-        self.diffusion_coefficient_calculations = str
-        self.diffusion_coefficient_value = float
-        self.tkeb = TKEB
+        self.dimensions = Dimensions
+        self.coefficient = Coefficient
+        self.images = Images
+        self.contour_plots = ContourPlots
 
 
-class ImageSources(Settings):
+class Dimensions(Settings):
 
     @Settings.assign
     def __int__(self, values: dict):
-        self.number_of_image_sources = int
-        self.max_error_at_monitor_locations = float
+        self.x = CoordinateValue
+        self.y = CoordinateValue
+        self.z = CoordinateValue
+
+
+class Coefficient(Settings):
+
+    @Settings.assign
+    def __int__(self, values: dict):
+        self.calculation = str
+        self.value = float
+        self.tkeb = TKEB
 
 
 class TKEB(Settings):
 
     @Settings.assign
     def __int__(self, values: dict):
-        self.total_supply_flow_rate = float
         self.number_of_supply_vents = int
 
 
-class ThresholdList(Terminus):
+class Images(Settings):
+
+    @Settings.assign
+    def __int__(self, values: dict):
+        self.quantity = int
+        self.max_error = Percentage
+
+
+class ContourPlots(Settings):
+
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.contour = bool
+        self.concentration = bool
+        self.exposure = bool
+        self.planes = Planes
+        self.creation_frequency = NonNegativeFloat
+        self.contour_range = str
+        self.manual_contours = ManualContours
+
+
+class Planes(Dict):
+
+    @Dict.assign
+    def __init__(self, values: dict):
+        self.values = Plane
+
+
+class Plane(Settings):
+
+    @Settings.assign
+    def __int__(self, value: dict):
+        self.axis = str
+        self.distance = NonNegativeFloat
+
+
+class ManualContours(List):
+
+    @List.assign
+    def __int__(self, value: dict):
+        self.value = NonNegativeFloat
+
+
+class WellMixed(Settings):
+
+    @Settings.assign
+    def __int__(self):
+        self.volume = Volume
+
+
+class CoordinateValue(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: list):
+    def __int__(self, value: dict):
         self.value = value
 
     def check(self):
-
-        if not isinstance(self.value, list):
-            raise ListTypeError(value)
-
-        for entry in self.value:
-            if not isinstance(entry, float) and not isinstance(entry, int):
-                raise FloatTypeError(entry)
+        if not isinstance(self.value, float):
+            raise TypeError("Coordinate value must be a float.")
+        if self.value < 0:
+            raise ValueError("Coordinate value must be non negative.")
 
 
-class CoordinatesList(Terminus):
+class Mass(Terminus):
 
     @Terminus.assign
-    def __init__(self, value: list):
+    def __int__(self, value: dict):
         self.value = value
 
     def check(self):
+        if not isinstance(self.value, float):
+            raise TypeError("Mass must be a float")
+        if self.value < 0:
+            raise ValueError("Mass must be non negative")
 
-        if not isinstance(self.value, list):
-            raise ListTypeError(self.value)
 
-        for value in self.value:
-            if not isinstance(value, list):
-                raise ListTypeError(value)
-            if len(value) != 3:
-                raise DimensionError(value, 3)
+class Time(Terminus):
 
-            for entry in value:
-                if not isinstance(entry, float) and not isinstance(entry, int):
-                    raise FloatTypeError(entry)
+    @Terminus.assign
+    def __int__(self, value: dict):
+        self.value = value
+
+    def check(self):
+        if not isinstance(self.value, float):
+            raise TypeError("Mass must be a float")
+        if self.value < 0:
+            raise ValueError("Mass must be non negative")
+
+
+class Percentage(Terminus):
+
+    @Terminus.assign
+    def __int__(self, value: dict):
+        self.value = value
+
+    def check(self):
+        if not isinstance(self.value, float):
+            raise TypeError("Percentage value must be a float")
+        if self.value < 0:
+            raise ValueError("Percentage value must not be non zero")
+
+
+class Volume(Terminus):
+
+    @Terminus.assign
+    def __int__(self, value: dict):
+        self.value = value
+
+    def check(self):
+        if not isinstance(self.value, float):
+            raise TypeError("Volume must be a float")
+        if self.value < 0:
+            raise ValueError("Volume must not be non zero")
+
+
+class Threshold(Terminus):
+
+    @Terminus.assign
+    def __int__(self, value: dict):
+        self.value = value
+
+    def check(self):
+        if not isinstance(self.value, float):
+            raise ValueError("Threshold value must be a float")
+        if self.value < 0:
+            raise ValueError("Coordinate value must be non negative.")
+
+
+class NonNegativeFloat(Terminus):
+
+    @Terminus.assign
+    def __int__(self, value):
+        self.value = value
+
+    def check(self):
+        if not isinstance(self.value, float):
+            raise ValueError("Value must be a float")
+        if self.value < 0:
+            raise ValueError("Value must be non negative.")

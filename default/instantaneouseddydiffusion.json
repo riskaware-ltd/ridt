@@ -106,11 +106,11 @@
             "planes": {
                 "plane_1": {
                     "axis": "xy/xz/zy",
-                    "distance": 5
+                    "distance": 5.0
                 },
                 "plane_2": {
                     "axis": "xy/xz/zy",
-                    "distance": 5
+                    "distance": 5.0
                 }
             },
             "creation_frequency": 0.01,
