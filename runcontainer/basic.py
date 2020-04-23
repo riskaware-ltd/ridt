@@ -11,7 +11,11 @@ class Basic:
         self.__build_parameter_space()
     
     def __build_parameter_space(self):
-        self._X, self._Y, self._Z, self._T = np.meshgrid(X, Y, Z, T, indexing='ij')
+        if self.settings.dispersion_model is "eddy_diffusion":
+            self._space = np.meshgrid(X, Y, Z, T, indexing='ij')
+        else:
+            self._space = T
+
     
     @property
     def settings(self):
@@ -19,7 +23,7 @@ class Basic:
 
     @property
     def space(self):
-        return self._X, self._Y, self._Z, self._T
+        return self._space
     
     def evaluate_over_parameter_space(self, function):
         pass
