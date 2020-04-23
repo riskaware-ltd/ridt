@@ -7,17 +7,19 @@ from base.settings import Dict
 class IDMFConfig(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.dispersion_model = str
         self.release_type = str
 
-        self.total_time = float
-        self.total_air_change_rate = float
-        self.fresh_air_change_rate = float
+        self.time_units = str
+        self.total_time = Time
+        self.time_step = NonNegativeFloat
+        self.total_air_change_rate = NonNegativeFloat
+        self.fresh_air_change_rate = NonNegativeFloat
 
-        self.instantaneous = InstantaneousSources
-        self.infinite_duration = InfiniteDurationSources
-        self.fixed_duration = FixedDurationSources
+        self.instantaneous = InstantaneousSettings
+        self.infinite_duration = InfiniteDurationSettings
+        self.fixed_duration = FixedDurationSettings
         self.monitor_locations = MonitorLocations
         self.thresholds = Thresholds
         self.output_units = OutputUnits
@@ -25,18 +27,31 @@ class IDMFConfig(Settings):
         self.eddy_diffusion = EddyDiffusion
         self.well_mixed = WellMixed
 
+    def consistency_check(self):
+        if self.total_time < self.time_interval:
+            raise ValueError("Time interval must be less than the total time.")
+        if self.eddy_diffusion.dimensions.x < self.eddy_diffusion.dimensions.spatial_step:
+            raise ValueError("The spatial step cannot be less than the x dimension.")
 
-class InstantaneousSources(Dict):
+
+class InstantaneousSettings(Settings):
 
     @Settings.assign
     def __init__(self, values: dict):
         self.sources = InstantaneousSourceDict
 
 
-class InstantaneousSourceDict(Settings):
+class InstantaneousSourceDict(Dict):
+
+    @Dict.assign
+    def __init__(self, values: dict):
+        self.value = InstantaneousSource
+
+
+class InstantaneousSource(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.x = CoordinateValue
         self.y = CoordinateValue
         self.z = CoordinateValue
@@ -44,17 +59,24 @@ class InstantaneousSourceDict(Settings):
         self.time = Time
 
 
-class InfiniteDurationSources(Dict):
-
-    @Dict.assign
-    def __int__(self, values: dict):
-        self.sources = InfiniteDurationsSourceDict
-
-
-class InfiniteDurationsSourceDict(Settings):
+class InfiniteDurationSettings(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
+        self.sources = InfiniteDurationSourceDict
+
+
+class InfiniteDurationSourceDict(Dict):
+
+    @Dict.assign
+    def __init__(self, values: dict):
+        self.value = InfiniteDurationSource
+
+
+class InfiniteDurationSource(Settings):
+
+    @Settings.assign
+    def __init__(self, values: dict):
         self.x = CoordinateValue
         self.y = CoordinateValue
         self.z = CoordinateValue
@@ -62,17 +84,24 @@ class InfiniteDurationsSourceDict(Settings):
         self.time = Time
 
 
-class FixedDurationSources(Dict):
+class FixedDurationSettings(Settings):
 
-    @Dict.assign
-    def __int__(self, values: dict):
+    @Settings.assign
+    def __init__(self, values: dict):
         self.sources = FixedDurationSourceDict
 
 
-class FixedDurationSourceDict(Settings):
+class FixedDurationSourceDict(Dict):
+
+    @Dict.assign
+    def __init__(self, values: dict):
+        self.value = FixedDurationSource
+
+
+class FixedDurationSource(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.x = CoordinateValue
         self.y = CoordinateValue
         self.z = CoordinateValue
@@ -84,14 +113,14 @@ class FixedDurationSourceDict(Settings):
 class MonitorLocations(Dict):
 
     @Dict.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.value = Monitor
 
 
 class Monitor(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.x = CoordinateValue
         self.y = CoordinateValue
         self.z = CoordinateValue
@@ -100,7 +129,7 @@ class Monitor(Settings):
 class Thresholds(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.concentration = ThresholdList
         self.exposure = ThresholdList
 
@@ -108,14 +137,14 @@ class Thresholds(Settings):
 class ThresholdList(List):
 
     @List.assign
-    def __int__(self, values: list):
-        self.values = Threshold
+    def __init__(self, values: list):
+        self.value = Threshold
 
 
 class OutputUnits(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.concentration = str
         self.exposure = str
 
@@ -123,7 +152,7 @@ class OutputUnits(Settings):
 class EddyDiffusion(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.dimensions = Dimensions
         self.coefficient = Coefficient
         self.images = Images
@@ -133,16 +162,18 @@ class EddyDiffusion(Settings):
 class Dimensions(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
+        self.spatial_units = str
         self.x = CoordinateValue
         self.y = CoordinateValue
         self.z = CoordinateValue
+        self.spatial_step = NonNegativeFloat
 
 
 class Coefficient(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.calculation = str
         self.value = float
         self.tkeb = TKEB
@@ -151,14 +182,14 @@ class Coefficient(Settings):
 class TKEB(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.number_of_supply_vents = int
 
 
 class Images(Settings):
 
     @Settings.assign
-    def __int__(self, values: dict):
+    def __init__(self, values: dict):
         self.quantity = int
         self.max_error = Percentage
 
@@ -180,13 +211,13 @@ class Planes(Dict):
 
     @Dict.assign
     def __init__(self, values: dict):
-        self.values = Plane
+        self.value = Plane
 
 
 class Plane(Settings):
 
     @Settings.assign
-    def __int__(self, value: dict):
+    def __init__(self, value: dict):
         self.axis = str
         self.distance = NonNegativeFloat
 
@@ -194,21 +225,21 @@ class Plane(Settings):
 class ManualContours(List):
 
     @List.assign
-    def __int__(self, value: dict):
+    def __init__(self, value: dict):
         self.value = NonNegativeFloat
 
 
 class WellMixed(Settings):
 
     @Settings.assign
-    def __int__(self):
+    def __init__(self, value: dict):
         self.volume = Volume
 
 
 class CoordinateValue(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: dict):
+    def __init__(self, value: dict):
         self.value = value
 
     def check(self):
@@ -221,7 +252,7 @@ class CoordinateValue(Terminus):
 class Mass(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: dict):
+    def __init__(self, value: dict):
         self.value = value
 
     def check(self):
@@ -234,7 +265,7 @@ class Mass(Terminus):
 class Time(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: dict):
+    def __init__(self, value: dict):
         self.value = value
 
     def check(self):
@@ -247,7 +278,7 @@ class Time(Terminus):
 class Percentage(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: dict):
+    def __init__(self, value: dict):
         self.value = value
 
     def check(self):
@@ -260,8 +291,8 @@ class Percentage(Terminus):
 class Volume(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: dict):
-        self.value = value
+    def __init__(self, value: dict):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -273,8 +304,8 @@ class Volume(Terminus):
 class Threshold(Terminus):
 
     @Terminus.assign
-    def __int__(self, value: dict):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -286,7 +317,7 @@ class Threshold(Terminus):
 class NonNegativeFloat(Terminus):
 
     @Terminus.assign
-    def __int__(self, value):
+    def __init__(self, value):
         self.value = value
 
     def check(self):
