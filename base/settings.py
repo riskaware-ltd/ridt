@@ -526,7 +526,10 @@ class Number(Terminus):
                 raise SettingRangeKeyError("num")
             self.value = value
         else:
-            raise SettingTypeError(f"{self.type} || List[{self.type}] || {{'min': {self.type}, 'max': {self.type}, 'num': {int}}}", type(value))
+            raise SettingTypeError(
+        f"{self.type} || List[{self.type}] || "
+        f"{{'min': {self.type}, 'max': {self.type}, 'num': {int}}}",
+        type(value))
     
     def lower_bound(self, value):
         if isinstance(self.value, self.type):
