@@ -12,8 +12,13 @@ class IDMFConfig(Settings):
         self.release_type = str
 
         self.time_units = str
+        self.time_discretisation = int
         self.total_time = Time
-        self.time_step = NonNegativeFloat
+        self.concentration_units = str
+        self.exposure_units = str
+
+        self.spatial_units = str
+        self.spatial_discretisation = int
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
@@ -22,16 +27,46 @@ class IDMFConfig(Settings):
         self.fixed_duration = FixedDurationSettings
         self.monitor_locations = MonitorLocations
         self.thresholds = Thresholds
-        self.output_units = OutputUnits
 
         self.eddy_diffusion = EddyDiffusion
         self.well_mixed = WellMixed
 
     def consistency_check(self):
-        if self.total_time < self.time_interval:
-            raise ValueError("Time interval must be less than the total time.")
-        if self.eddy_diffusion.dimensions.x < self.eddy_diffusion.dimensions.spatial_step:
-            raise ValueError("The spatial step cannot be less than the x dimension.")
+        for key, value in self.fixed_duration.sources.value.items():
+            if value.end_time < value.start_time:
+                raise ValueError("The start time must be smaller than the end time.")
+        if len([val for val in self.thresholds.concentration.value]) > 5:
+            raise ValueError("Maximum of five concentration thresholds allowed")
+        if len([val for val in self.thresholds.exposure.value]) > 5:
+            raise ValueError("Maximum of five concentration thresholds allowed")
+        for key, val in self.eddy_diffusion.contour_plots.planes.value.items():
+            if val.axis not in ["xy", "xz", "zy"]:
+                raise ValueError(f"Plane {key} must be a xy, xz or zy plane.")
+            if val.axis == "xy" and val.distance > self.eddy_diffusion.dimensions.z:
+                raise ValueError(f"Plane {key} lies out of the container's border.")
+            if val.axis == "xz" and val.distance > self.eddy_diffusion.dimensions.y:
+                raise ValueError(f"Plane {key} lies out of the container's border.")
+            if val.axis == "zy" and val.distance > self.eddy_diffusion.dimensions.x:
+                raise ValueError(f"Plane {key} lies out of the container's border.")
+        if self.eddy_diffusion.contour_plots.contours.min > self.eddy_diffusion.contour_plots.contours.max:
+            raise ValueError("Manual contour min cannot be greater than manual contour max.")
+        if self.eddy_diffusion.contour_plots.range not in ["auto", "manual"]:
+            raise ValueError("Contour range must be either auto or manual.")
+        if self.eddy_diffusion.contour_plots.scale not in ["linear", "logarithmic"]:
+            raise ValueError("Contour scale must be either linear or logarithmic.")
+        if self.release_type not in ["instantaneous", "infiniteduration", "fixedduration"]:
+            raise ValueError("Release type must be either "
+                             "instantaneous, infiniteduration or fixedduration.")
+        if self.dispersion_model not in ["well_mixed", "eddy_diffusion"]:
+            raise ValueError("Dispersion model muse be either well_mixed or eddy_diffusion.")
+        if self.time_units not in ["s", "m", "h"]:
+            raise ValueError("Time units must be either s, m or h.")
+        if self.concentration_units not in ["kgm-3", "mgm-3", "kgm-3", "ppm", "ppb", "ppt"]:
+            raise ValueError("Concentration units must be kgm-3, mgm-3, kgm-3, ppm, ppb or ppt.")
+        if self.exposure_units not in ["mgminm-3", "kgsm-3"]:
+            raise ValueError("Exposure units must be mgminm-3 or kgsm-3.")
+        if self.spatial_units not in ["mm", "cm", "m"]:
+            raise ValueError("Spatial units must be mm, cm or m.")
 
 
 class InstantaneousSettings(Settings):
@@ -141,14 +176,6 @@ class ThresholdList(List):
         self.value = Threshold
 
 
-class OutputUnits(Settings):
-
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.concentration = str
-        self.exposure = str
-
-
 class EddyDiffusion(Settings):
 
     @Settings.assign
@@ -163,11 +190,9 @@ class Dimensions(Settings):
 
     @Settings.assign
     def __init__(self, values: dict):
-        self.spatial_units = str
         self.x = CoordinateValue
         self.y = CoordinateValue
         self.z = CoordinateValue
-        self.spatial_step = NonNegativeFloat
 
 
 class Coefficient(Settings):
@@ -203,8 +228,10 @@ class ContourPlots(Settings):
         self.exposure = bool
         self.planes = Planes
         self.creation_frequency = NonNegativeFloat
-        self.contour_range = str
-        self.manual_contours = ManualContours
+        self.number_of_contours = int
+        self.range = str
+        self.scale = str
+        self.contours = ManualContours
 
 
 class Planes(Dict):
@@ -222,11 +249,12 @@ class Plane(Settings):
         self.distance = NonNegativeFloat
 
 
-class ManualContours(List):
+class ManualContours(Settings):
 
-    @List.assign
+    @Settings.assign
     def __init__(self, value: dict):
-        self.value = NonNegativeFloat
+        self.min = NonNegativeFloat
+        self.max = NonNegativeFloat
 
 
 class WellMixed(Settings):
@@ -239,8 +267,8 @@ class WellMixed(Settings):
 class CoordinateValue(Terminus):
 
     @Terminus.assign
-    def __init__(self, value: dict):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -252,8 +280,8 @@ class CoordinateValue(Terminus):
 class Mass(Terminus):
 
     @Terminus.assign
-    def __init__(self, value: dict):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -265,8 +293,8 @@ class Mass(Terminus):
 class Time(Terminus):
 
     @Terminus.assign
-    def __init__(self, value: dict):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -278,8 +306,8 @@ class Time(Terminus):
 class Percentage(Terminus):
 
     @Terminus.assign
-    def __init__(self, value: dict):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -291,7 +319,7 @@ class Percentage(Terminus):
 class Volume(Terminus):
 
     @Terminus.assign
-    def __init__(self, value: dict):
+    def __init__(self, value: float):
         self.value = float
 
     def check(self):
@@ -317,8 +345,8 @@ class Threshold(Terminus):
 class NonNegativeFloat(Terminus):
 
     @Terminus.assign
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float
 
     def check(self):
         if not isinstance(self.value, float):
