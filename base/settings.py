@@ -145,7 +145,9 @@ class Settings:
                     raise SettingErrorMessage(setting, original_error=e)
                 except SettingNotFoundError as e:
                     raise SettingErrorMessage(setting, original_error=e)
-                except SettingRangeError as e:
+                except SettingRangeTypeError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
+                except SettingRangeKeyError as e:
                     raise SettingErrorMessage(setting, original_error=e)
                 except SettingErrorMessage as e:
                     raise SettingErrorMessage(setting, branch_error=e)
@@ -166,6 +168,8 @@ class Settings:
         elif issubclass(type(rv), Dict):
             return rv.get
         elif issubclass(type(rv), List):
+            return rv.get
+        elif issubclass(type(rv), Number):
             return rv.get
         else:
             return rv
@@ -490,11 +494,7 @@ class Dict(Settings):
             return self.value.items()
 
 
-class Number(Settings):
-
-    @property
-    def get(self):
-        return self.value
+class Number(Terminus):
 
     def distribute(self, value):
         if not hasattr(self, "type"):
@@ -511,33 +511,74 @@ class Number(Settings):
         elif type(value) is dict:
             try:
                 if not isinstance(value["min"], self.type):
-                    raise SettingRangeError(f"The 'min' parameter was not of type {self.type}")
+                    raise SettingRangeTypeError("min", self.type)
             except KeyError:
-                raise SettingRangeError("No 'min' parameter provided for range.")
+                raise SettingRangeKeyError("min")
             try:
                 if not isinstance(value["max"], self.type):
-                    raise SettingRangeError(f"The 'max' parameter was not of type {self.type}")
+                    raise SettingRangeTypeError("max", self.type)
             except KeyError:
-                raise SettingRangeError("No 'max' parameter provided for range.")
+                raise SettingRangeKeyError("max")
             try:
                 if not isinstance(value["num"], int):
-                    raise SettingRangeError(f"The 'num' parameter was not of type {int}")
+                    raise SettingRangeTypeError('num', int)
             except KeyError:
-                raise SettingRangeError("No 'num' parameter provided for range.")
+                raise SettingRangeKeyError("num")
+            self.value = value
         else:
-            raise SettingRangeError(f"Not {self.type}, List[{self.type}, or range specification.")
+            raise SettingTypeError(f"{self.type} || List[{self.type}] || {{'min': {self.type}, 'max': {self.type}, 'num': {int}}}", type(value))
+    
+    def lower_bound(self, value):
+        if isinstance(self.value, self.type):
+            if self.value < value:
+                raise ValueError(f"Value must be > {value}.")
+        if isinstance(self.value, list):
+            for item in self.value:
+                if item < value:
+                    raise ValueError(f"Values must be > {value}.")
+        if isinstance(self.value, dict):
+            if self.value["min"] < value:
+                raise ValueError(f"'min' must be > {value}.")
+            if self.value["max"] < value:
+                raise ValueError(f"'max' must be > {value}.")
+    
+    def upper_bound(self, value):
+        if isinstance(self.value, self.type):
+            if self.value > value:
+                raise ValueError(f"Value must be < {value}.")
+        if isinstance(self.value, list):
+            for item in self.value:
+                if item > value:
+                    raise ValueError(f"Values must be < {value}.")
+        if isinstance(self.value, dict):
+            if self.value["min"] > value:
+                raise ValueError(f"'min' must be < {value}.")
+            if self.value["max"] < value:
+                raise ValueError(f"'max' must be < {value}.")
 
 
-class SettingRangeError(Error):
-    """The exception raised when a :class:`~.Number` instance does not have
-    the correct type or entries in a range specification.
+class SettingRangeKeyError(Error):
+    """The exception raised when a :class:`~.Number` instance is missing an 
+    entry in a range specification.
 
     """
-    def __init__(self, msg: str):
-        """The constructor for the :class:`SettingRangeError` class.
+    def __init__(self, key: str):
+        """The constructor for the :class:`SettingRangeKeyError` class.
 
         """
-        self.msg = msg
+        self.msg = f"No '{key}' parameter provided for range."
+
+
+class SettingRangeTypeError(Error):
+    """The exception raised when a :class:`~.Number` instance is passed an
+    incorrect type in a range specification. 
+
+    """
+    def __init__(self, key: str, expected_type: T):
+        """The constructor for the :class:`SettingRangeTypeError` class.
+
+        """
+        self.msg = f"The '{key}' parameter was not {expected_type}."
 
 
 class SettingNotFoundError(Error):

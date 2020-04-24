@@ -2,6 +2,7 @@ from base.settings import Settings
 from base.settings import Terminus
 from base.settings import List
 from base.settings import Dict
+from base.settings import Number
 
 
 class IDMFConfig(Settings):
@@ -23,11 +24,11 @@ class IDMFConfig(Settings):
         A string dictating the units of time used within the
         simulation.
 
-    time_discretisation: :obj:`int`
+    time_samples: :obj:`int`
         The number of intervals that the total time is split
         up into.
 
-    total_time: :class:`~Time`
+    total_time: :class:`~NonNegativeFloat`
         A non negative float which corresponds to the total
         time of the simulation.
 
@@ -41,7 +42,7 @@ class IDMFConfig(Settings):
     spatial_units: :obj:`str`
         The spatial units of the container.
 
-    spatial_discretisation: :obj:`int`
+    spatial_samples: :obj:`int`
         The number of intervals that the container is split
         up into.
 
@@ -67,7 +68,7 @@ class IDMFConfig(Settings):
         A :class:`~Dict` child that contains paths
         to the MonitorLocations configurations.
 
-    thresholds: :class:`~Thresholds`
+    thresholds: :class:`~NonNegativeFloats`
         A :class:`~Settings` child containing the
         paths to the Threshold configurations.
 
@@ -103,13 +104,13 @@ class IDMFConfig(Settings):
         self.release_type = str
 
         self.time_units = str
-        self.time_discretisation = int
-        self.total_time = Time
+        self.time_samples = int
+        self.total_time = NonNegativeFloat
         self.concentration_units = str
         self.exposure_units = str
 
         self.spatial_units = str
-        self.spatial_discretisation = int
+        self.spatial_samples = int
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
@@ -207,15 +208,15 @@ class InstantaneousSource(Settings):
 
     Attributes
     ---------
-    x: :class:`~CoordinateValue`
+    x: :class:`~NonNegativeFloat`
         The x coordinate of the source.
-    y: :class:`~CoordinateValue`
+    y: :class:`~NonNegativeFloat`
         The y coordinate of the source.
-    z: :class:`~CoordinateValue`
+    z: :class:`~NonNegativeFloat`
         The z coordinate of the source.
-    mass: :class:`~Mass`
+    mass: :class:`~NonNegativeFloat`
         The mass of the material released.
-    time: :class:`~Time`
+    time: :class:`~NonNegativeFloat`
         The time that the material is released.
     """
     @Settings.assign
@@ -228,11 +229,11 @@ class InstantaneousSource(Settings):
             The dictionary corresponding to the instantaneous
             sources.
         """
-        self.x = CoordinateValue
-        self.y = CoordinateValue
-        self.z = CoordinateValue
-        self.mass = Mass
-        self.time = Time
+        self.x = NonNegativeFloat
+        self.y = NonNegativeFloat
+        self.z = NonNegativeFloat
+        self.mass = NonNegativeFloat
+        self.time = NonNegativeFloat
 
 
 class InfiniteDurationSettings(Settings):
@@ -279,15 +280,15 @@ class InfiniteDurationSource(Settings):
 
     Attributes
     ---------
-    x: :class:`~CoordinateValue`
+    x: :class:`~NonNegativeFloat`
         The x coordinate of the source.
-    y: :class:`~CoordinateValue`
+    y: :class:`~NonNegativeFloat`
         The y coordinate of the source.
-    z: :class:`~CoordinateValue`
+    z: :class:`~NonNegativeFloat`
         The z coordinate of the source.
     rate: :class:`~NonNegativeFloat`
         The mass of the material released.
-    time: :class:`~Time`
+    time: :class:`~NonNegativeFloat`
         The time that the material is released.
     """
     @Settings.assign
@@ -300,11 +301,11 @@ class InfiniteDurationSource(Settings):
             The dictionary corresponding to the infinite duration
             sources configurations.
         """
-        self.x = CoordinateValue
-        self.y = CoordinateValue
-        self.z = CoordinateValue
+        self.x = NonNegativeFloat
+        self.y = NonNegativeFloat
+        self.z = NonNegativeFloat
         self.rate = NonNegativeFloat
-        self.time = Time
+        self.time = NonNegativeFloat
 
 
 class FixedDurationSettings(Settings):
@@ -349,17 +350,17 @@ class FixedDurationSource(Settings):
 
     Attributes
     ---------
-    x: :class:`~CoordinateValue`
+    x: :class:`~NonNegativeFloat`
         The x coordinate of the source.
-    y: :class:`~CoordinateValue`
+    y: :class:`~NonNegativeFloat`
         The y coordinate of the source.
-    z: :class:`~CoordinateValue`
+    z: :class:`~NonNegativeFloat`
         The z coordinate of the source.
     rate: :class:`~NonNegativeFloat`
         The mass of the material released.
-    start_time: :class:`~Time`
+    start_time: :class:`~NonNegativeFloat`
         The time that the material is released.
-    end_time: :class:`~Time`
+    end_time: :class:`~NonNegativeFloat`
         The time that the source stops emitting
         the material.
     """
@@ -373,12 +374,12 @@ class FixedDurationSource(Settings):
             The dictionary corresponding to the fixed duration
              sources configurations.
         """
-        self.x = CoordinateValue
-        self.y = CoordinateValue
-        self.z = CoordinateValue
+        self.x = NonNegativeFloat
+        self.y = NonNegativeFloat
+        self.z = NonNegativeFloat
         self.rate = NonNegativeFloat
-        self.start_time = Time
-        self.end_time = Time
+        self.start_time = NonNegativeFloat
+        self.end_time = NonNegativeFloat
 
 
 class MonitorLocations(Dict):
@@ -402,18 +403,18 @@ class Monitor(Settings):
 
     Attributes
     ---------
-    x: :class:`~CoordinateValue`
+    x: :class:`~NonNegativeFloat`
         The x coordinate of the monitor.
-    y: :class:`~CoordinateValue`
+    y: :class:`~NonNegativeFloat`
         The y coordinate of the monitor.
-    z: :class:`~CoordinateValue`
+    z: :class:`~NonNegativeFloat`
         The z coordinate of the monitor.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        self.x = CoordinateValue
-        self.y = CoordinateValue
-        self.z = CoordinateValue
+        self.x = NonNegativeFloat
+        self.y = NonNegativeFloat
+        self.z = NonNegativeFloat
 
 
 class Thresholds(Settings):
@@ -439,7 +440,7 @@ class ThresholdList(List):
 
     @List.assign
     def __init__(self, values: list):
-        self.type = Threshold
+        self.type = NonNegativeFloat
 
 
 class EddyDiffusion(Settings):
@@ -472,18 +473,18 @@ class Dimensions(Settings):
 
     Attributes
     ---------
-    x: :class:`~CoordinateValue`
+    x: :class:`~NonNegativeFloat`
         The x magnitude of the container.
-    y: :class:`~CoordinateValue`
+    y: :class:`~NonNegativeFloat`
         The y magnitude of the container.
-    z: :class:`~CoordinateValue`
+    z: :class:`~NonNegativeFloat`
         The z magnitude of the container.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        self.x = CoordinateValue
-        self.y = CoordinateValue
-        self.z = CoordinateValue
+        self.x = NonNegativeFloat
+        self.y = NonNegativeFloat
+        self.z = NonNegativeFloat
 
 
 class Coefficient(Settings):
@@ -628,100 +629,30 @@ class WellMixed(Settings):
 
     Attributes
     ---------
-    volume: :class:`~Volume`
+    volume: :class:`~NonNegativeFloat`
         The total volume of the container.
     """
     @Settings.assign
     def __init__(self, value: dict):
-        self.volume = Volume
+        self.volume = NonNegativeFloat
 
 
-class CoordinateValue(Terminus):
-
-    @Terminus.assign
-    def __init__(self, value: float):
-        self.type = float
-
-    def check(self):
-        if not isinstance(self.value, float):
-            raise TypeError("Coordinate value must be a float.")
-        if self.value < 0:
-            raise ValueError("Coordinate value must be non negative.")
-
-
-class Mass(Terminus):
+class Percentage(Number):
 
     @Terminus.assign
     def __init__(self, value: float):
         self.type = float
 
     def check(self):
-        if not isinstance(self.value, float):
-            raise TypeError("Mass must be a float")
-        if self.value < 0:
-            raise ValueError("Mass must be non negative")
+        self.lower_bound(0.0)
+        self.upper_bound(100.0)
 
 
-class Time(Terminus):
+class NonNegativeFloat(Number):
 
     @Terminus.assign
     def __init__(self, value: float):
         self.type = float
 
     def check(self):
-        if not isinstance(self.value, float):
-            raise TypeError("Mass must be a float")
-        if self.value < 0:
-            raise ValueError("Mass must be non negative")
-
-
-class Percentage(Terminus):
-
-    @Terminus.assign
-    def __init__(self, value: float):
-        self.type = float
-
-    def check(self):
-        if not isinstance(self.value, float):
-            raise TypeError("Percentage value must be a float")
-        if self.value < 0:
-            raise ValueError("Percentage value must not be non zero")
-
-
-class Volume(Terminus):
-
-    @Terminus.assign
-    def __init__(self, value: float):
-        self.type = float
-
-    def check(self):
-        if not isinstance(self.value, float):
-            raise TypeError("Volume must be a float")
-        if self.value < 0:
-            raise ValueError("Volume must not be non zero")
-
-
-class Threshold(Terminus):
-
-    @Terminus.assign
-    def __init__(self, value: float):
-        self.type = float
-
-    def check(self):
-        if not isinstance(self.value, float):
-            raise ValueError("Threshold value must be a float")
-        if self.value < 0:
-            raise ValueError("Coordinate value must be non negative.")
-
-
-class NonNegativeFloat(Terminus):
-
-    @Terminus.assign
-    def __init__(self, value: float):
-        self.type = float
-
-    def check(self):
-        if not isinstance(self.value, float):
-            raise ValueError("Value must be a float")
-        if self.value < 0:
-            raise ValueError("Value must be non negative.")
+        self.lower_bound(0.0)

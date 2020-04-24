@@ -3,16 +3,16 @@
     "release_type": "instantaneous",
 
     "time_units": "s",
-    "time_discretisation": 10,
+    "time_samples": 10,
     "total_time": 100.0,
 
     "concentration_units": "kgm-3",
     "exposure_units": "mgminm-3",
 
     "spatial_units": "m",
-    "spatial_discretisation": 10,
+    "spatial_samples": 10,
 
-    "total_air_change_rate": 0.0,
+    "total_air_change_rate": 1.0,
     "fresh_air_change_rate": 0.0,
 
     "instantaneous": {
@@ -49,7 +49,11 @@
     "fixed_duration": {
         "sources": {
             "source_1": {
-                "x": 1.0,
+                "x": {
+                    "min": 1.0,
+                    "max": 10.0,
+                    "num": 10
+                },
                 "y": 1.0,
                 "z": 1.0,
                 "rate": 10.0,
