@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import sys
 import inspect
 import builtins
 
 from collections.abc import Iterable
 
+from typing import Union
 from typing import TypeVar
 from abc import ABC
 from abc import abstractmethod
@@ -122,31 +125,46 @@ class Settings:
 
         """
         for setting, setting_type in self.__dict__.items():
+            if not isinstance(values, dict):
+                raise SettingTypeError(dict, type(values))
             try:
-                value = values[setting]
-            except KeyError:
-                raise SettingNotFoundError(setting, self.__class__.__name__)
+                try:
+                    value = values[setting]
+                except KeyError:
+                    raise SettingNotFoundError()
+            except SettingNotFoundError as e:
+                raise SettingErrorMessage(setting, original_error=e)
             if value is None:
                 setattr(self, setting, value)
             elif setting_type not in self.primitive:
                 try:
                     setattr(self, setting, setting_type(value))
-                except SettingListTypeError as e:
-                    raise SettingTypeError(setting, e.setting_type)
-                except SettingDictTypeError as e:
-                    raise SettingTypeError(setting, e.setting_type)
-                except CheckError as e:
-                    raise AssignError(setting, e)
+                except SettingTypeError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
+                except SettingCheckError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
+                except SettingNotFoundError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
+                except SettingErrorMessage as e:
+                    raise SettingErrorMessage(setting, branch_error=e)
             else:
-                if isinstance(value, setting_type):
-                    setattr(self, setting, value)
-                else:
-                    raise SettingTypeError(setting, setting_type)
+                try:
+                    if isinstance(value, setting_type):
+                        setattr(self, setting, value)
+                    else:
+                        raise SettingTypeError(setting_type, type(setting))
+                except SettingErrorMessage as e:
+                    SettingErrorMessage(setting, original_error=e)
+
 
     def __getattribute__(self, name):
         rv = object.__getattribute__(self, name)
-        if Terminus in rv.__class__.__bases__:
-            return list(rv.__dict__.values())[0]
+        if issubclass(type(rv), Terminus):
+            return rv.get
+        elif issubclass(type(rv), Dict):
+            return rv.get
+        elif issubclass(type(rv), List):
+            return rv.get
         else:
             return rv
 
@@ -157,60 +175,11 @@ class Settings:
         pass
 
 
-class CheckError(Error):
-    """The exception raised when a :class:`Terminus` fails its value check.
-
-    """
-    def __init__(self, raised_exception, value: T):
-        """The constructor for the :class:`CheckError` class.
-
-        Parameters
-        ----------
-        raised_exception 
-            The exception raised by the test.
-        value : T
-            The value which failed the check.
-        """
-        self.exception = raised_exception
-        self.value = value
-        msg = "A value passed to the initialiser of a Terminus class instance"\
-              " has failed its check."
-        super().__init__(msg)
-
-
-class AssignError(Error):
-    """The exception raised when a :class:`Settings` class catches a
-    :class:`~.CheckError` exception when assigning a value.
-
-    """
-    def __init__(self, setting: str, check_error: CheckError):
-        """The constructor for the :class:`AssignError` class.
-
-        Parameters
-        ----------
-        setting: :obj:`str`
-            The setting for which the exception is being raised.
-
-        check_error: :class:`CheckError`
-            The check error instance raised by the :class:`~.Terminus`
-            instance.
-
-        """
-        print(check_error.exception)
-        msg = f"When assigning the '{setting}' setting, the passed value "\
-              f"'{check_error.value}' failed the value check with the "\
-              f"following error: {check_error.exception}" 
-        super().__init__(msg)
-
-
 class Terminus(ABC):
     """A base class for a terminating setting.
 
     This class is used to store a single settting in a :class:`~.Settings`
     derived class.
-
-    It can have only ONE class attribute.  If more are added, the
-    MultiplicityError is raised.
 
     If the expected type of a :class:`~.Settings` derived class attribute
     inherits from :class:`Termninus`, then when __getattribute__ is called to
@@ -226,28 +195,9 @@ class Terminus(ABC):
     automatically called after the derived class' constructor.
 
     """
-
-    def __setattr__(self, name: str, value: T):
-        """The setter method for :class:`Terminus` instances.
-
-        Parameters
-        ----------
-        name : :obj:`str`
-            The name of the attribute to be set.
-
-        value: T
-            The value to be assigned to the attribute.
-
-        Raises
-        ------
-        MultiplicityError
-            If the passed name is not the same as the existing attribute name.
-
-        """
-        if len(self.__dict__) > 1:
-            raise MultiplicityError()
-        else:
-            self.__dict__[name] = value
+    @property
+    def get(self):
+        return self.value
 
     @staticmethod
     def assign(method):
@@ -280,7 +230,7 @@ class Terminus(ABC):
         pass
 
     def action(self, check_method):
-        """Method that handles the return value of the :meth:`Terminus.check`
+        """Method that handles exceptions thrown by the :meth:`Terminus.check`
         function.
 
         Parameters
@@ -290,16 +240,16 @@ class Terminus(ABC):
 
         Raises
         ------
-        :class:`~.CheckError`
+        :class:`~.SettingCheckError`
             If the check function raises any exceptions.
 
         """
         try:
             self.check()
         except TypeError as e:
-            raise CheckError(e, self.value)
+            raise SettingCheckError(e, self.value)
         except ValueError as e:
-            raise CheckError(e, self.value)
+            raise SettingCheckError(e, self.value)
 
     def distribute(self, value: T):
         """Method called by the decorator :meth:`Terminus.assign` that
@@ -312,25 +262,17 @@ class Terminus(ABC):
             The value passed to the constructor of the :class:`Terminus`
             derived class.
 
-        Raises
-        ------
-        :class:`~.SettingTypeError`
-            If `value` is not of the required type, as defined in the derived
-            class' constructor.
-
         """
+        if not hasattr(self, "type"):
+            raise AttributeError("The child class has no self.type attribute.")
+        if not isinstance(self.type, type):
+            raise ValueError(f"The value of the type attribute should be a {type}")
+        if not isinstance(value, self.type):
+            raise SettingTypeError(self.type, type(value))
         self.value = value
 
-    @property
-    def value(self):
-        """`value` property that accesses the single class attribute,
-        regardless of that attribute's name.
 
-        """
-        return list(self.__dict__.values())[0]
-
-
-class List:
+class List(Settings):
     """A base class for a list of settings classes.
 
     This class is used to store a number of identical :class:`~.Settings` or
@@ -350,46 +292,8 @@ class List:
     """
 
     @property
-    def primitive(self):
-        """:obj:`list`(:obj:`type`) : a list of built in types.
-
-        """
-        return [getattr(builtins, d) for d in dir(builtins) if
-                isinstance(getattr(builtins, d), type)]
-
-    def __setattr__(self, name: str, value: T):
-        """The setter method for :class:`TerminusSet` instances.
-
-        Parameters
-        ----------
-        name : :obj:`str`
-            The name of the attribute to be set.
-
-        value: T
-            The value to be assigned to the attribute.
-
-        Raises
-        ------
-        MultiplicityError
-            If the passed name is not the same as the existing attribute name.
-
-        """
-        if len(self.__dict__) > 1:
-            raise MultiplicityError()
-        else:
-            self.__dict__[name] = value
-
-    @staticmethod
-    def assign(method):
-        """A decorator that applies the :meth:`List.distribute` to
-        parameter of the constructor of the derived class.
-
-        """
-        @wraps(method)
-        def wrapper(self, *args):
-            method(self, *args)
-            self.distribute(*args)
-        return wrapper
+    def get(self):
+        return self[:]
 
     def distribute(self, values: list):
         """Method called by the decorator :meth:`List.assign` that
@@ -416,29 +320,31 @@ class List:
             as specified in the derived class.
 
         """
-        if not isinstance(values, list):
-            raise SettingTypeError(values, list)
+        if not hasattr(self, "type"):
+            raise AttributeError("The child class has no self.type attribute.")
+        if not isinstance(self.type, type):
+            raise ValueError(f"The value of the type attribute should be a {type}")
 
-        setting_type = self.value
+        if not isinstance(values, list):
+            raise SettingTypeError(list, type(values))
+
         self.value = list()
 
-        if setting_type not in self.primitive:
-            for item in values:
-                self.value.append(setting_type(item))
+        if self.type not in self.primitive:
+            for idx, item in enumerate(values):
+                try:
+                    self.value.append(self.type(item))
+                except SettingErrorMessage as e:
+                    raise SettingErrorMessage(f"[{idx}]", e)
         else:
-            for item in values:
-                if not isinstance(item, setting_type):
-                    raise SettingListTypeError(setting_type)
-                self.value.append(item)
+            for idx, item in enumerate(values):
+                try:
+                    if not isinstance(item, self.type):
+                        raise SettingTypeError(self.type, type(item))
+                    self.value.append(item)
+                except SettingTypeError as e:
+                    raise SettingErrorMessage(f"[{idx}]", original_error=e)
 
-    @property
-    def value(self):
-        """`value` property that accesses the single class attribute,
-        regardless of that attribute's name.
-
-        """
-        return list(self.__dict__.values())[0]
-    
     def __getitem__(self, key):
         """An overload of the list get item method.
 
@@ -449,11 +355,11 @@ class List:
 
         """
         rv = self.value[key]
-        if Terminus in self.value[0].__class__.__bases__:
+        if issubclass(self.type, Terminus):
             if isinstance(rv, Iterable):
-                return [item.value for item in rv] 
+                return [item.get for item in rv] 
             else:
-                return rv.value
+                return rv.get
         else:
             return rv
     
@@ -469,7 +375,7 @@ class List:
         return len(self.value)
 
 
-class Dict:
+class Dict(Settings):
     """A base class for a dict of settings classes.
 
     This class is used to store a number of identical :class:`~.Settings` or
@@ -480,7 +386,7 @@ class Dict:
 
     The implementation of the derived class constructor should be as follows::
 
-        @TerminusSet.assign
+        @Settings.assign
         def __init__(self, values: list):
             self.value = type
     
@@ -489,46 +395,8 @@ class Dict:
     """
 
     @property
-    def primitive(self):
-        """:obj:`list`(:obj:`type`) : a list of built in types.
-
-        """
-        return [getattr(builtins, d) for d in dir(builtins) if
-                isinstance(getattr(builtins, d), type)]
-
-    def __setattr__(self, name: str, value: T):
-        """The setter method for :class:`TerminusSet` instances.
-
-        Parameters
-        ----------
-        name : :obj:`str`
-            The name of the attribute to be set.
-
-        value: T
-            The value to be assigned to the attribute.
-
-        Raises
-        ------
-        MultiplicityError
-            If the passed name is not the same as the existing attribute name.
-
-        """
-        if len(self.__dict__) > 1:
-            raise MultiplicityError()
-        else:
-            self.__dict__[name] = value
-
-    @staticmethod
-    def assign(method):
-        """A decorator that applies the :meth:`Dict.distribute` to
-        parameter of the constructor of the derived class.
-
-        """
-        @wraps(method)
-        def wrapper(self, *args):
-            method(self, *args)
-            self.distribute(*args)
-        return wrapper
+    def get(self):
+        return self.value
 
     def distribute(self, values: dict):
         """Method called by the decorator :meth:`Dict.assign` that
@@ -555,28 +423,30 @@ class Dict:
             as specified in the derived class.
 
         """
-        if not isinstance(values, dict):
-            raise SettingTypeError(values, dict)
+        if not hasattr(self, "type"):
+            raise AttributeError("The child class has no self.type attribute.")
+        if not isinstance(self.type, type):
+            raise ValueError(f"The value of the type attribute should be a {type}")
 
-        setting_type = self.value
+        if not isinstance(values, dict):
+            raise SettingTypeError(dict, type(values))
+
         self.value = dict()
 
-        if setting_type not in self.primitive:
+        if self.type not in self.primitive:
             for key, value in values.items():
-                self.value[key] = setting_type(value)
+                try:
+                    self.value[key] = self.type(value)
+                except SettingErrorMessage as e:
+                    raise SettingErrorMessage(key, e)
         else:
             for key, value in values.items():
-                if not isinstance(value, setting_type):
-                    raise SettingDictTypeError(setting_type)
-                self.value[key] = value
-
-    @property
-    def value(self):
-        """`value` property that accesses the single class attribute,
-        regardless of that attribute's name.
-
-        """
-        return list(self.__dict__.values())[0]
+                try:
+                    if not isinstance(value, self.type):
+                        raise SettingTypeError(self.type, type(value))
+                    self.value[key] = value
+                except SettingTypeError as e:
+                    raise SettingErrorMessage(key, original_error=e)
     
     def __getitem__(self, key):
         """An overload of the :obj:`dict` __getitem__ method.
@@ -606,29 +476,16 @@ class Dict:
         return self.value.keys()
     
     def values(self):
-        if Terminus in list(self.value.values())[0].__class__.__bases__:
+        if issubclass(self.type, Terminus):
             return {k: v.value for k, v in self.value.items()}.values()
         else:
             return self.value.values()
     
     def items(self):
-        if Terminus in list(self.value.values())[0].__class__.__bases__:
+        if issubclass(self.type, Terminus):
             return {k: v.value for k, v in self.value.items()}.items()
         else:
             return self.value.items()
-
-
-class MultiplicityError(Error):
-    """The exception raised when more than one attribute are assigned to a
-    :class:`Terminus` instance.
-
-    """
-
-    def __init__(self):
-        """The constructor for the :class:`MultiplicityError` class.
-        """
-        msg = f"More than one setting value defined in a {Terminus} instance."
-        super().__init__(msg)
 
 
 class SettingNotFoundError(Error):
@@ -636,30 +493,39 @@ class SettingNotFoundError(Error):
     :obj:`dict`.
 
     """
-    def __init__(self, setting: str, settings_class: type):
+    def __init__(self):
         """The constructor for the :class:`SettingNotFoundError` class.
+
+        """
+        self.msg = "Setting not found." 
+
+
+class SettingCheckError(Error):
+    """The exception raised when a :class:`Terminus` fails its value check.
+
+    """
+    def __init__(self, raised_exception, value: T):
+        """The constructor for the :class:`SettingCheckError` class.
 
         Parameters
         ----------
-        setting : :obj:`str`
-            The name of the setting that cannot be found.
-
-        settings_class : :obj:`type`
-            The :class:`~.Settings` dertived class to
-            which the missing setting belongs.
+        raised_exception 
+            The exception raised by the test.
+        value : T
+            The value which failed the check.
         """
-        msg = f"The setting '{setting}' was not found " \
-              f"for the {settings_class} object. Please check the relevant " \
-              f"config file."
-        super().__init__(msg)
+        self.msg = raised_exception
 
 
-class SettingTypeError(Error):
+class SettingErrorMessage(Error):
     """The exception raised when the setting found in the passed :obj:`dict`
     is of the wrong type.
 
     """
-    def __init__(self, setting: str, setting_type: type):
+    def __init__(self,
+                 current_name: str,
+                 branch_error: SettingErrorMessage = None,
+                 original_error: Union[SettingCheckError, SettingsTypeError] = None):
         """The constructor for the :class::`SettingTypeError` class.
 
         Parameters
@@ -670,41 +536,44 @@ class SettingTypeError(Error):
         setting_type : :obj:`type`
             The expected type of the setting.
         """
-        msg = f"The found setting {setting} was not of type {setting_type}."
-        super().__init__(msg)
+        if original_error:
+            self.route = [current_name]
+            self.original_error = original_error
 
+        elif branch_error:
+            self.route = [current_name] + branch_error.route
+            self.original_error = branch_error.original_error
+        else:
+            raise ValueError("Must pass either new error or branch error as parameter.")
 
-class SettingListTypeError(Error):
-    """The exception raised when the setting found in the passed :obj:`list`
-    is of the wrong type, when intantiating a :class:`~.List` object.
+        super().__init__(self.build_message())
+    
+    def build_message(self):
+        rv = str()
+        join = " -> "
+        for item in self.route:
+            if "[" in item: 
+                rv = rv[:-len(join)]
+            rv += f"{item}" + join
+        rv += f"{str(self.original_error.msg)}"
+        return rv
+        
 
-    """
-    def __init__(self, setting_type: type):
-        """The constructor for the :class::`SettingListTypeError` class.
-
-        Parameters
-        ----------
-        setting_type : :obj:`type`
-            The expected type of the setting.
-
-        """
-        self.setting_type = setting_type
-        super().__init__()
-
-
-class SettingDictTypeError(Error):
+class SettingTypeError(Error):
     """The exception raised when the setting found in the passed :obj:`dict`
     is of the wrong type, when intantiating a :class:`~.Dict` object.
 
     """
-    def __init__(self, setting_type: type):
+    def __init__(self, expected: type, actual: type):
         """The constructor for the :class::`SettingDictTypeError` class.
 
         Parameters
         ----------
-        setting_type : :obj:`type`
-            The expected type of the setting.
+        expected : :obj:`type`
+            The expected type.
+        
+        actual : :obj:`type`
+            The recieved type.
 
         """
-        self.setting_type = setting_type
-        super().__init__()
+        self.msg = f"Expecting : {expected} | Received: {actual}"
