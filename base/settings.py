@@ -145,6 +145,8 @@ class Settings:
                     raise SettingErrorMessage(setting, original_error=e)
                 except SettingNotFoundError as e:
                     raise SettingErrorMessage(setting, original_error=e)
+                except SettingRangeError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
                 except SettingErrorMessage as e:
                     raise SettingErrorMessage(setting, branch_error=e)
             else:
@@ -486,6 +488,56 @@ class Dict(Settings):
             return {k: v.value for k, v in self.value.items()}.items()
         else:
             return self.value.items()
+
+
+class Number(Settings):
+
+    @property
+    def get(self):
+        return self.value
+
+    def distribute(self, value):
+        if not hasattr(self, "type"):
+            raise AttributeError("The child class has no self.type attribute.")
+        if not isinstance(self.type, type):
+            raise ValueError(f"The value of the type attribute should be a {type}")
+        if type(value) is self.type:
+            self.value = value
+        elif type(value) is list:
+            for item in value:
+                if not isinstance(item, self.type):
+                    raise SettingTypeError(self.type, type(item))
+            self.value = value
+        elif type(value) is dict:
+            try:
+                if not isinstance(value["min"], self.type):
+                    raise SettingRangeError(f"The 'min' parameter was not of type {self.type}")
+            except KeyError:
+                raise SettingRangeError("No 'min' parameter provided for range.")
+            try:
+                if not isinstance(value["max"], self.type):
+                    raise SettingRangeError(f"The 'max' parameter was not of type {self.type}")
+            except KeyError:
+                raise SettingRangeError("No 'max' parameter provided for range.")
+            try:
+                if not isinstance(value["num"], int):
+                    raise SettingRangeError(f"The 'num' parameter was not of type {int}")
+            except KeyError:
+                raise SettingRangeError("No 'num' parameter provided for range.")
+        else:
+            raise SettingRangeError(f"Not {self.type}, List[{self.type}, or range specification.")
+
+
+class SettingRangeError(Error):
+    """The exception raised when a :class:`~.Number` instance does not have
+    the correct type or entries in a range specification.
+
+    """
+    def __init__(self, msg: str):
+        """The constructor for the :class:`SettingRangeError` class.
+
+        """
+        self.msg = msg
 
 
 class SettingNotFoundError(Error):
