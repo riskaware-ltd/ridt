@@ -198,7 +198,7 @@ class InstantaneousSourceDict(Dict):
             The value corresponding to the instantaneous
             source configurations.
         """
-        self.value = InstantaneousSource
+        self.type = InstantaneousSource
 
 
 class InstantaneousSource(Settings):
@@ -270,7 +270,7 @@ class InfiniteDurationSourceDict(Dict):
             The value corresponding to the infinite duration
             sources.
         """
-        self.value = InfiniteDurationSource
+        self.type = InfiniteDurationSource
 
 
 class InfiniteDurationSource(Settings):
@@ -340,7 +340,7 @@ class FixedDurationSourceDict(Dict):
         values : :obj:`dict`
             The value corresponding to the fixed duration sources.
         """
-        self.value = FixedDurationSource
+        self.type = FixedDurationSource
 
 
 class FixedDurationSource(Settings):
@@ -393,7 +393,7 @@ class MonitorLocations(Dict):
             The dictionary corresponding to the fixed duration
              sources configurations.
         """
-        self.value = Monitor
+        self.type = Monitor
 
 
 class Monitor(Settings):
@@ -439,7 +439,7 @@ class ThresholdList(List):
 
     @List.assign
     def __init__(self, values: list):
-        self.value = Threshold
+        self.type = Threshold
 
 
 class EddyDiffusion(Settings):
@@ -583,7 +583,7 @@ class Planes(Dict):
 
     @Dict.assign
     def __init__(self, values: dict):
-        self.value = Plane
+        self.type = Plane
 
 
 class Plane(Settings):
@@ -640,7 +640,7 @@ class CoordinateValue(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -653,7 +653,7 @@ class Mass(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -666,7 +666,7 @@ class Time(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -679,7 +679,7 @@ class Percentage(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -692,7 +692,7 @@ class Volume(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -705,7 +705,7 @@ class Threshold(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
@@ -718,7 +718,7 @@ class NonNegativeFloat(Terminus):
 
     @Terminus.assign
     def __init__(self, value: float):
-        self.value = float
+        self.type = float
 
     def check(self):
         if not isinstance(self.value, float):
