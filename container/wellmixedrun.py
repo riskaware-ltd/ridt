@@ -3,7 +3,7 @@ import numpy as np
 from config.idmfconfig import IDMFConfig
 
 
-class Basic:
+class WellMixedRun:
 
     def __init__(self, settings: IDMFConfig):
 
@@ -11,10 +11,7 @@ class Basic:
         self.__build_parameter_space()
     
     def __build_parameter_space(self):
-        if self.settings.dispersion_model is "eddy_diffusion":
-            self._space = np.meshgrid(X, Y, Z, T, indexing='ij')
-        else:
-            self._space = T
+        self._space = T
 
     
     @property
