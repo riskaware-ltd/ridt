@@ -8,6 +8,21 @@ from base.settings import SettingErrorMessage
 
 
 class ConfigFileParser:
+    """The class which handles the configuration file parsing.
+
+    This class handles the parsing of configuration files from disk, as well as
+    the instantiation of the :class:`~.IDMFConfig` instances using the parsed
+    data.
+
+    Attributes
+    ----------
+    path : :obj:`str`
+        The path to the file containing the configuration JSON.
+    
+    data : :obj:`dict`
+        The parsed JSON, stored as a :obj:`dict`.
+
+    """
 
     def __init__(self):
         pass
@@ -19,11 +34,41 @@ class ConfigFileParser:
         pass
 
     def __call__(self, path: str):
-        self.__parse_file(path)
+        """The way that the functionality of the :class:`~.ConfigFileParser`
+        class is accessed.
+
+        Parameters
+        ----------
+        path : :obj:`str`
+            The path to the file which contains the configuration to be parsed.
+
+        Returns
+        -------
+        :class:`~.IDMFConfig`
+            The :class:`~.IDMFConfig` instances created with the data parsed
+            from `path`.
+
+        """
+        self.path = path
+        self.__parse_file()
         return self.__instantiate_settings()
         
-    def __parse_file(self, path: str):
-        self.path = path
+    def __parse_file(self):
+        """The method which parses the configuration file.
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.ConfigFileParserJSONError`
+            If the structure of the parsed JSON is invalid.
+        
+        :class:`~.ConfigFileParserOSError`
+            If an :obj:`OSError` is raised when parsing the file.
+
+        """
 
         try:
             with open(self.path, 'r') as f:
@@ -34,6 +79,21 @@ class ConfigFileParser:
             raise ConfigFileParserOSError(self.path, e)
 
     def __instantiate_settings(self):
+        """The method which instantiates the :class:`~.IDMFConfig` instances
+        using the parsed data.
+
+        Returns
+        -------
+        :class:`~.IDMFConfig`
+            The :class:`~.IDMFConfig` instance created using the parsed data.
+        
+        Raises
+        ------
+        :class:`~.ConfigFileParserValidationError`
+            If any :class:`~.SettingErrorMessage` errors are raised when
+            instantiating the :class:`~.IDMFConfig` class.
+
+        """
         try:
             return IDMFConfig(self.data)
         except SettingErrorMessage as e:
