@@ -547,7 +547,7 @@ class Number(Terminus):
                 raise SettingRangeTypeError('num', int)
         except KeyError:
             raise SettingRangeKeyError("num")
-        self.value = linspace(value['min'], value['max'], abs(value['num']))
+        self.value = list(linspace(value['min'], value['max'], abs(value['num'])))
         self._range = True
     
     def lower_bound(self, value):
