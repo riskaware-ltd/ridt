@@ -3,16 +3,28 @@ from __future__ import annotations
 import sys
 import inspect
 import builtins
+import operator
+import itertools
+
+from pprint import pprint
+
+from copy import copy
 
 from collections.abc import Iterable
 
 from typing import Union
 from typing import TypeVar
+from typing import Type
+from typing import List
+
 from abc import ABC
 from abc import abstractmethod
+
 from functools import wraps
+from functools import reduce
 
 from numpy import linspace
+from numpy import meshgrid
 
 from base.exceptions import Error
 
@@ -67,7 +79,6 @@ class Settings:
             # this_is_a_string
 
     """
-
     @staticmethod
     def assign(method):
         """A decorator that applies the
@@ -161,6 +172,7 @@ class Settings:
                         raise SettingTypeError(setting_type, type(setting))
                 except SettingErrorMessage as e:
                     SettingErrorMessage(setting, original_error=e)
+        self.__source__ = values
 
 
     def __getattribute__(self, name):
@@ -301,7 +313,7 @@ class List(Settings):
 
     @property
     def get(self):
-        return self[:]
+        return self.value
 
     def distribute(self, values: list):
         """Method called by the decorator :meth:`List.assign` that
@@ -579,6 +591,70 @@ class Number(Terminus):
                 raise ValueError(f"'max' must be < {value}.")
 
 
+class ComputationalSpaceBuilder:
+
+    def __init__(self, setting: Type[Settings]):
+        self.setting = setting
+        self.parameters = list()
+        self.explore(self.setting, [])
+        self.addresses = [v["address"] for v in self.parameters]
+        self.values = [v["values"] for v in self.parameters]
+
+    def get_by_address(self, root: dict, address: List[str]):
+        return reduce(operator.getitem, address, root)
+
+    def set_by_address(self, root: dict, address, value):
+        self.get_by_address(root, address[:-1])[address[-1]] = value
+
+    def explore(self, root, path):
+        
+        if issubclass(type(root), List):
+            branch = enumerate(root.value)
+        elif issubclass(type(root), Dict):
+            branch = root.items()
+        elif issubclass(type(root), Settings):
+            branch = [(k, v) for k, v in root.__dict__.items() if "__" not in k]
+        else:
+            branch = []
+        for key, item in branch:
+            new_path = copy(path)
+            if issubclass(type(item), Number):
+                if item.is_range:
+                    new_path.append(key)
+                    self.parameters.append({
+                        "address": new_path,
+                        "values": item.get
+                    })
+            else:
+                new_path.append(key)
+                self.explore(item, new_path)
+   
+    def build_path(self, elements: list):
+        rv = ""
+        for item in elements:
+            rv += f"{item} -> "
+        return rv
+    
+    def build_configuration_space(self):
+        self.configuration_space = dict()
+        for batch in itertools.product(*self.values):
+            rv = copy(self.setting.__source__)
+            for address, value in zip(self.addresses, batch):
+                self.set_by_address(rv, address, float(value))
+            self.configuration_space[batch] = type(self.setting)(rv)
+    
+    def index_space(self):
+        for batch in itertools.product(*[[i for i in range(len(v))] for v in self.values]):
+            yield batch
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+
+
 class SettingRangeKeyError(Error):
     """The exception raised when a :class:`~.Number` instance is missing an 
     entry in a range specification.
@@ -630,6 +706,26 @@ class SettingCheckError(Error):
             The value which failed the check.
         """
         self.msg = raised_exception
+        
+
+class SettingTypeError(Error):
+    """The exception raised when the setting found in the passed :obj:`dict`
+    is of the wrong type, when intantiating a :class:`~.Dict` object.
+
+    """
+    def __init__(self, expected: type, actual: type):
+        """The constructor for the :class::`SettingDictTypeError` class.
+
+        Parameters
+        ----------
+        expected : :obj:`type`
+            The expected type.
+        
+        actual : :obj:`type`
+            The recieved type.
+
+        """
+        self.msg = f"Expecting : {expected} | Received: {actual}"
 
 
 class SettingErrorMessage(Error):
@@ -672,23 +768,3 @@ class SettingErrorMessage(Error):
             rv += f"{item}" + join
         rv += f"{str(self.original_error.msg)}"
         return rv
-        
-
-class SettingTypeError(Error):
-    """The exception raised when the setting found in the passed :obj:`dict`
-    is of the wrong type, when intantiating a :class:`~.Dict` object.
-
-    """
-    def __init__(self, expected: type, actual: type):
-        """The constructor for the :class::`SettingDictTypeError` class.
-
-        Parameters
-        ----------
-        expected : :obj:`type`
-            The expected type.
-        
-        actual : :obj:`type`
-            The recieved type.
-
-        """
-        self.msg = f"Expecting : {expected} | Received: {actual}"
