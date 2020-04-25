@@ -12,6 +12,8 @@ from abc import ABC
 from abc import abstractmethod
 from functools import wraps
 
+from numpy import linspace
+
 from base.exceptions import Error
 
 T = TypeVar("T")
@@ -496,6 +498,10 @@ class Dict(Settings):
 
 class Number(Terminus):
 
+    @property
+    def is_range(self):
+        return self._range
+
     def distribute(self, value):
         if not hasattr(self, "type"):
             raise AttributeError("The child class has no self.type attribute.")
@@ -516,14 +522,14 @@ class Number(Terminus):
     
     def __value(self, value):
         self.value = value
-        self.range = False
+        self._range = False
     
     def __list(self, value: list):
         for item in value:
             if not isinstance(item, self.type):
                 raise SettingTypeError(self.type, type(item))
         self.value = value
-        self.range = True
+        self._range = True
     
     def __range(self, value: dict):
         try:
@@ -541,8 +547,8 @@ class Number(Terminus):
                 raise SettingRangeTypeError('num', int)
         except KeyError:
             raise SettingRangeKeyError("num")
-        self.value = value
-        self.range = True
+        self.value = linspace(value['min'], value['max'], abs(value['num']))
+        self._range = True
     
     def lower_bound(self, value):
         if isinstance(self.value, self.type):
