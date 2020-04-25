@@ -46,3 +46,6 @@ docs/_build/
 
 # pycharm files
 .idea/
+
+# Virtual environments
+.venv/
