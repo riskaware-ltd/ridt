@@ -501,35 +501,48 @@ class Number(Terminus):
             raise AttributeError("The child class has no self.type attribute.")
         if not isinstance(self.type, type):
             raise ValueError(f"The value of the type attribute should be a {type}")
+
         if type(value) is self.type:
-            self.value = value
+            self.__value(value)
         elif type(value) is list:
-            for item in value:
-                if not isinstance(item, self.type):
-                    raise SettingTypeError(self.type, type(item))
-            self.value = value
+            self.__list(value)
         elif type(value) is dict:
-            try:
-                if not isinstance(value["min"], self.type):
-                    raise SettingRangeTypeError("min", self.type)
-            except KeyError:
-                raise SettingRangeKeyError("min")
-            try:
-                if not isinstance(value["max"], self.type):
-                    raise SettingRangeTypeError("max", self.type)
-            except KeyError:
-                raise SettingRangeKeyError("max")
-            try:
-                if not isinstance(value["num"], int):
-                    raise SettingRangeTypeError('num', int)
-            except KeyError:
-                raise SettingRangeKeyError("num")
-            self.value = value
+            self.__range(value)
         else:
             raise SettingTypeError(
         f"{self.type} || List[{self.type}] || "
         f"{{'min': {self.type}, 'max': {self.type}, 'num': {int}}}",
         type(value))
+    
+    def __value(self, value):
+        self.value = value
+        self.range = False
+    
+    def __list(self, value: list):
+        for item in value:
+            if not isinstance(item, self.type):
+                raise SettingTypeError(self.type, type(item))
+        self.value = value
+        self.range = True
+    
+    def __range(self, value: dict):
+        try:
+            if not isinstance(value["min"], self.type):
+                raise SettingRangeTypeError("min", self.type)
+        except KeyError:
+            raise SettingRangeKeyError("min")
+        try:
+            if not isinstance(value["max"], self.type):
+                raise SettingRangeTypeError("max", self.type)
+        except KeyError:
+            raise SettingRangeKeyError("max")
+        try:
+            if not isinstance(value["num"], int):
+                raise SettingRangeTypeError('num', int)
+        except KeyError:
+            raise SettingRangeKeyError("num")
+        self.value = value
+        self.range = True
     
     def lower_bound(self, value):
         if isinstance(self.value, self.type):
