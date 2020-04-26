@@ -16,6 +16,7 @@ from typing import Union
 from typing import TypeVar
 from typing import Type
 from typing import List
+from typing import Tuple
 
 from abc import ABC
 from abc import abstractmethod
@@ -24,6 +25,7 @@ from functools import wraps
 from functools import reduce
 
 from numpy import linspace
+from numpy import prod
 from numpy import meshgrid
 
 from base.exceptions import Error
@@ -591,14 +593,15 @@ class Number(Terminus):
                 raise ValueError(f"'max' must be < {value}.")
 
 
-class ComputationalSpaceBuilder:
+class ComputationalSpace:
 
     def __init__(self, setting: Type[Settings]):
         self.setting = setting
-        self.parameters = list()
+        self.addresses = list()
+        self.values = list()
+        self.configuration_space = list()
         self.explore(self.setting, [])
-        self.addresses = [v["address"] for v in self.parameters]
-        self.values = [v["values"] for v in self.parameters]
+        self.build_configuration_space()
 
     def get_by_address(self, root: dict, address: List[str]):
         return reduce(operator.getitem, address, root)
@@ -621,31 +624,39 @@ class ComputationalSpaceBuilder:
             if issubclass(type(item), Number):
                 if item.is_range:
                     new_path.append(key)
-                    self.parameters.append({
-                        "address": new_path,
-                        "values": item.get
-                    })
+                    self.addresses.append(new_path)
+                    self.values.append(item.get)
             else:
                 new_path.append(key)
                 self.explore(item, new_path)
    
-    def build_path(self, elements: list):
-        rv = ""
-        for item in elements:
-            rv += f"{item} -> "
-        return rv
-    
     def build_configuration_space(self):
-        self.configuration_space = dict()
         for batch in itertools.product(*self.values):
             rv = copy(self.setting.__source__)
             for address, value in zip(self.addresses, batch):
                 self.set_by_address(rv, address, float(value))
-            self.configuration_space[batch] = type(self.setting)(rv)
+            self.configuration_space.append(type(self.setting)(rv))
     
-    def index_space(self):
-        for batch in itertools.product(*[[i for i in range(len(v))] for v in self.values]):
-            yield batch
+    def __getitem__(self, indices):
+        if not isinstance(indices, tuple):
+            raise IndexError("only integers are valid when accessing arrays")
+        if len(indices) > len(self.values):
+            raise IndexError("too many indices for array")
+        for idx, item in enumerate(indices):
+            if not isinstance(item, int):
+                raise IndexError("only integers are valid when accessing arrays")
+            if not 0 <= item < len(self.values):
+                raise IndexError(f"index {item} is out of bounds for axis {idx} with size {len(self.values[idx])}")
+        index = 0
+        for idx, item in enumerate(indices):
+            index += item * int(prod([len(v) for v in self.values[idx + 1:]]))
+        return self.configuration_space[index]
+
+
+
+    @property
+    def shape(self):
+        return tuple((len(v) for v in self.values))
 
     def __enter__(self):
         return self
