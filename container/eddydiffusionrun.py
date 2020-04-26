@@ -11,7 +11,8 @@ class EddyDiffusionRun:
         self.__build_parameter_space()
     
     def __build_parameter_space(self):
-        self._space = np.meshgrid(X, Y, Z, T, indexing='ij')
+        pass
+        # self._space = np.meshgrid(X, Y, Z, T, indexing='ij')
     
     @property
     def settings(self):

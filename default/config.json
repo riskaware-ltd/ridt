@@ -1,5 +1,5 @@
 {
-    "dispersion_model": "eddy_diffusion",
+    "dispersion_model": "well_mixed",
     "release_type": "instantaneous",
 
     "time_units": "s",
@@ -15,50 +15,56 @@
     "total_air_change_rate": 1.0,
     "fresh_air_change_rate": 0.0,
 
-    "instantaneous": {
-        "sources":{
-            "source_1": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0,
-                "mass": 10.0,
-                "time": 12.0
-            },
-            "source_2": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0,
-                "mass": 10.0,
-                "time": 12.0
-            }
-        }
-    },
-
-    "infinite_duration": {
-        "sources": {
-            "source_1": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0,
-                "rate": 10.0,
-                "time": 12.0
-            }
-        }
-    },
-
-    "fixed_duration": {
-        "sources": {
-            "source_1": {
-                "x": {
-                    "min": 1.0,
-                    "max": 10.0,
-                    "num": 10
+    "modes": {
+        "instantaneous": {
+            "sources":{
+                "source_1": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "mass": {
+                        "min": 0.0,
+                        "max": 10.0,
+                        "num": 3
+                    },
+                    "time": 12.0
                 },
-                "y": 1.0,
-                "z": 1.0,
-                "rate": 10.0,
-                "start_time": 12.0,
-                "end_time": 15.0
+                "source_2": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "mass": 10.0,
+                    "time": 12.0
+                }
+            }
+        },
+
+        "infinite_duration": {
+            "sources": {
+                "source_1": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "rate": 10.0,
+                    "time": 12.0
+                }
+            }
+        },
+
+        "fixed_duration": {
+            "sources": {
+                "source_1": {
+                    "x": {
+                        "min": 1.0,
+                        "max": 10.0,
+                        "num": 3
+                    },
+                    "y": 1.0,
+                    "z": 1.0,
+                    "rate": 10.0,
+                    "start_time": 12.0,
+                    "end_time": 15.0
+                }
             }
         }
     },
@@ -79,9 +85,12 @@
     "thresholds": {
         "concentration": [
             0.0,
-            1.0,
             2.0,
-            3.0,
+            {
+                "min": 0.0,
+                "max": 1.0,
+                "num": 3
+            },
             4.0
         ],
         "exposure": [
@@ -93,54 +102,50 @@
         ]
     },
 
-    "eddy_diffusion": {
-
-        "dimensions": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-        },
-
-        "coefficient": {
-            "calculation": "TKEB/EXPLICIT",
-            "value": 1.0,
-            "tkeb": {
-                "number_of_supply_vents": 1
-            }
-        },
-
-        "images": {
-            "quantity": 0,
-            "max_error": 1.0
-        },
-
-        "contour_plots": {
-            "contour": true,
-            "concentration": true,
-            "exposure": true,
-            "planes": {
-                "plane_1": {
-                    "axis": "xy",
-                    "distance": 0.1
-                },
-                "plane_2": {
-                    "axis": "zy",
-                    "distance": 0.1
+    "models":{
+        "eddy_diffusion": {
+            "dimensions": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "coefficient": {
+                "calculation": "TKEB/EXPLICIT",
+                "value": 1.0,
+                "tkeb": {
+                    "number_of_supply_vents": 1
                 }
             },
-            "creation_frequency": 0.01,
-            "number_of_contours": 10,
-            "range": "auto",
-            "scale": "linear",
-            "contours": {
-                "min": 1.0,
-                "max": 5.0
+            "images": {
+                "quantity": 0,
+                "max_error": 1.0
+            },
+            "contour_plots": {
+                "contour": true,
+                "concentration": true,
+                "exposure": true,
+                "planes": {
+                    "plane_1": {
+                        "axis": "xy",
+                        "distance": 0.1
+                    },
+                    "plane_2": {
+                        "axis": "zy",
+                        "distance": 0.1
+                    }
+                },
+                "creation_frequency": 0.01,
+                "number_of_contours": 10,
+                "range": "auto",
+                "scale": "linear",
+                "contours": {
+                    "min": 1.0,
+                    "max": 5.0
+                }
             }
+        },
+        "well_mixed": {
+            "volume": 1.0
         }
-    },
-
-    "well_mixed": {
-        "volume": 1.0
     }
-
 }

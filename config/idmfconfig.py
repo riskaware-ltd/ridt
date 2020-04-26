@@ -7,9 +7,9 @@ from base.settings import Number
 
 class IDMFConfig(Settings):
 
-    """The :class:`~IDMFConfig` class. It inherits from
-    :class:`~Settings`. For information about the behaviour of
-    :class:`~.Settings` derived classes, please refer to the :class:`~.Settings`
+    """The :class:`~.IDMFConfig` class. It inherits from
+    :class:`~.Settings`. For information about the behaviour of
+    :class:`~..Settings` derived classes, please refer to the :class:`~..Settings`
     documentation.
 
     Attributes
@@ -28,7 +28,7 @@ class IDMFConfig(Settings):
         The number of intervals that the total time is split
         up into.
 
-    total_time: :class:`~NonNegativeFloat`
+    total_time: :class:`~.NonNegativeFloat`
         A non negative float which corresponds to the total
         time of the simulation.
 
@@ -46,39 +46,25 @@ class IDMFConfig(Settings):
         The number of intervals that the container is split
         up into.
 
-    total_air_change_rate: :class:`~NonNegativeFloat`
+    total_air_change_rate: :class:`~.NonNegativeFloat`
         The total air change rate in the system.
 
-    fresh_air_change_rate: :class:`~NonNegativeFloat`
+    fresh_air_change_rate: :class:`~.NonNegativeFloat`
         The fresh air change rate in the system.
 
-    instantaneous: :class:`~InstantaneousSettings`
-        A :class:`~Settings` child that contains paths
-        to the Instantaneous configurations.
-
-    infinite_duration: :class:`~InfiniteDurationSettings`
-        A :class:`~Settings` child that contains paths
-        to the InfiniteDuration configurations.
-
-    fixed_duration: :class:`~FixedDurationSettings`
-        A :class:`~Settings` child that contains paths
-        to the FixedDuration configurations.
-
-    monitor_locations: :class:`~MonitorLocations`
-        A :class:`~Dict` child that contains paths
+    monitor_locations: :class:`~.MonitorLocations`
+        A :class:`~.Dict` child that contains paths
         to the MonitorLocations configurations.
 
-    thresholds: :class:`~NonNegativeFloats`
-        A :class:`~Settings` child containing the
-        paths to the Threshold configurations.
+    thresholds: :class:`~.NonNegativeFloats`
+        A :class:`~.Settings` child containing the paths to the Threshold
+        configurations.
+    
+    modes : :class:`~.ModeSettings`
+        A :class:`~.Settings` child containin mode specific settings.
 
-    eddy_diffusion: :class:`~EddyDiffusion`
-        A :class:`~Settings` child containing the paths
-        to the EddyDiffusion configurations.
-
-    well_mixed: :class:`~WellMixed`
-        A :class:`~Settings` child containing the paths
-        to the WellMixed configurations.
+    models : :class:`~.ModelSettings`
+        A :class:`~.Settings` child containin model specific settings.
 
     Returns
     -------
@@ -87,7 +73,7 @@ class IDMFConfig(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~IDMFConfig` class.
+        """The constructor for the :class:`~.IDMFConfig` class.
 
         Parameters
         ----------
@@ -114,14 +100,11 @@ class IDMFConfig(Settings):
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
-        self.instantaneous = InstantaneousSettings
-        self.infinite_duration = InfiniteDurationSettings
-        self.fixed_duration = FixedDurationSettings
+        self.modes = ModeSettings
         self.monitor_locations = MonitorLocations
         self.thresholds = Thresholds
 
-        self.eddy_diffusion = EddyDiffusion
-        self.well_mixed = WellMixed
+        self.models = ModelSettings
 
     def consistency_check(self):
         for key, value in self.fixed_duration.sources.value.items():
@@ -161,21 +144,84 @@ class IDMFConfig(Settings):
             raise ValueError("Spatial units must be mm, cm or m.")
 
 
+class ModelSettings(Settings):
+    """The :class:`~.ModelSettings` class. It inherits from :class:`~.Settings`
+    class
+
+    Attributes
+    ----------
+    eddy_diffusion: :class:`~.EddyDiffusion`
+        A :class:`~.Settings` child containing the paths
+        to the EddyDiffusion configurations.
+
+    well_mixed: :class:`~.WellMixed`
+        A :class:`~.Settings` child containing the paths
+        to the WellMixed configurations.
+
+    """
+    @Settings.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`~.ModelSettings` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The dictionary corresponding to the instantaneous
+            settings configurations.
+        """
+        self.eddy_diffusion = EddyDiffusion
+        self.well_mixed = WellMixed
+
+
+class ModeSettings(Settings):
+    """The :class:`~.ModeSettings` class. It inherits from :class:`~.Settings`
+    class
+
+    Attributes
+    ----------
+    instantaneous: :class:`~.InstantaneousSettings`
+        A :class:`~.Settings` child that contains paths
+        to the Instantaneous configurations.
+
+    infinite_duration: :class:`~.InfiniteDurationSettings`
+        A :class:`~.Settings` child that contains paths
+        to the InfiniteDuration configurations.
+
+    fixed_duration: :class:`~.FixedDurationSettings`
+        A :class:`~.Settings` child that contains paths
+        to the FixedDuration configurations.
+
+    """
+    @Settings.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`~.InstantaneousSettings` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The dictionary corresponding to the instantaneous
+            settings configurations.
+        """
+        self.instantaneous = InstantaneousSettings
+        self.infinite_duration = InfiniteDurationSettings
+        self.fixed_duration = FixedDurationSettings
+
+
 class InstantaneousSettings(Settings):
 
-    """The :class:`~InstantaneousSettings` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.InstantaneousSettings` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    sources: :class:`~Dict`
+    sources: :class:`~.Dict`
         Path to the dictionary of instantaneous sources within
         the simulation.
     """
 
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~InstantaneousSettings` class.
+        """The constructor for the :class:`~.InstantaneousSettings` class.
 
         Parameters
         ----------
@@ -191,7 +237,7 @@ class InstantaneousSourceDict(Dict):
 
     @Dict.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~InstantaneousSourceDict` class.
+        """The constructor for the :class:`~.InstantaneousSourceDict` class.
 
         Parameters
         ----------
@@ -203,25 +249,25 @@ class InstantaneousSourceDict(Dict):
 
 
 class InstantaneousSource(Settings):
-    """The :class:`~InstantaneousSource` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.InstantaneousSource` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    x: :class:`~NonNegativeFloat`
+    x: :class:`~.NonNegativeFloat`
         The x coordinate of the source.
-    y: :class:`~NonNegativeFloat`
+    y: :class:`~.NonNegativeFloat`
         The y coordinate of the source.
-    z: :class:`~NonNegativeFloat`
+    z: :class:`~.NonNegativeFloat`
         The z coordinate of the source.
-    mass: :class:`~NonNegativeFloat`
+    mass: :class:`~.NonNegativeFloat`
         The mass of the material released.
-    time: :class:`~NonNegativeFloat`
+    time: :class:`~.NonNegativeFloat`
         The time that the material is released.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~InstantaneousSource` class.
+        """The constructor for the :class:`~.InstantaneousSource` class.
 
         Parameters
         ----------
@@ -237,18 +283,18 @@ class InstantaneousSource(Settings):
 
 
 class InfiniteDurationSettings(Settings):
-    """The :class:`~InfiniteDurationSettings` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.InfiniteDurationSettings` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    sources: :class:`~Dict`
+    sources: :class:`~.Dict`
         Path to the dictionary of infinite duration sources within
         the simulation.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~InfiniteDurationSettings` class.
+        """The constructor for the :class:`~.InfiniteDurationSettings` class.
 
         Parameters
         ----------
@@ -263,7 +309,7 @@ class InfiniteDurationSourceDict(Dict):
 
     @Dict.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~InfiniteDurationSourceDict` class.
+        """The constructor for the :class:`~.InfiniteDurationSourceDict` class.
 
         Parameters
         ----------
@@ -275,25 +321,25 @@ class InfiniteDurationSourceDict(Dict):
 
 
 class InfiniteDurationSource(Settings):
-    """The :class:`~InfiniteDurationSource` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.InfiniteDurationSource` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    x: :class:`~NonNegativeFloat`
+    x: :class:`~.NonNegativeFloat`
         The x coordinate of the source.
-    y: :class:`~NonNegativeFloat`
+    y: :class:`~.NonNegativeFloat`
         The y coordinate of the source.
-    z: :class:`~NonNegativeFloat`
+    z: :class:`~.NonNegativeFloat`
         The z coordinate of the source.
-    rate: :class:`~NonNegativeFloat`
+    rate: :class:`~.NonNegativeFloat`
         The mass of the material released.
-    time: :class:`~NonNegativeFloat`
+    time: :class:`~.NonNegativeFloat`
         The time that the material is released.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~InfiniteDurationSource` class.
+        """The constructor for the :class:`~.InfiniteDurationSource` class.
 
         Parameters
         ----------
@@ -309,18 +355,18 @@ class InfiniteDurationSource(Settings):
 
 
 class FixedDurationSettings(Settings):
-    """The :class:`~FixedDurationSettings` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.FixedDurationSettings` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    sources: :class:`~Dict`
+    sources: :class:`~.Dict`
         Path to the dictionary of fixed duration sources within
         the simulation.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~FixedDurationSettings` class.
+        """The constructor for the :class:`~.FixedDurationSettings` class.
 
         Parameters
         ----------
@@ -334,7 +380,7 @@ class FixedDurationSourceDict(Dict):
 
     @Dict.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~FixedDurationSourceDict` class.
+        """The constructor for the :class:`~.FixedDurationSourceDict` class.
 
         Parameters
         ----------
@@ -345,28 +391,28 @@ class FixedDurationSourceDict(Dict):
 
 
 class FixedDurationSource(Settings):
-    """The :class:`~FixedDurationSource` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.FixedDurationSource` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    x: :class:`~NonNegativeFloat`
+    x: :class:`~.NonNegativeFloat`
         The x coordinate of the source.
-    y: :class:`~NonNegativeFloat`
+    y: :class:`~.NonNegativeFloat`
         The y coordinate of the source.
-    z: :class:`~NonNegativeFloat`
+    z: :class:`~.NonNegativeFloat`
         The z coordinate of the source.
-    rate: :class:`~NonNegativeFloat`
+    rate: :class:`~.NonNegativeFloat`
         The mass of the material released.
-    start_time: :class:`~NonNegativeFloat`
+    start_time: :class:`~.NonNegativeFloat`
         The time that the material is released.
-    end_time: :class:`~NonNegativeFloat`
+    end_time: :class:`~.NonNegativeFloat`
         The time that the source stops emitting
         the material.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~FixedDurationSource` class.
+        """The constructor for the :class:`~.FixedDurationSource` class.
 
         Parameters
         ----------
@@ -386,7 +432,7 @@ class MonitorLocations(Dict):
 
     @Dict.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~MonitorLocations` class.
+        """The constructor for the :class:`~.MonitorLocations` class.
 
         Parameters
         ----------
@@ -398,16 +444,16 @@ class MonitorLocations(Dict):
 
 
 class Monitor(Settings):
-    """The :class:`~Monitor` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.Monitor` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    x: :class:`~NonNegativeFloat`
+    x: :class:`~.NonNegativeFloat`
         The x coordinate of the monitor.
-    y: :class:`~NonNegativeFloat`
+    y: :class:`~.NonNegativeFloat`
         The y coordinate of the monitor.
-    z: :class:`~NonNegativeFloat`
+    z: :class:`~.NonNegativeFloat`
         The z coordinate of the monitor.
     """
     @Settings.assign
@@ -418,15 +464,15 @@ class Monitor(Settings):
 
 
 class Thresholds(Settings):
-    """The :class:`~Thresholds` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.Thresholds` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    concentration: :class:`~ThresholdList`
+    concentration: :class:`~.ThresholdList`
         Path to the list of concentration thresholds within
         the simulation.
-    exposure: :class:`~ThresholdList`
+    exposure: :class:`~.ThresholdList`
         Path to the list of exposure thresholds within
         the simulation.
     """
@@ -444,19 +490,19 @@ class ThresholdList(List):
 
 
 class EddyDiffusion(Settings):
-    """The :class:`~EddyDiffusion` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.EddyDiffusion` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    dimensions: :class:`~Dimensions`
+    dimensions: :class:`~.Dimensions`
         Path to the dimensions of the container.
-    coefficient: :class:`~Coefficient`
+    coefficient: :class:`~.Coefficient`
         Path to the eddy diffusion
         coefficient calculations.
-    images: :class:`~Images`
+    images: :class:`~.Images`
         Path to the image configurations.
-    contour_plots: :class:`~ContourPlots`
+    contour_plots: :class:`~.ContourPlots`
         Path to the contour plots configurations.
     """
     @Settings.assign
@@ -468,16 +514,16 @@ class EddyDiffusion(Settings):
 
 
 class Dimensions(Settings):
-    """The :class:`~Dimensions` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.Dimensions` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    x: :class:`~NonNegativeFloat`
+    x: :class:`~.NonNegativeFloat`
         The x magnitude of the container.
-    y: :class:`~NonNegativeFloat`
+    y: :class:`~.NonNegativeFloat`
         The y magnitude of the container.
-    z: :class:`~NonNegativeFloat`
+    z: :class:`~.NonNegativeFloat`
         The z magnitude of the container.
     """
     @Settings.assign
@@ -488,8 +534,8 @@ class Dimensions(Settings):
 
 
 class Coefficient(Settings):
-    """The :class:`~Coefficient` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.Coefficient` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
@@ -498,7 +544,7 @@ class Coefficient(Settings):
         coefficient will be calculated.
     value: :obj:`float`
         The explicit value of the eddy diffusion coefficient.
-    tkeb: :class:`~TKEB`
+    tkeb: :class:`~.TKEB`
         The path leading to the TKEB configurations.
     """
     @Settings.assign
@@ -509,8 +555,8 @@ class Coefficient(Settings):
 
 
 class TKEB(Settings):
-    """The :class:`~TKEB` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.TKEB` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
@@ -523,14 +569,14 @@ class TKEB(Settings):
 
 
 class Images(Settings):
-    """The :class:`~Images` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.Images` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
     quantity: :obj:`int`
         The number of images.
-    max_error: :class:`~Percentage`
+    max_error: :class:`~.Percentage`
         The max error allowed when changing the number of image sources by 1.
     """
     @Settings.assign
@@ -540,8 +586,8 @@ class Images(Settings):
 
 
 class ContourPlots(Settings):
-    """The :class:`~ContourPlots` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.ContourPlots` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
@@ -551,9 +597,9 @@ class ContourPlots(Settings):
         Show contour plots of the concentration value.
     exposure: :obj:`bool`
         Show the contour plots of the exposure value.
-    planes: :class:`~Planes`
+    planes: :class:`~.Planes`
         The planes where the contour plots are located.
-    creation_frequency: :class:`~NonNegativeFloat`
+    creation_frequency: :class:`~.NonNegativeFloat`
         How often we wish to create a contour plot of each plane in 1/s.
     number_of_contours: :obj:`int`
         The number of contours depicted.
@@ -563,7 +609,7 @@ class ContourPlots(Settings):
     scale: :obj:`str`
         The scale of the contours. Either logarithmic
         or linear.
-    contours: :class:`~ManualContours`
+    contours: :class:`~.ManualContours`
         If range is manual. Then set the min and max
         values of the contours.
     """
@@ -588,14 +634,14 @@ class Planes(Dict):
 
 
 class Plane(Settings):
-    """The :class:`~Plane` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.Plane` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
     axis: :obj:`str`
         Either an xy, zy, or xz plane.
-    distance: :class:`~NonNegativeFloat`
+    distance: :class:`~.NonNegativeFloat`
         How far along the remaining axis
         this plane is.
     """
@@ -606,14 +652,14 @@ class Plane(Settings):
 
 
 class ManualContours(Settings):
-    """The :class:`~ManualContours` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.ManualContours` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    min: :class:`~NonNegativeFloat`
+    min: :class:`~.NonNegativeFloat`
         The min value of the contours.
-    max: :class:`~NonNegativeFloat`
+    max: :class:`~.NonNegativeFloat`
         The max value of the contours.
 
     """
@@ -624,12 +670,12 @@ class ManualContours(Settings):
 
 
 class WellMixed(Settings):
-    """The :class:`~WellMixed` class. It inherits from
-    :class:`~Settings`.
+    """The :class:`~.WellMixed` class. It inherits from
+    :class:`~.Settings`.
 
     Attributes
     ---------
-    volume: :class:`~NonNegativeFloat`
+    volume: :class:`~.NonNegativeFloat`
         The total volume of the container.
     """
     @Settings.assign
