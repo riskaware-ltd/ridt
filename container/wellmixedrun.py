@@ -20,11 +20,17 @@ class WellMixedRun:
     def build_parameter_space(self):
         self._space = np.linspace(0.0, self.settings.total_time, self.settings.time_samples)
     
-    def prepare_instantaneous(self):
-        with ComputationalSpace(self.settings) as csb:
-            print(csb[1,2,2])
-            print(csb.shape)
-        
+    def prepare(self):
+
+        restrict = { 
+            "modes": self.settings.release_type,
+            "models": self.settings.dispersion_model
+        }
+
+        space = ComputationalSpace(self.settings, restrict)
+        print(space.shape)
+        space.axes
+   
     @property
     def settings(self):
         return self._settings

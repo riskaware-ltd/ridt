@@ -595,13 +595,15 @@ class Number(Terminus):
 
 class ComputationalSpace:
 
-    def __init__(self, setting: Type[Settings]):
+    def __init__(self, setting: Type[Settings], restrict: Dict[str, str]):
         self.setting = setting
+        self.restrict = restrict
         self.addresses = list()
         self.values = list()
         self.configuration_space = list()
-        self.explore(self.setting, [])
+        self.explore(self.setting, list())
         self.build_configuration_space()
+        print(self.addresses)
 
     def get_by_address(self, root: dict, address: List[str]):
         return reduce(operator.getitem, address, root)
@@ -609,8 +611,7 @@ class ComputationalSpace:
     def set_by_address(self, root: dict, address, value):
         self.get_by_address(root, address[:-1])[address[-1]] = value
 
-    def explore(self, root, path):
-        
+    def explore(self, root, path, restrict = None):
         if issubclass(type(root), List):
             branch = enumerate(root.value)
         elif issubclass(type(root), Dict):
@@ -618,7 +619,10 @@ class ComputationalSpace:
         elif issubclass(type(root), Settings):
             branch = [(k, v) for k, v in root.__dict__.items() if "__" not in k]
         else:
-            branch = []
+            branch = list()
+        if restrict:
+            branch = [(k, v) for k, v in branch if k == restrict]
+            print(branch)
         for key, item in branch:
             new_path = copy(path)
             if issubclass(type(item), Number):
@@ -628,7 +632,10 @@ class ComputationalSpace:
                     self.values.append(item.get)
             else:
                 new_path.append(key)
-                self.explore(item, new_path)
+                for k, v in self.restrict.items():
+                    new_restrict = v if key == k else None
+                    break
+                self.explore(item, new_path, new_restrict)
    
     def build_configuration_space(self):
         for batch in itertools.product(*self.values):
@@ -641,7 +648,7 @@ class ComputationalSpace:
         if not isinstance(indices, tuple):
             raise IndexError("only integers are valid when accessing arrays")
         if len(indices) > len(self.values):
-            raise IndexError("too many indices for array")
+            raise IndexError(f"too many indices for array {self.shape}")
         for idx, item in enumerate(indices):
             if not isinstance(item, int):
                 raise IndexError("only integers are valid when accessing arrays")
@@ -652,11 +659,20 @@ class ComputationalSpace:
             index += item * int(prod([len(v) for v in self.values[idx + 1:]]))
         return self.configuration_space[index]
 
-
-
     @property
     def shape(self):
         return tuple((len(v) for v in self.values))
+    
+    @property
+    def axes(self):
+        for item, space in zip(self.addresses, self.values):
+            print(self.build_path(item), space)
+
+    def build_path(self, elements: List[str]):
+        rv = ""
+        for item in elements:
+            rv += f"{item} -> "
+        return rv
 
     def __enter__(self):
         return self
