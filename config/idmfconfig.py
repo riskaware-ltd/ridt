@@ -107,6 +107,53 @@ class IDMFConfig(Settings):
         self.models = ModelSettings
 
     def consistency_check(self):
+        """Checker to be called after instantiating the :class:`~.IDMFConfig` class.
+        Maintains that certain requirements are met and caught before initializing the run.
+        Raises
+        ------
+        ValueError
+            If the end time of a fixed duration source is less than the start time.
+
+        ValueError
+            If there are more than five concentration or exposure thresholds.
+
+        ValueError
+            If the type of plane does not coincide with an orthogonal axis.
+
+        ValueError
+            If the plane lies outside of the dimensions of the container.
+
+        ValueError
+            If the min value of the manual contour is greater than the max value.
+
+        ValueError
+            If the contour range type is not manual or auto.
+
+        ValueError
+            If the contour scaling is not linear or logarithmic.
+
+        ValueError
+            if the release type is not instantaneous, fixedduration
+            or infiniteduration.
+
+        ValueError
+            If the type of dispersion model is not well mixed or
+            eddy diffusion.
+
+        ValueError
+            If the time units are not seconds, minutes or hours.
+
+        ValueError
+            If the concentration units are not
+            kgm-3, mgm-3, kgm-3, ppm, ppb or ppt.
+
+        ValueError
+            If the exposure units are not
+             mgminm-3 or kgsm-3.
+
+        ValueError
+            If the spatial units are not mm, cm, m.
+        """
         for key, value in self.fixed_duration.sources.value.items():
             if value.end_time < value.start_time:
                 raise ValueError("The start time must be smaller than the end time.")
@@ -194,13 +241,13 @@ class ModeSettings(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.InstantaneousSettings` class.
+        """The constructor for the :class:`~.ModeSettings` class.
 
         Parameters
         ----------
         values : :obj:`dict`
-            The dictionary corresponding to the instantaneous
-            settings configurations.
+            The dictionary corresponding to the mode settings
+            configurations.
         """
         self.instantaneous = InstantaneousSettings
         self.infinite_duration = InfiniteDurationSettings
@@ -234,7 +281,15 @@ class InstantaneousSettings(Settings):
 
 
 class InstantaneousSourceDict(Dict):
+    """The :class:`~.InstantaneousSourceDict` class. It inherits from
+    :class:`~.Dict`.
 
+    Attributes
+    ---------
+    type: :class:`~.InstantaneousSource`
+        Path to the dictionary of values of the instantaneous
+        sources.
+    """
     @Dict.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`~.InstantaneousSourceDict` class.
@@ -306,7 +361,15 @@ class InfiniteDurationSettings(Settings):
 
 
 class InfiniteDurationSourceDict(Dict):
+    """The :class:`~.InfiniteDurationSourceDict` class. It inherits from
+     :class:`~.Dict`.
 
+     Attributes
+     ---------
+     type: :class:`~.InfiniteDurationSource`
+         Path to the dictionary of values of the infinite duration
+         sources.
+     """
     @Dict.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`~.InfiniteDurationSourceDict` class.
@@ -378,6 +441,16 @@ class FixedDurationSettings(Settings):
 
 class FixedDurationSourceDict(Dict):
 
+    """The :class:`~.FixedDurationSourceDict` class. It inherits from
+    :class:`~.Dict`.
+
+    Attributes
+    ---------
+    type: :class:`~.FixedDurationSource`
+        Path to the dictionary of values of the fixed duration
+        sources.
+    """
+
     @Dict.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`~.FixedDurationSourceDict` class.
@@ -430,6 +503,16 @@ class FixedDurationSource(Settings):
 
 class MonitorLocations(Dict):
 
+    """The :class:`~.MonitorLocations` class. It inherits from
+    :class:`~.Dict`.
+
+    Attributes
+    ---------
+    values: :class:`~.Monitor`
+        Path to the dictionary of values of the monitors
+        in the simulation.
+    """
+
     @Dict.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`~.MonitorLocations` class.
@@ -458,6 +541,13 @@ class Monitor(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.Monitor` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the monitor locations.
+        """
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
         self.z = NonNegativeFloat
@@ -478,14 +568,37 @@ class Thresholds(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.Thresholds` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the exposure
+            and concentration thresholds.
+        """
         self.concentration = ThresholdList
         self.exposure = ThresholdList
 
 
 class ThresholdList(List):
+    """The :class:`~.ThresholdList` class. It inherits from
+    :class:`~.List`.
 
+    Attributes
+    ---------
+    type: :class:`~.Threshold`
+        Path to the dictionary of values of the thresholds
+        in the simulation.
+    """
     @List.assign
     def __init__(self, values: list):
+        """The constructor for the :class:`~.ThresholdList` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the thresholds.
+        """
         self.type = NonNegativeFloat
 
 
@@ -507,6 +620,14 @@ class EddyDiffusion(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.EddyDiffusion` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the eddy diffusion
+            model type.
+        """
         self.dimensions = Dimensions
         self.coefficient = Coefficient
         self.images = Images
@@ -528,6 +649,14 @@ class Dimensions(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.Dimensions` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the dimensions
+            of the container.
+        """
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
         self.z = NonNegativeFloat
@@ -549,6 +678,14 @@ class Coefficient(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.Coefficient` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the coefficient
+            calculations.
+        """
         self.calculation = str
         self.value = float
         self.tkeb = TKEB
@@ -565,6 +702,14 @@ class TKEB(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.TKEB` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the TKEB
+            equation.
+        """
         self.number_of_supply_vents = int
 
 
@@ -581,6 +726,14 @@ class Images(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.TKEB` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the TKEB
+            equation.
+        """
         self.quantity = int
         self.max_error = Percentage
 
@@ -615,6 +768,13 @@ class ContourPlots(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.ContourPlots` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the contour plots.
+        """
         self.contour = bool
         self.concentration = bool
         self.exposure = bool
@@ -627,9 +787,25 @@ class ContourPlots(Settings):
 
 
 class Planes(Dict):
+    """The :class:`~.Planes` class. It inherits from
+    :class:`~.Dict`.
 
+    Attributes
+    ---------
+    type: :class:`~.Plane`
+        Path to the dictionary of values for the
+        planes in the simulation.
+    """
     @Dict.assign
     def __init__(self, values: dict):
+        """The constructor for the :class:`~.Planes` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the planes
+            of the contour plots.
+        """
         self.type = Plane
 
 
@@ -647,6 +823,13 @@ class Plane(Settings):
     """
     @Settings.assign
     def __init__(self, value: dict):
+        """The constructor for the :class:`~.Plane` class.
+
+        Parameters
+        ----------
+        value : :obj:`dict`
+            The values corresponding to each plane.
+        """
         self.axis = str
         self.distance = NonNegativeFloat
 
@@ -665,6 +848,13 @@ class ManualContours(Settings):
     """
     @Settings.assign
     def __init__(self, value: dict):
+        """The constructor for the :class:`~.ManualContours` class.
+
+        Parameters
+        ----------
+        value : :obj:`dict`
+            The values corresponding to manual contours.
+        """
         self.min = NonNegativeFloat
         self.max = NonNegativeFloat
 
@@ -680,25 +870,72 @@ class WellMixed(Settings):
     """
     @Settings.assign
     def __init__(self, value: dict):
+        """The constructor for the :class:`~.WellMixed` class.
+
+        Parameters
+        ----------
+        value : :obj:`dict`
+            The values corresponding to well mixed model.
+        """
         self.volume = NonNegativeFloat
 
 
 class Percentage(Number):
+    """The :class:`~.Percentage` class. It inherits from
+    :class:`~.Number`.
 
+    Attributes
+    ---------
+    type :obj:`float`
+        The float value corresponding to a percentage.
+    """
     @Terminus.assign
     def __init__(self, value: float):
+        """The constructor for the :class:`~.Percentage` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
         self.type = float
 
     def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value doesn't lie within the bounds.
+        """
         self.lower_bound(0.0)
         self.upper_bound(100.0)
 
 
 class NonNegativeFloat(Number):
+    """The :class:`~.NonNegativeFloat` class. It inherits from
+    :class:`~.Number`.
 
+    Attributes
+    ---------
+    type :obj:`float`
+        The float value corresponding to a percentage.
+    """
     @Terminus.assign
     def __init__(self, value: float):
+        """The constructor for the :class:`~.NonNegativeFloat` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
         self.type = float
 
     def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 0.
+        """
         self.lower_bound(0.0)
