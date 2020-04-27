@@ -286,9 +286,9 @@ class Terminus(ABC):
 
         """
         if not hasattr(self, "type"):
-            raise AttributeError("The child class has no self.type attribute.")
+            raise TypeAttributeNotImplementedError(self.__class__)
         if not isinstance(self.type, type):
-            raise ValueError(f"The value of the type attribute should be a {type}")
+            raise TypeAttributeTypeError(self.__class__)
         if not isinstance(value, self.type):
             raise SettingTypeError(self.type, type(value))
         self.value = value
@@ -343,9 +343,9 @@ class List(Settings):
 
         """
         if not hasattr(self, "type"):
-            raise AttributeError("The child class has no self.type attribute.")
+            raise TypeAttributeNotImplementedError(self.__class__)
         if not isinstance(self.type, type):
-            raise ValueError(f"The value of the type attribute should be a {type}")
+            raise TypeAttributeTypeError(self.__class__)
 
         if not isinstance(values, list):
             raise SettingTypeError(list, type(values))
@@ -446,9 +446,9 @@ class Dict(Settings):
 
         """
         if not hasattr(self, "type"):
-            raise AttributeError("The child class has no self.type attribute.")
+            raise TypeAttributeNotImplementedError(self.__class__)
         if not isinstance(self.type, type):
-            raise ValueError(f"The value of the type attribute should be a {type}")
+            raise TypeAttributeTypeError(self.__class__)
 
         if not isinstance(values, dict):
             raise SettingTypeError(dict, type(values))
@@ -518,9 +518,9 @@ class Number(Terminus):
 
     def distribute(self, value):
         if not hasattr(self, "type"):
-            raise AttributeError("The child class has no self.type attribute.")
+            raise TypeAttributeNotImplementedError(self.__class__)
         if not isinstance(self.type, type):
-            raise ValueError(f"The value of the type attribute should be a {type}")
+            raise TypeAttributeTypeError(self.__class__)
 
         if type(value) is self.type:
             self.__value(value)
@@ -561,36 +561,38 @@ class Number(Terminus):
                 raise SettingRangeTypeError('num', int)
         except KeyError:
             raise SettingRangeKeyError("num")
-        self.value = list(linspace(value['min'], value['max'], abs(value['num'])))
+        self.value = list(linspace(value['min'],
+                                   value['max'],
+                                   abs(value['num'])))
         self._range = True
     
     def lower_bound(self, value):
         if isinstance(self.value, self.type):
             if self.value < value:
-                raise ValueError(f"Value must be > {value}.")
-        if isinstance(self.value, list):
+                raise ValueError(f"must be > {value}.")
+        elif isinstance(self.value, list):
             for item in self.value:
                 if item < value:
-                    raise ValueError(f"Values must be > {value}.")
-        if isinstance(self.value, dict):
+                    raise ValueError(f"must be > {value}.")
+        elif isinstance(self.value, dict):
             if self.value["min"] < value:
-                raise ValueError(f"'min' must be > {value}.")
+                raise ValueError(f"must be > {value}.")
             if self.value["max"] < value:
-                raise ValueError(f"'max' must be > {value}.")
+                raise ValueError(f"must be > {value}.")
     
     def upper_bound(self, value):
         if isinstance(self.value, self.type):
             if self.value > value:
-                raise ValueError(f"Value must be < {value}.")
-        if isinstance(self.value, list):
+                raise ValueError(f"must be < {value}.")
+        elif isinstance(self.value, list):
             for item in self.value:
                 if item > value:
-                    raise ValueError(f"Values must be < {value}.")
-        if isinstance(self.value, dict):
+                    raise ValueError(f"must be < {value}.")
+        elif isinstance(self.value, dict):
             if self.value["min"] > value:
-                raise ValueError(f"'min' must be < {value}.")
-            if self.value["max"] < value:
-                raise ValueError(f"'max' must be < {value}.")
+                raise ValueError(f"must be < {value}.")
+            if self.value["max"] > value:
+                raise ValueError(f"must be < {value}.")
 
 
 class ComputationalSpace:
@@ -603,7 +605,6 @@ class ComputationalSpace:
         self.configuration_space = list()
         self.explore(self.setting, list())
         self.build_configuration_space()
-        print(self.addresses)
 
     def get_by_address(self, root: dict, address: List[str]):
         return reduce(operator.getitem, address, root)
@@ -622,7 +623,6 @@ class ComputationalSpace:
             branch = list()
         if restrict:
             branch = [(k, v) for k, v in branch if k == restrict]
-            print(branch)
         for key, item in branch:
             new_path = copy(path)
             if issubclass(type(item), Number):
@@ -642,6 +642,7 @@ class ComputationalSpace:
             rv = copy(self.setting.__source__)
             for address, value in zip(self.addresses, batch):
                 self.set_by_address(rv, address, float(value))
+            
             self.configuration_space.append(type(self.setting)(rv))
     
     def __getitem__(self, indices):
@@ -652,7 +653,7 @@ class ComputationalSpace:
         for idx, item in enumerate(indices):
             if not isinstance(item, int):
                 raise IndexError("only integers are valid when accessing arrays")
-            if not 0 <= item < len(self.values):
+            if not 0 <= item < len(self.values[idx]):
                 raise IndexError(f"index {item} is out of bounds for axis {idx} with size {len(self.values[idx])}")
         index = 0
         for idx, item in enumerate(indices):
@@ -795,3 +796,63 @@ class SettingErrorMessage(Error):
             rv += f"{item}" + join
         rv += f"{str(self.original_error.msg)}"
         return rv
+
+
+class TypeAttributeNotImplementedError(Error):
+    """The exception raised when the `type` attribute has not been defined
+    in a Terminus, Number, List, or Dict derived class.
+
+    """
+    def __init__(self, derived_class):
+        """The constructor for the :class::`TypeAttributeNotImplementedError`
+        class.
+
+        Parameters
+        ----------
+        derived_class : :obj:`type`
+            The name of the derived class that raised the exception.
+        
+        """
+        self.msg = f"The {derived_class} class does not have a self.type "\
+                   f"attribute defined in its constructor."
+        
+
+class TypeAttributeNotImplementedError(Error):
+    """The exception raised when the `type` attribute has not been defined
+    in a Terminus, Number, List, or Dict derived class.
+
+    """
+    def __init__(self, derived_class):
+        """The constructor for the :class::`TypeAttributeNotImplementedError`
+        class.
+
+        Parameters
+        ----------
+        derived_class : :obj:`type`
+            The name of the derived class that raised the exception.
+        
+        """
+        self.msg = f"The {derived_class} class does not have a self.type "\
+                   f"attribute defined in its constructor."
+        super().__init__(self.msg)
+ 
+
+class TypeAttributeTypeError(Error):
+    """The exception raised when the value of the `type` attribute defined
+    in a Terminus, Number, List, or Dict derived class is not a :obj:`type`.
+
+    """
+    def __init__(self, derived_class):
+        """The constructor for the :class::`TypeAttributeNotImplementedError`
+        class.
+
+        Parameters
+        ----------
+        derived_class : :obj:`type`
+            The name of the derived class that raised the exception.
+        
+        """
+        self.msg = f"The {derived_class} class self.type attribute's value is"\
+                   f" not of type `type`."
+        super().__init__(self.msg)
+ 
