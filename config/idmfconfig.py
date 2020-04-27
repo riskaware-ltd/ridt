@@ -154,27 +154,27 @@ class IDMFConfig(Settings):
         ValueError
             If the spatial units are not mm, cm, m.
         """
-        for key, value in self.fixed_duration.sources.value.items():
+        for key, value in self.modes.fixed_duration.sources.items():
             if value.end_time < value.start_time:
                 raise ValueError("The start time must be smaller than the end time.")
-        if len([val for val in self.thresholds.concentration.value]) > 5:
+        if len([val for val in self.thresholds.concentration]) > 5:
             raise ValueError("Maximum of five concentration thresholds allowed")
-        if len([val for val in self.thresholds.exposure.value]) > 5:
+        if len([val for val in self.thresholds.exposure]) > 5:
             raise ValueError("Maximum of five concentration thresholds allowed")
-        for key, val in self.eddy_diffusion.contour_plots.planes.value.items():
+        for key, val in self.models.eddy_diffusion.contour_plots.planes.items():
             if val.axis not in ["xy", "xz", "zy"]:
                 raise ValueError(f"Plane {key} must be a xy, xz or zy plane.")
-            if val.axis == "xy" and val.distance > self.eddy_diffusion.dimensions.z:
+            if val.axis == "xy" and val.distance > self.models.eddy_diffusion.dimensions.z:
                 raise ValueError(f"Plane {key} lies out of the container's border.")
-            if val.axis == "xz" and val.distance > self.eddy_diffusion.dimensions.y:
+            if val.axis == "xz" and val.distance > self.models.eddy_diffusion.dimensions.y:
                 raise ValueError(f"Plane {key} lies out of the container's border.")
-            if val.axis == "zy" and val.distance > self.eddy_diffusion.dimensions.x:
+            if val.axis == "zy" and val.distance > self.models.eddy_diffusion.dimensions.x:
                 raise ValueError(f"Plane {key} lies out of the container's border.")
-        if self.eddy_diffusion.contour_plots.contours.min > self.eddy_diffusion.contour_plots.contours.max:
+        if self.models.eddy_diffusion.contour_plots.contours.min > self.models.eddy_diffusion.contour_plots.contours.max:
             raise ValueError("Manual contour min cannot be greater than manual contour max.")
-        if self.eddy_diffusion.contour_plots.range not in ["auto", "manual"]:
+        if self.models.eddy_diffusion.contour_plots.range not in ["auto", "manual"]:
             raise ValueError("Contour range must be either auto or manual.")
-        if self.eddy_diffusion.contour_plots.scale not in ["linear", "logarithmic"]:
+        if self.models.eddy_diffusion.contour_plots.scale not in ["linear", "logarithmic"]:
             raise ValueError("Contour scale must be either linear or logarithmic.")
         if self.release_type not in ["instantaneous", "infiniteduration", "fixedduration"]:
             raise ValueError("Release type must be either "
