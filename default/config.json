@@ -13,17 +13,24 @@
     "spatial_samples": 30,
 
     "total_air_change_rate": 1.0,
-    "fresh_air_change_rate": 0.1,
+    "fresh_air_change_rate": 100.0,
 
     "modes": {
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": 2.0,
-                    "y": 2.0,
-                    "z": 2.0,
-                    "mass": 1000000.0,
-                    "time": 12.0
+                    "x": 10.5,
+                    "y": 10.5,
+                    "z": 10.5,
+                    "mass": 1.0,
+                    "time": 1.0
+                },
+                "source_2": {
+                    "x": 15.5,
+                    "y": 15.5,
+                    "z": 10.5,
+                    "mass": 1.0,
+                    "time": 1.0
                 }
             }
         },
@@ -113,13 +120,13 @@
     "models":{
         "eddy_diffusion": {
             "dimensions": {
-                "x": 5.0,
-                "y": 5.0,
-                "z": 5.0
+                "x": 20.0,
+                "y": 20.0,
+                "z": 20.0
             },
             "coefficient": {
-                "calculation": "TKEB",
-                "value": 1.0,
+                "calculation": "EXPLICIT",
+                "value": 1.0,    
                 "tkeb": {
                     "number_of_supply_vents": 1
                 }
