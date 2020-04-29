@@ -32,24 +32,19 @@ class EddyDiffusion:
         concentration = []
         for source_name, source in sources.items():
             concentration.append([])
-            r_x = self.__exp(settings, xx, tt, dimension[0], source.x, coefficient[0])
-            r_y = self.__exp(settings, yy, tt, dimension[1], source.y, coefficient[0])
-            r_z = self.__exp(settings, zz, tt, dimension[2], source.z, coefficient[0])
+            r_x = self.__exp(settings, xx, tt, dimension[0], source.x,
+                             source.time, coefficient[0])
+            r_y = self.__exp(settings, yy, tt, dimension[1], source.y,
+                             source.time, coefficient[0])
+            r_z = self.__exp(settings, zz, tt, dimension[2], source.z,
+                             source.time, coefficient[0])
             concentration[-1].append(
                 self.__instantaneous_concentration(settings, source.mass, coefficient[0],
                                                    tt, r_x, r_y, r_z)
             )
         concentration = np.squeeze(concentration)
-        print(len(concentration))
-        print(len(concentration[0]))
-        print(len(concentration[0][0]))
-        print(len(concentration[0][0][0]))
-        print(len(concentration[0][0][0][0]))
-        concentration = self.__pointwise_addition(concentration[0], concentration[1])
-        print(len(concentration))
-        print(len(concentration[0]))
-        print(len(concentration[0][0]))
-        print(len(concentration[0][0][0]))
+        # concentration = self.__pointwise_addition(concentration[0], concentration[1])
+        print(concentration[0])
         return concentration
 
     def __instantaneous_concentration(
@@ -83,6 +78,7 @@ class EddyDiffusion:
               t: float,
               dimension: float,
               source_pos: float,
+              source_time: float,
               coefficient: float):
 
         image_num = settings.models.eddy_diffusion.images.quantity
@@ -157,12 +153,44 @@ w = EddyDiffusion()
 g = w(config)
 
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
+
+"""fig1 = plt.figure()
 for i in range(100):
-    for j in range(3):
-        x = np.linspace(0, 1, 3)
-        y = np.linspace(0, 1, 3)
-        xx, yy = np.meshgrid(x, y)
+    for j in range(5):
+        contour, = plt.contourf([], [], g[i][j])
+        plt.title(f"Time: {i}, Z: {j}")
+        contour_anim = anim.FuncAnimation(fig1, update_contour, 10)
+        plt.show()"""
 
-        plt.contourf(xx, yy, g[i][j])
-        plt.show()
+
+x = np.linspace(0, 5, 5)
+y = np.linspace(0, 5, 5)
+xx, yy = np.meshgrid(x, y)
+
+fig = plt.figure()
+ax = plt.axes(xlim=(0, 5), ylim=(0, 5), xlabel='x', ylabel='y')
+
+cvals = np.linspace(0, 1, 6)      # set contour values
+cont = plt.contourf(x, y, g[0][0], cvals)    # first image on screen
+plt.colorbar()
+
+
+def get_g(i):
+    return g[i][2]
+
+
+def animate(i):
+    global cont
+    z = get_g(i)
+    for c in cont.collections:
+        c.remove()  # removes only the contours, leaves the rest intact
+    cont = plt.contourf(xx, yy, z, cvals)
+    # plt.title('t = %i:  %.2f' % (i,z[5,5]))
+    return cont
+
+
+anim = animation.FuncAnimation(fig, animate, frames=100, repeat=True)
+plt.show()
+# anim.save("", writer=animation.FFMpegWriter())
