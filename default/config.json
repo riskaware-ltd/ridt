@@ -1,6 +1,6 @@
 {
     "dispersion_model": "well_mixed",
-    "release_type": "infinite_duration",
+    "release_type": "instantaneous",
 
     "time_units": "s",
     "time_samples": 100,
@@ -10,7 +10,7 @@
     "exposure_units": "mgminm-3",
 
     "spatial_units": "m",
-    "spatial_samples": 10,
+    "spatial_samples": 30,
 
     "total_air_change_rate": 1.0,
     "fresh_air_change_rate": 0.1,
@@ -19,18 +19,11 @@
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0,
-                    "mass": 20.0,
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0,
+                    "mass": 1000000.0,
                     "time": 12.0
-                },
-                "source_2": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0,
-                    "mass": 10.0,
-                    "time": 20.0
                 }
             }
         },
@@ -120,19 +113,19 @@
     "models":{
         "eddy_diffusion": {
             "dimensions": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 5.0,
+                "y": 5.0,
+                "z": 5.0
             },
             "coefficient": {
-                "calculation": "TKEB/EXPLICIT",
+                "calculation": "TKEB",
                 "value": 1.0,
                 "tkeb": {
                     "number_of_supply_vents": 1
                 }
             },
             "images": {
-                "quantity": 0,
+                "quantity": 1,
                 "max_error": 1.0
             },
             "contour_plots": {
