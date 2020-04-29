@@ -176,7 +176,7 @@ class IDMFConfig(Settings):
             raise ValueError("Contour range must be either auto or manual.")
         if self.models.eddy_diffusion.contour_plots.scale not in ["linear", "logarithmic"]:
             raise ValueError("Contour scale must be either linear or logarithmic.")
-        if self.release_type not in ["instantaneous", "infiniteduration", "fixedduration"]:
+        if self.release_type not in ["instantaneous", "infinite_duration", "fixed_duration"]:
             raise ValueError("Release type must be either "
                              "instantaneous, infiniteduration or fixedduration.")
         if self.dispersion_model not in ["well_mixed", "eddy_diffusion"]:

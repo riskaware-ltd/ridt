@@ -1,8 +1,18 @@
+from numpy import ndarray
+from numpy import zeros
+from numpy import ones
+from numpy import full
+from numpy import exp
+from numpy import power
+from numpy import pi
+from numpy import heaviside
+from numpy import maximum
+from numpy import where
+from numpy import cumsum
+
 from config.configfileparser import ConfigFileParser
 from config.idmfconfig import IDMFConfig
-
-import numpy as np
-from numpy import ndarray
+from config.idmfconfig import InstantaneousSource
 
 
 class EddyDiffusion:
@@ -11,61 +21,83 @@ class EddyDiffusion:
         self.settings = settings
         self.dim = self.settings.models.eddy_diffusion.dimensions
         self.volume = self.dim.x * self.dim.y * self.dim.z
-        self.tkeb_value = self.__coeff()
+        self.shape = (self.settings.time_samples,
+                      self.settings.spatial_samples,
+                      self.settings.spatial_samples,
+                      self.settings.spatial_samples)
+        self.conc = zeros(self.shape)
+        self.zero = zeros(self.shape)
+        self.one = ones(self.shape)
+        self.diff_coeff = self.__diffusion_coefficient()
 
     def __call__(self, x: float, y: float,  z: float, t: float):
         try:
-            return getattr(self, f"_{self.settings.release_type}")(x, y, z, t)
+            return  getattr(self, f"_{self.settings.release_type}")(x, y, z, t)
         except AttributeError as e:
             f"Release type must be instantaneous, fixed_duration or infinite_duration"
 
-    def _instantaneous(self, xx, yy, zz, tt):
+    def _instantaneous(self, x: float, y: float, z: float, t: float):
         sources = self.settings.modes.instantaneous.sources
-        concentration = []
-        for source_name, source in sources.items():
-            print(source)
-            r_x = self.__exp(xx, tt, self.dim.x, source.x, source.time)
-            r_y = self.__exp(yy, tt, self.dim.y, source.y, source.time)
-            r_z = self.__exp(zz, tt, self.dim.z, source.z, source.time)
-            concentration.append(self.__instantaneous_concentration(source.mass, tt, r_x, r_y, r_z))
-        return sum(concentration)
+        for source in sources.values():
+            t_shift = maximum(t - source.time, self.one)
+            self.conc += self.heaviside(t, source.time) *\
+                source.mass * self.__concentration(source, x, y, z, t_shift)
+        return self.conc
 
-    def __instantaneous_concentration( self, mass: float, time: float, r_x: float, r_y: float, r_z: float):
-        fa_rate = self.settings.fresh_air_change_rate
-        return (mass * np.exp(-(fa_rate / self.volume) * time) / (8 * np.power(np.pi * self.tkeb_value * time, 3/2))) * r_x * r_y * r_z
-
-    def __infinite(self, x, y, z, t, n):
-        return float
+    def _infinite_duration(self, x: float, y: float, z: float, t: float):
+        sources = getattr(self.settings.modes, self.settings.release_type).sources
+        for source in sources.values():
+            t_shift = maximum(t - source.time, self.one)
+            self.conc +=  self.heaviside(t, source.time) *\
+                source.rate * self.__concentration(source, x, y, z, t_shift)
+        return cumsum(self.conc, axis=0) *\
+            (self.settings.total_time / self.settings.time_samples)
     
-    def __fixed(self, x, y, z, t, n):
-        return float
+    def _fixed_duration(self, x: float, y: float, z: float, t: float):
+        sources = getattr(self.settings.modes, self.settings.release_type).sources
+        for source in sources.values():
+            print(self.conc.shape)
+            t_shift = maximum(t - source.start_time, self.one)
+            self.conc += self.heaviside(t, source.start_time) *\
+                source.rate * self.__concentration(source, x, y, z, t_shift) -\
+                self.heaviside(t, source.end_time) *\
+                source.rate * self.__concentration(source, x, y, z, t_shift)
+        return cumsum(self.conc, axis=0) *\
+            (self.settings.total_time / self.settings.time_samples)
+    
+    def heaviside(self, value: float, offset: float = 0):
+        return where(value > offset, self.one, self.zero)
 
-    def __exp(self,
-              pos: float,
-              t: float,
-              dimension: float,
-              source_pos: float,
-              source_time: float):
+    def __concentration(self,
+                       source: InstantaneousSource,
+                       x: float,
+                       y: float,
+                       z: float,
+                       t: float):
+        r_x = self.__exp(x, t, self.dim.x, source.x)
+        r_y = self.__exp(y, t, self.dim.y, source.y)
+        r_z = self.__exp(z, t, self.dim.z, source.z)
+        return self.__coeff(t) * r_x * r_y * r_z
+
+    def __exp(self, position: float, t: float, bound: float, source_loc: float):
 
         image_num = self.settings.models.eddy_diffusion.images.quantity
+        def image(arg):
+            return exp((-power(arg, 2)) / 4 * self.diff_coeff * t)
 
         rv = []
-        print(source_pos)
-        for n in range(-image_num, image_num + 1):
-            rv.append(
-                np.exp((-np.power(pos + 2 * n * dimension - source_pos, 2)) / 4 * self.tkeb_value * t) +
-                np.exp((-np.power(pos + 2 * n * dimension + source_pos, 2)) / 4 * self.tkeb_value * t)
-            )
+        for image_index in range(-image_num, image_num + 1):
+            rv.append(image(position + 2 * image_index * bound - source_loc) +
+                      image(position + 2 * image_index * bound + source_loc))
         return sum(rv)
 
-    def __coeff(self):
-        coeff = self.settings.models.eddy_diffusion.coefficient
-        if coeff.calculation == "EXPLICIT":
-            return coeff.value
-        if coeff.calculation == "TKEB":
-            return self.__tkeb()
+    def __coeff(self, t: float):
+        fa_rate = self.settings.fresh_air_change_rate
+        num = exp(-t * fa_rate / self.volume)
+        den  = 8 * power(pi * self.diff_coeff * t, 3 / 2)
+        return num / den
 
-    def __tkeb(self):
+    def __diffusion_coefficient(self):
         vent_number = self.settings\
             .models\
             .eddy_diffusion\
@@ -73,12 +105,16 @@ class EddyDiffusion:
             .tkeb\
             .number_of_supply_vents
 
-        tkeb_term = self.settings.total_air_change_rate /\
-            np.power(self.volume * np.power(vent_number, 2), 1/3)
+        coeff = self.settings.models.eddy_diffusion.coefficient
+        if coeff.calculation == "EXPLICIT":
+            return coeff.value
+        else:
+            tkeb_term = self.settings.total_air_change_rate /\
+                power(self.volume * power(vent_number, 2), 1/3)
 
-        upper_pi = 0.827 * tkeb_term + 0.0565
-        regression = 0.824 * tkeb_term
-        lower_pi = max(0.822 * tkeb_term - 0.0565, 0.001)
+            upper_pi = 0.827 * tkeb_term + 0.0565
+            regression = 0.824 * tkeb_term
+            lower_pi = max(0.822 * tkeb_term - 0.0565, 0.001)
 
-        # TODO ASK DSTL about which or all coeffs to evaulate.
-        return regression
+            # TODO ASK DSTL about which or all coeffs to evaulate.
+            return regression

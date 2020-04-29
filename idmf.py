@@ -45,7 +45,6 @@ def idmf(config_file, output_dir):
 
     e = EddyDiffusion(s) 
     out = e(xx, yy, zz, tt)
-    print(out[:, 15, 15, 15])
 
     x = np.linspace(0, s.models.eddy_diffusion.dimensions.x, s.spatial_samples)
     y = np.linspace(0, s.models.eddy_diffusion.dimensions.y, s.spatial_samples)
