@@ -154,13 +154,29 @@ class IDMFConfig(Settings):
         ValueError
             If the spatial units are not mm, cm, m.
         """
+
+        for key, value in self.modes.instantaneous.sources.items():
+            if value.time > self.total_time:
+                raise ValueError(f"{key}'s start time must be smaller than the total time.")
+
+        for key, value in self.modes.infinite_duration.sources.items():
+            if value.time > self.total_time:
+                raise ValueError(f"{key}'s start time must be smaller than the total time.")
+
+        for key, value in self.modes.fixed_duration.sources.items():
+            if value.start_time > self.total_time or value.end_time > self.total_time:
+                raise ValueError(f"{key}'s source times must be smaller than the total time.")
+
         for key, value in self.modes.fixed_duration.sources.items():
             if value.end_time < value.start_time:
                 raise ValueError("The start time must be smaller than the end time.")
+
         if len([val for val in self.thresholds.concentration]) > 5:
             raise ValueError("Maximum of five concentration thresholds allowed")
+
         if len([val for val in self.thresholds.exposure]) > 5:
             raise ValueError("Maximum of five concentration thresholds allowed")
+
         for key, val in self.models.eddy_diffusion.contour_plots.planes.items():
             if val.axis not in ["xy", "xz", "zy"]:
                 raise ValueError(f"Plane {key} must be a xy, xz or zy plane.")
@@ -170,6 +186,7 @@ class IDMFConfig(Settings):
                 raise ValueError(f"Plane {key} lies out of the container's border.")
             if val.axis == "zy" and val.distance > self.models.eddy_diffusion.dimensions.x:
                 raise ValueError(f"Plane {key} lies out of the container's border.")
+
         if self.models.eddy_diffusion.contour_plots.contours.min > self.models.eddy_diffusion.contour_plots.contours.max:
             raise ValueError("Manual contour min cannot be greater than manual contour max.")
         if self.models.eddy_diffusion.contour_plots.range not in ["auto", "manual"]:
