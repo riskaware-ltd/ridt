@@ -35,10 +35,7 @@ class EddyDiffusion:
         self.sources = getattr(self.settings.modes, self.settings.release_type).sources
 
     def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: ndarray):
-        try:
-            return  getattr(self, f"{self.settings.release_type}")(x, y, z, t)
-        except AttributeError as e:
-            f"Release type must be instantaneous, fixed_duration or infinite_duration"
+        return getattr(self, f"{self.settings.release_type}")(x, y, z, t)
 
     def instantaneous(self, x: ndarray, y: ndarray, z: ndarray, t: List[float]): 
         for idx, time in enumerate(t):
@@ -66,7 +63,7 @@ class EddyDiffusion:
                         source, x, y, z, time - source.start_time)
                 if time - source.start_time - source.end_time > 0:
                     self.conc_decay[idx] += source.rate * self.__concentration(
-                        source, x, y, z, time - source.start_time - source.end_time)
+                        source, x, y, z, time - source.end_time)
         self.conc = cumsum(array(self.conc), axis=0) * self.delta_t
         self.conc_decay = cumsum(array(self.conc_decay), axis=0) * self.delta_t
         return self.conc - self.conc_decay
