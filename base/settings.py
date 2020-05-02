@@ -360,13 +360,19 @@ class List(Settings):
                     self.value.append(self.type(item))
                 except SettingErrorMessage as e:
                     raise SettingErrorMessage(f"[{idx}]", e)
+                except SettingTypeError as e:
+                    raise SettingErrorMessage(f"[{idx}]", original_error=e)
+                except SettingRangeTypeError as e:
+                    raise SettingErrorMessage(f"[{idx}]", original_error=e)
+                except SettingRangeKeyError as e:
+                    raise SettingErrorMessage(f"[{idx}]", original_error=e)
         else:
             for idx, item in enumerate(values):
                 try:
                     if not isinstance(item, self.type):
                         raise SettingTypeError(self.type, type(item))
                     self.value.append(item)
-                except SettingTypeError as e:
+                except SettingStringSelectionError as e:
                     raise SettingErrorMessage(f"[{idx}]", original_error=e)
 
     def __getitem__(self, key):
@@ -463,6 +469,12 @@ class Dict(Settings):
                     self.value[key] = self.type(value)
                 except SettingErrorMessage as e:
                     raise SettingErrorMessage(key, e)
+                except SettingRangeTypeError as e:
+                    raise SettingErrorMessage(key, original_error=e)
+                except SettingRangeKeyError as e:
+                    raise SettingErrorMessage(key, original_error=e)
+                except SettingStringSelectionError as e:
+                    raise SettingErrorMessage(key, original_error=e)
         else:
             for key, value in values.items():
                 try:
@@ -713,7 +725,7 @@ class SettingRangeKeyError(Error):
         """The constructor for the :class:`SettingRangeKeyError` class.
 
         """
-        self.msg = f"No '{key}' parameter provided for range."
+        self.msg = f"No '{key}' parameter provided for range"
 
 
 class SettingRangeTypeError(Error):
@@ -725,7 +737,7 @@ class SettingRangeTypeError(Error):
         """The constructor for the :class:`SettingRangeTypeError` class.
 
         """
-        self.msg = f"The '{key}' parameter was not {expected_type}."
+        self.msg = f"The '{key}' parameter was not {expected_type}"
 
 
 class SettingStringSelectionError(Error):
