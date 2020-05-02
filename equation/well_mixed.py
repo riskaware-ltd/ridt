@@ -1,3 +1,7 @@
+from numpy import ndarray
+from numpy import zeros
+from numpy import array 
+
 from config.idmfconfig import IDMFConfig
 
 import numpy as np
@@ -5,86 +9,47 @@ import numpy as np
 
 class WellMixed:
 
-    def __init__(self):
-        pass
+    def __init__(self, settings: IDMFConfig):
+        self.settings = settings
+        self.sources = getattr(self.settings.modes, self.settings.release_type).sources
+        self.volume = settings.models.well_mixed.volume
+        self.fa_rate = settings.fresh_air_change_rate
+        self.shape = (self.settings.time_samples,)
+        self.conc = zeros(self.shape)
 
-    def __call__(self, settings: IDMFConfig, time_array: np.ndarray):
-        try:
-            return getattr(self, f"_{settings.release_type}")(settings, time_array)
-        except AttributeError:
-            f"Release type must be instantaneous, fixed_duration or infinite_duration"
+    def __call__(self, t: np.ndarray):
+        return getattr(self, f"{settings.release_type}")(t)
 
-    def _instantaneous(self, settings: IDMFConfig, time_array: np.ndarray):
-        sources = settings.modes.instantaneous.sources
-        concentration = []
-        for source_name, source in sources.items():
-            concentration.append(self.__instantaneous_concentration(
-                settings, source, time_array))
-        return [sum(x) for x in zip(*concentration)]
+    def __concentration(self, t: float):
+        return np.exp(-(self.fa_rate / self.volume) * t)
 
-    @staticmethod
-    def __instantaneous_concentration(settings, source, time_array: np.ndarray):
-        volume = settings.models.well_mixed.volume
-        fa_rate = settings.fresh_air_change_rate
-        concentration = []
-        for time in time_array:
-            if time < source.time:
-                concentration.append(0)
-            if time >= source.time:
-                concentration.append(
-                    (source.mass / volume) * np.exp(
-                        -(fa_rate / volume) * (time - source.time))
-                )
-        return concentration
+    def instantaneous(self, t: np.ndarray):
+        for idx, time in enumerate(t):
+            for source in self.sources.values():
+                if time - source.time > 0:
+                    self.conc[idx] += (source.mass / volume) * __concentration(
+                        time - source.time)
+        return array(self.conc)
 
-    def _infinite_duration(self, settings: IDMFConfig, time_array: np.ndarray):
-        sources = settings.modes.infinite_duration.sources
-        concentration = []
-        for source_name, source in sources.items():
-            concentration.append(self.__infinite_concentration(
-                settings, source, time_array))
-        return [sum(x) for x in zip(*concentration)]
+    def infinite_duration(self, t: ndarray):
+        for idx, time in enumerate(t):
+            for source in self.sources.values():
+                if time - source.time > 0:
+                    self.conc[idx] += (source.rate / fa_rate) *\
+                        (1 - __concentration(time - source.time))
+        return array(self.conc)
 
-    @staticmethod
-    def __infinite_concentration(settings, source, time_array: np.ndarray):
-        volume = settings.models.well_mixed.volume
-        fa_rate = settings.fresh_air_change_rate
-        concentration = []
-        for time in time_array:
-            if time < source.time:
-                concentration.append(0)
-            if time >= source.time:
-                concentration.append(
-                    (source.rate / fa_rate) * (1 - np.exp(
-                        -(fa_rate / volume) * (time - source.time)))
-                )
-        return concentration
-
-    def _fixed_duration(self, settings: IDMFConfig, time_array: np.ndarray):
-        sources = settings.modes.fixed_duration.sources
-        concentration = []
-        for source_name, source in sources.items():
-            concentration.append(self.__fixed_concentration(
-                settings, source, time_array))
-        return [sum(x) for x in zip(*concentration)]
-
-    @staticmethod
-    def __fixed_concentration(settings, source, time_array: np.ndarray):
-        volume = settings.models.well_mixed.volume
-        fa_rate = settings.fresh_air_change_rate
-        concentration = []
-        for index, time in enumerate(time_array):
-            if time < source.start_time:
-                concentration.append(0)
-            if source.start_time <= time <= source.end_time:
-                concentration.append(
-                    (source.rate / fa_rate) * (1 - np.exp(
-                        -(fa_rate / volume) * (time - source.start_time)))
-                )
-            if time > source.end_time:
-                concentration.append(
-                    concentration[int(source.end_time) - 1] * np.exp(
-                        -(fa_rate / volume) * (time - source.end_time)
-                    )
-                )
-        return concentration
+    def fixed_duration(self, t: ndarray):
+        end_int = 0
+        for idx, time in enumerate(t):
+            for source in self.sources.values():
+                if time < source.start_time:
+                    pass
+                elif time < source.end_time:
+                    self.conc[idx] += (source.rate / fa_rate) *\
+                        (1 - __concentration(time - source.start_time))
+                else:
+                    if not end_int:
+                        end_int = idx - 1
+                    self.conc[idx] += self.conc[end_int] * __concentration(
+                        time - source.start_time - source.end_time)
