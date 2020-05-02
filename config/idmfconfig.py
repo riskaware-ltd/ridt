@@ -163,28 +163,57 @@ class IDMFConfig(Settings):
                 for axis in ["x", "y", "z"]:
                     par = getattr(value, axis)
                     bound = getattr(dim, axis)
-                    if par < 0 or par > bound:
-                        raise ConsistencyError(
-                    f"{mode} source {key} x position ({par}) is "
-                    f"outside simulation space domain (0, {bound}).")
+                    if isinstance(par, list):
+                        for item in par:
+                            if item < 0 or item > bound:
+                                raise ConsistencyError(
+                            f"{mode} source {key} x position is "
+                            f"outside simulation space domain (0, {bound}).")
+                    else:
+                        if par < 0 or par > bound:
+                            raise ConsistencyError(
+                        f"{mode} source {key} x position is "
+                        f"outside simulation space domain (0, {bound}).")
+
 
         for mode in ["instantaneous", "infinite_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
-                if value.time > self.total_time:
-                    raise ConsistencyError(
-                f"{mode} source {key} time ({value.time}) is "
-                f"outside simulation time domain [0, {self.total_time}).")
+                if isinstance(value.time, list):
+                    for item in value.time:
+                        if item > self.total_time:
+                            raise ConsistencyError(
+                        f"{mode} source {key} time is "
+                        f"outside simulation time domain [0, {self.total_time}).")
+                else:
+                    if value.time > self.total_time:
+                        raise ConsistencyError(
+                    f"{mode} source {key} time is "
+                    f"outside simulation time domain [0, {self.total_time}).")
 
         for key, value in getattr(self.modes, "fixed_duration").sources.items():
-            if value.start_time > self.total_time:
-                raise ConsistencyError(
-            f"{mode} source {key} start time ({value.start_time}) is "
-            f"outside simulation time domain [0, {self.total_time}).")
-            if value.end_time > self.total_time:
-                raise ConsistencyError(
-            f"{mode} source {key} end time ({value.end_time}) is "
-            f"outside simulation time domain [0, {self.total_time}).")
+            if isinstance(value.start_time, list):
+                for item in value.start_time:
+                    if item > self.total_time:
+                        raise ConsistencyError(
+                    f"{mode} source {key} start time is "
+                    f"outside simulation time domain [0, {self.total_time}).")
+            else:
+                if value.start_time > self.total_time:
+                    raise ConsistencyError(
+                f"{mode} source {key} start time is "
+                f"outside simulation time domain [0, {self.total_time}).")
 
+            if isinstance(value.end_time, list):
+                for item in value.end_time:
+                    if item > self.total_time:
+                        raise ConsistencyError(
+                    f"{mode} source {key} end time is "
+                    f"outside simulation time domain [0, {self.total_time}).")
+            else:
+                if value.end_time > self.total_time:
+                    raise ConsistencyError(
+                f"{mode} source {key} end time is "
+                f"outside simulation time domain [0, {self.total_time}).")
 
         contours = self.models.eddy_diffusion.contour_plots.contours
         if contours.min >= contours.max:
