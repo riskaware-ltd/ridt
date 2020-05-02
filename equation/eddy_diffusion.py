@@ -26,9 +26,8 @@ class EddyDiffusion:
         self.settings = settings
         self.dim = self.settings.models.eddy_diffusion.dimensions
         self.volume = self.dim.x * self.dim.y * self.dim.z
-        self.shape = (self.settings.models.eddy_diffusion.spatial_samples.x,
-                      self.settings.models.eddy_diffusion.spatial_samples.y,
-                      self.settings.models.eddy_diffusion.spatial_samples.z)
+        samples = self.settings.models.eddy_diffusion.spatial_samples
+        self.shape = (samples.x, samples.y, samples.z)
         self.zero = zeros(self.shape)
         self.conc = [copy(self.zero) for i in range(self.settings.time_samples)]
         self.delta_t = self.settings.total_time / self.settings.time_samples
@@ -86,10 +85,11 @@ class EddyDiffusion:
     def __exp(self, position: ndarray, t: float, bound: float, source_loc: float):
 
         image_num = self.settings.models.eddy_diffusion.images.quantity
+
         def image(arg):
             return exp(-power(arg, 2) / (4 * self.diff_coeff * t))
 
-        rv = []
+        rv = list()
         for image_index in range(-image_num, image_num + 1):
             value = position + 2 * image_index * bound
             rv.append(image(value - source_loc) + image(value + source_loc))
