@@ -18,25 +18,25 @@ class WellMixed:
         self.conc = zeros(self.shape)
 
     def __call__(self, t: np.ndarray):
-        return getattr(self, f"{settings.release_type}")(t)
+        return getattr(self, f"{self.settings.release_type}")(t)
 
-    def __concentration(self, t: float):
+    def concentration(self, t: float):
         return np.exp(-(self.fa_rate / self.volume) * t)
 
     def instantaneous(self, t: np.ndarray):
         for idx, time in enumerate(t):
             for source in self.sources.values():
                 if time - source.time > 0:
-                    self.conc[idx] += (source.mass / volume) * __concentration(
-                        time - source.time)
+                    self.conc[idx] += (source.mass / self.volume) *\
+                        self.concentration(time - source.time)
         return array(self.conc)
 
     def infinite_duration(self, t: ndarray):
         for idx, time in enumerate(t):
             for source in self.sources.values():
                 if time - source.time > 0:
-                    self.conc[idx] += (source.rate / fa_rate) *\
-                        (1 - __concentration(time - source.time))
+                    self.conc[idx] += (source.rate / self.fa_rate) *\
+                        (1 - self.concentration(time - source.time))
         return array(self.conc)
 
     def fixed_duration(self, t: ndarray):
@@ -46,10 +46,11 @@ class WellMixed:
                 if time < source.start_time:
                     pass
                 elif time < source.end_time:
-                    self.conc[idx] += (source.rate / fa_rate) *\
-                        (1 - __concentration(time - source.start_time))
+                    self.conc[idx] += (source.rate / self.fa_rate) *\
+                        (1 - self.concentration(time - source.start_time))
                 else:
                     if not end_int:
                         end_int = idx - 1
-                    self.conc[idx] += self.conc[end_int] * __concentration(
-                        time - source.start_time - source.end_time)
+                    self.conc[idx] += self.conc[end_int] * self.concentration(
+                        time - source.end_time)
+        return array(self.conc)
