@@ -96,7 +96,6 @@ class IDMFConfig(Settings):
         self.exposure_units = str
 
         self.spatial_units = str
-        self.spatial_samples = int
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
@@ -627,11 +626,17 @@ class EddyDiffusion(Settings):
     ---------
     dimensions: :class:`~.Dimensions`
         Path to the dimensions of the container.
+
+    spatial_samples: :class:`~.SpatialSamples`
+        Path to the spatial_samples container.
+
     coefficient: :class:`~.Coefficient`
         Path to the eddy diffusion
         coefficient calculations.
+
     images: :class:`~.Images`
         Path to the image configurations.
+
     contour_plots: :class:`~.ContourPlots`
         Path to the contour plots configurations.
     """
@@ -646,6 +651,7 @@ class EddyDiffusion(Settings):
             model type.
         """
         self.dimensions = Dimensions
+        self.spatial_samples = SpatialSamples
         self.coefficient = Coefficient
         self.images = Images
         self.contour_plots = ContourPlots
@@ -677,6 +683,34 @@ class Dimensions(Settings):
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
         self.z = NonNegativeFloat
+
+
+class SpatialSamples(Settings):
+    """The :class:`~.SpatialSamples` class. It inherits from
+    :class:`~.Settings`.
+
+    Attributes
+    ---------
+    x: :class:`~.NonNegativeInteger`
+        The x magnitude of the container.
+    y: :class:`~.NonNegativeInteger`
+        The y magnitude of the container.
+    z: :class:`~.NonNegativeInteger`
+        The z magnitude of the container.
+    """
+    @Settings.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`~.SpatialSamples` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the spatial samples
+            of the container.
+        """
+        self.x = NonNegativeInteger
+        self.y = NonNegativeInteger
+        self.z = NonNegativeInteger
 
 
 class Coefficient(Settings):
@@ -932,10 +966,6 @@ class NonNegativeFloat(Number):
     """The :class:`~.NonNegativeFloat` class. It inherits from
     :class:`~.Number`.
 
-    Attributes
-    ---------
-    type :obj:`float`
-        The float value corresponding to a percentage.
     """
     @Terminus.assign
     def __init__(self, value: float):
@@ -956,3 +986,32 @@ class NonNegativeFloat(Number):
             If the value isn't greater than 0.
         """
         self.lower_bound(0.0)
+
+
+class NonNegativeInteger(Terminus):
+    """The :class:`~.NonNegativeInteger` class. It inherits from
+    :class:`~.Terminus`.
+
+
+    """
+    @Terminus.assign
+    def __init__(self, value: float):
+        """The constructor for the :class:`~.NonNegativeInteger` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
+        self.type = int
+
+    def check(self):
+        """Abstract method from :class:`~.Terminus`.
+
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 0.
+        """
+        if not self.value > 0:
+            raise ValueError("Must be > 0")

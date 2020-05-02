@@ -26,9 +26,9 @@ class EddyDiffusion:
         self.settings = settings
         self.dim = self.settings.models.eddy_diffusion.dimensions
         self.volume = self.dim.x * self.dim.y * self.dim.z
-        self.shape = (self.settings.spatial_samples,
-                      self.settings.spatial_samples,
-                      self.settings.spatial_samples)
+        self.shape = (self.settings.models.eddy_diffusion.spatial_samples.x,
+                      self.settings.models.eddy_diffusion.spatial_samples.y,
+                      self.settings.models.eddy_diffusion.spatial_samples.z)
         self.zero = zeros(self.shape)
         self.conc = [copy(self.zero) for i in range(self.settings.time_samples)]
         self.delta_t = self.settings.total_time / self.settings.time_samples
