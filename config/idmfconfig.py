@@ -3,6 +3,8 @@ from base.settings import Terminus
 from base.settings import List
 from base.settings import Dict
 from base.settings import Number
+from base.settings import StringSelection
+from base.exceptions import Error
 
 
 class IDMFConfig(Settings):
@@ -20,7 +22,7 @@ class IDMFConfig(Settings):
     release_type: :obj:`str`
         A string selecting the release type.
 
-    time_units: :obj:`str`
+    time_units: :class:`~.TimeUnits` 
         A string dictating the units of time used within the
         simulation.
 
@@ -32,14 +34,14 @@ class IDMFConfig(Settings):
         A non negative float which corresponds to the total
         time of the simulation.
 
-    concentration_units: :obj:`str`
+    concentration_units: :class:`~.ConcentrationUnits` 
         The units of the concentration of the material.
 
-    exposure_units: :obj:`str`
+    exposure_units: :class:`~.ExposureUnits` 
         The units of the exposure of the material
         within the container.
 
-    spatial_units: :obj:`str`
+    spatial_units: :class:`~.SpatialUnits` 
         The spatial units of the container.
 
     spatial_samples: :obj:`int`
@@ -86,16 +88,17 @@ class IDMFConfig(Settings):
         None
 
         """
-        self.dispersion_model = str
-        self.release_type = str
+        self.dispersion_model = DispersionModel
+        self.release_type = ReleaseType
 
-        self.time_units = str
-        self.time_samples = int
+        self.time_units = TimeUnits
+        self.time_samples = NonNegativeInteger
         self.total_time = NonNegativeFloat
-        self.concentration_units = str
-        self.exposure_units = str
 
-        self.spatial_units = str
+        self.concentration_units = ConcentrationUnits
+        self.exposure_units = ExposureUnits
+
+        self.spatial_units = SpatialUnits
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
@@ -154,57 +157,192 @@ class IDMFConfig(Settings):
             If the spatial units are not mm, cm, m.
         """
 
-        for key, value in self.modes.instantaneous.sources.items():
-            if value.time > self.total_time:
-                raise ValueError(f"{key}'s start time must be smaller than the total time.")
+        for mode in ["instantaneous", "infinite_duration", "fixed_duration"]:
+            for key, value in getattr(self.modes, mode).sources.items():
+                dim = self.models.eddy_diffusion.dimensions
+                for axis in ["x", "y", "z"]:
+                    par = getattr(value, axis)
+                    bound = getattr(dim, axis)
+                    if par < 0 or par > bound:
+                        raise ConsistencyError(
+                    f"{mode} source {key} x position ({par}) is "
+                    f"outside simulation space domain (0, {bound}).")
 
-        for key, value in self.modes.infinite_duration.sources.items():
-            if value.time > self.total_time:
-                raise ValueError(f"{key}'s start time must be smaller than the total time.")
+        for mode in ["instantaneous", "infinite_duration"]:
+            for key, value in getattr(self.modes, mode).sources.items():
+                if value.time > self.total_time:
+                    raise ConsistencyError(
+                f"{mode} source {key} time ({value.time}) is "
+                f"outside simulation time domain [0, {self.total_time}).")
 
-        for key, value in self.modes.fixed_duration.sources.items():
-            if value.start_time > self.total_time or value.end_time > self.total_time:
-                raise ValueError(f"{key}'s source times must be smaller than the total time.")
+        for key, value in getattr(self.modes, "fixed_duration").sources.items():
+            if value.start_time > self.total_time:
+                raise ConsistencyError(
+            f"{mode} source {key} start time ({value.start_time}) is "
+            f"outside simulation time domain [0, {self.total_time}).")
+            if value.end_time > self.total_time:
+                raise ConsistencyError(
+            f"{mode} source {key} end time ({value.end_time}) is "
+            f"outside simulation time domain [0, {self.total_time}).")
 
-        for key, value in self.modes.fixed_duration.sources.items():
-            if value.end_time < value.start_time:
-                raise ValueError("The start time must be smaller than the end time.")
 
-        if len([val for val in self.thresholds.concentration]) > 5:
-            raise ValueError("Maximum of five concentration thresholds allowed")
+        contours = self.models.eddy_diffusion.contour_plots.contours
+        if contours.min >= contours.max:
+            raise ConsistencyError(
+        f"contour min ({contours.min}) >= contour max ({contours.max}).")
 
-        if len([val for val in self.thresholds.exposure]) > 5:
-            raise ValueError("Maximum of five concentration thresholds allowed")
 
-        for key, val in self.models.eddy_diffusion.contour_plots.planes.items():
-            if val.axis not in ["xy", "xz", "zy"]:
-                raise ValueError(f"Plane {key} must be a xy, xz or zy plane.")
-            if val.axis == "xy" and val.distance > self.models.eddy_diffusion.dimensions.z:
-                raise ValueError(f"Plane {key} lies out of the container's border.")
-            if val.axis == "xz" and val.distance > self.models.eddy_diffusion.dimensions.y:
-                raise ValueError(f"Plane {key} lies out of the container's border.")
-            if val.axis == "zy" and val.distance > self.models.eddy_diffusion.dimensions.x:
-                raise ValueError(f"Plane {key} lies out of the container's border.")
+class DispersionModel(StringSelection):
+    """The dispersion model selection setting class.
 
-        if self.models.eddy_diffusion.contour_plots.contours.min > self.models.eddy_diffusion.contour_plots.contours.max:
-            raise ValueError("Manual contour min cannot be greater than manual contour max.")
-        if self.models.eddy_diffusion.contour_plots.range not in ["auto", "manual"]:
-            raise ValueError("Contour range must be either auto or manual.")
-        if self.models.eddy_diffusion.contour_plots.scale not in ["linear", "logarithmic"]:
-            raise ValueError("Contour scale must be either linear or logarithmic.")
-        if self.release_type not in ["instantaneous", "infinite_duration", "fixed_duration"]:
-            raise ValueError("Release type must be either "
-                             "instantaneous, infiniteduration or fixedduration.")
-        if self.dispersion_model not in ["well_mixed", "eddy_diffusion"]:
-            raise ValueError("Dispersion model muse be either well_mixed or eddy_diffusion.")
-        if self.time_units not in ["s", "m", "h"]:
-            raise ValueError("Time units must be either s, m or h.")
-        if self.concentration_units not in ["kgm-3", "mgm-3", "kgm-3", "ppm", "ppb", "ppt"]:
-            raise ValueError("Concentration units must be kgm-3, mgm-3, kgm-3, ppm, ppb or ppt.")
-        if self.exposure_units not in ["mgminm-3", "kgsm-3"]:
-            raise ValueError("Exposure units must be mgminm-3 or kgsm-3.")
-        if self.spatial_units not in ["mm", "cm", "m"]:
-            raise ValueError("Spatial units must be mm, cm or m.")
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: str):
+        """The constructor for the :class:`DispersionModel` class.
+
+        value : :obj:`str`
+            The string indicating the dispersion model selection.
+        """
+        self.options = [
+            "eddy_diffusion",
+            "well_mixed"
+        ]
+
+    def check(self):
+        pass
+
+
+class ReleaseType(StringSelection):
+    """The release type selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`ReleaseType` class.
+
+        value : :obj:`str`
+            The string indicating the release type selection.
+        """
+        self.options = [
+            "instantaneous",
+            "infinite_duration",
+            "fixed_duration"
+        ]
+
+    def check(self):
+        pass
+
+
+class TimeUnits(StringSelection):
+    """The time units selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`TimeUnits` class.
+
+        value : :obj:`str`
+            The string indicating the time units selection.
+        """
+        self.options = [
+            "s",
+            "m",
+            "h"
+        ]
+
+    def check(self):
+        pass
+
+
+class ConcentrationUnits(StringSelection):
+    """The time units selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`ConcentrationUnits` class.
+
+        value : :obj:`str`
+            The string indicating the concentration units selection.
+        """
+        self.options = [
+            "kgm-3",
+            "mgm-3",
+            "kgm-3",
+            "ppm",
+            "ppb",
+            "ppt"
+        ]
+    def check(self):
+        pass
+
+
+class ExposureUnits(StringSelection):
+    """The time units selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`ExposureUnits` class.
+
+        value : :obj:`str`
+            The string indicating the exposure units selection.
+        """
+        self.options = [
+            "mgminm-3",
+            "kgsm-3"
+        ]
+
+    def check(self):
+        pass
+
+
+class SpatialUnits(StringSelection):
+    """The time units selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`SpatialUnits` class.
+
+        value : :obj:`str`
+            The string indicating the spatial units selection.
+        """
+        self.options = [
+            "m",
+            "cm",
+            "mm"
+        ]
+
+    def check(self):
+        pass
+
+
+class ConsistencyError(Error):
+    """The exception raised if a consistency check is failed.
+
+    """
+
+    def __init__(self, msg: str):
+        """The constructor for the :class:`ConsistencyError` class
+
+        Parameters
+        ----------
+
+        """
+        super().__init__(msg)
 
 
 class ModelSettings(Settings):
@@ -720,7 +858,7 @@ class Coefficient(Settings):
     Attributes
     ---------
     calculation: :obj:`str`
-        A string dictating the way the eddy diffusion
+        A string dictating the way the eddy diffusion 
         coefficient will be calculated.
     value: :obj:`float`
         The explicit value of the eddy diffusion coefficient.
@@ -737,9 +875,56 @@ class Coefficient(Settings):
             The values corresponding to the coefficient
             calculations.
         """
-        self.calculation = str
-        self.value = float
+        self.calculation = CoefficientMode
+        self.value = ExplicitCoefficient
         self.tkeb = TKEB
+
+
+class CoefficientMode(StringSelection):
+    """The diffusion coefficient mode selection
+    It inherits from :class:`~.Terminus`.
+
+    """
+    @Terminus.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`CoefficientMode` class.
+
+        value : :obj:`str`
+            The string indicating the way to calculate the diffusion coefficient.
+        """
+        self.options = [
+            "EXPLICIT",
+            "TKEB"
+        ]
+
+    def check(self):
+        pass
+
+
+class ExplicitCoefficient(Number):
+    """The setting for the explicit value of the diffusion coefficient.
+
+    Inherits from :class:`~.Number`.
+    """
+    @Terminus.assign
+    def __init__(self, value: float):
+        """The constructor for the :class:`~.ExplicitCoefficient` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
+        self.type = float
+
+    def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 1e-3.
+        """
+        self.lower_bound(1e-3)
 
 
 class TKEB(Settings):
@@ -785,7 +970,7 @@ class Images(Settings):
             The values corresponding to the TKEB
             equation.
         """
-        self.quantity = int
+        self.quantity = NonNegativeInteger
         self.max_error = Percentage
 
 
@@ -831,10 +1016,54 @@ class ContourPlots(Settings):
         self.exposure = bool
         self.planes = Planes
         self.creation_frequency = NonNegativeFloat
-        self.number_of_contours = int
-        self.range = str
-        self.scale = str
+        self.number_of_contours = NonNegativeInteger
+        self.range = RangeMode
+        self.scale = ScaleType 
         self.contours = ManualContours
+
+
+class RangeMode(StringSelection):
+    """The contour range mode selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: str):
+        """The constructor for the :class:`RangeMode` class.
+
+        value : :obj:`str`
+            The string indicating the range mode selection.
+        """
+        self.options = [
+            "auto",
+            "manual"
+        ]
+
+    def check(self):
+        pass
+
+
+class ScaleType(StringSelection):
+    """The contour scale type selection setting class.
+
+    It inherits from :class:`~.Terminus`.
+
+    """
+    @Terminus.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`ScaleType` class.
+
+        value : :obj:`str`
+            The string indicating the scale type selection.
+        """
+        self.options = [
+            "linear",
+            "logarithmic"
+        ]
+
+    def check(self):
+        pass
 
 
 class Planes(Dict):
@@ -868,6 +1097,7 @@ class Plane(Settings):
     ---------
     axis: :obj:`str`
         Either an xy, zy, or xz plane.
+
     distance: :class:`~.NonNegativeFloat`
         How far along the remaining axis
         this plane is.
@@ -881,8 +1111,28 @@ class Plane(Settings):
         value : :obj:`dict`
             The values corresponding to each plane.
         """
-        self.axis = str
+        self.axis = Axis
         self.distance = NonNegativeFloat
+
+
+class Axis(Terminus):
+    """The axis selection setting class.
+
+    It inherits from :class:`~.Terminus`.
+
+    """
+    @Terminus.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`Axis` class.
+
+        value : :obj:`str`
+            The string indicating the axis.
+        """
+        self.type = str
+
+    def check(self):
+        if self.value not in ["xy", "yz", "xz"]:
+            raise ValueError("must be one of [xy, yz, xz]")
 
 
 class ManualContours(Settings):
@@ -988,9 +1238,9 @@ class NonNegativeFloat(Number):
         self.lower_bound(0.0)
 
 
-class NonNegativeInteger(Terminus):
+class NonNegativeInteger(Number):
     """The :class:`~.NonNegativeInteger` class. It inherits from
-    :class:`~.Terminus`.
+    :class:`~.Number`.
 
 
     """
@@ -1013,5 +1263,4 @@ class NonNegativeInteger(Terminus):
         ValueError
             If the value isn't greater than 0.
         """
-        if not self.value > 0:
-            raise ValueError("Must be > 0")
+        self.lower_bound(0)

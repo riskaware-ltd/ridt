@@ -164,6 +164,8 @@ class Settings:
                     raise SettingErrorMessage(setting, original_error=e)
                 except SettingRangeKeyError as e:
                     raise SettingErrorMessage(setting, original_error=e)
+                except SettingStringSelectionError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
                 except SettingErrorMessage as e:
                     raise SettingErrorMessage(setting, branch_error=e)
             else:
@@ -510,6 +512,25 @@ class Dict(Settings):
             return self.value.items()
 
 
+class StringSelection(Terminus):
+    
+    @property
+    def get(self):
+        return self.value
+
+    def distribute(self, value):
+        if not hasattr(self, "options"):
+            raise OptionsAttributeNotImplementedError(self.__class__)
+        if not isinstance(self.options, list):
+            raise OptionsAttributeTypeError(self.__class__)
+        if not isinstance(value, str):
+            raise SettingTypeError(str, type(value))
+        elif value not in self.options:
+            raise SettingStringSelectionError(self.options)
+        else:
+            self.value = value
+
+
 class Number(Terminus):
 
     @property
@@ -569,30 +590,30 @@ class Number(Terminus):
     def lower_bound(self, value):
         if isinstance(self.value, self.type):
             if self.value < value:
-                raise ValueError(f"must be > {value}.")
+                raise ValueError(f"must be > {value}")
         elif isinstance(self.value, list):
             for item in self.value:
                 if item < value:
-                    raise ValueError(f"must be > {value}.")
+                    raise ValueError(f"must be > {value}")
         elif isinstance(self.value, dict):
             if self.value["min"] < value:
-                raise ValueError(f"must be > {value}.")
+                raise ValueError(f"must be > {value}")
             if self.value["max"] < value:
-                raise ValueError(f"must be > {value}.")
+                raise ValueError(f"must be > {value}")
     
     def upper_bound(self, value):
         if isinstance(self.value, self.type):
             if self.value > value:
-                raise ValueError(f"must be < {value}.")
+                raise ValueError(f"must be < {value}")
         elif isinstance(self.value, list):
             for item in self.value:
                 if item > value:
-                    raise ValueError(f"must be < {value}.")
+                    raise ValueError(f"must be < {value}")
         elif isinstance(self.value, dict):
             if self.value["min"] > value:
-                raise ValueError(f"must be < {value}.")
+                raise ValueError(f"must be < {value}")
             if self.value["max"] > value:
-                raise ValueError(f"must be < {value}.")
+                raise ValueError(f"must be < {value}")
 
 
 class ComputationalSpace:
@@ -707,6 +728,18 @@ class SettingRangeTypeError(Error):
         self.msg = f"The '{key}' parameter was not {expected_type}."
 
 
+class SettingStringSelectionError(Error):
+    """The exception raised when a :class:`~.StringSelection` instance is
+    passed an invalid value.
+
+    """
+    def __init__(self, allowed: List[str]):
+        """The constructor for the :class:`SettingRangeTypeError` class.
+
+        """
+        self.msg = f"must be one of {allowed}"
+
+
 class SettingNotFoundError(Error):
     """The exception raised when a setting cannot be found in the passed
     :obj:`dict`.
@@ -798,13 +831,13 @@ class SettingErrorMessage(Error):
         return rv
 
 
-class TypeAttributeNotImplementedError(Error):
-    """The exception raised when the `type` attribute has not been defined
-    in a Terminus, Number, List, or Dict derived class.
+class OptionsAttributeNotImplementedError(Error):
+    """The exception raised when the `options` attribute has not been defined
+    in a StringSelection derived class.
 
     """
     def __init__(self, derived_class):
-        """The constructor for the :class::`TypeAttributeNotImplementedError`
+        """The constructor for the :class::`OptionsAttributeNotImplementedError`
         class.
 
         Parameters
@@ -813,8 +846,30 @@ class TypeAttributeNotImplementedError(Error):
             The name of the derived class that raised the exception.
         
         """
-        self.msg = f"The {derived_class} class does not have a self.type "\
+        self.msg = f"The {derived_class} class does not have a self.options"\
                    f"attribute defined in its constructor."
+  
+
+class OptionsAttributeTypeError(Error):
+    """The exception raised when the value of the `options` attribute defined
+    in a StringSelection derived class is not a :obj:`list`, or one of its
+    elements is not a string.
+
+    """
+    def __init__(self, derived_class):
+        """The constructor for the :class::`OptionsAttributeTypeError`
+        class.
+
+        Parameters
+        ----------
+        derived_class : :obj:`type`
+            The name of the derived class that raised the exception.
+        
+        """
+        self.msg = f"The {derived_class} class self.options attribute's value "\
+                   f"is not of type {list}, or one of its elements is not of"\
+                   f" type {str}"
+        super().__init__(self.msg)
         
 
 class TypeAttributeNotImplementedError(Error):
@@ -843,7 +898,7 @@ class TypeAttributeTypeError(Error):
 
     """
     def __init__(self, derived_class):
-        """The constructor for the :class::`TypeAttributeNotImplementedError`
+        """The constructor for the :class::`TypeAttributeTypeError`
         class.
 
         Parameters
@@ -855,4 +910,3 @@ class TypeAttributeTypeError(Error):
         self.msg = f"The {derived_class} class self.type attribute's value is"\
                    f" not of type `type`."
         super().__init__(self.msg)
- 
