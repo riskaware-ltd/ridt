@@ -26,7 +26,7 @@ class WellMixed:
     def instantaneous(self, t: np.ndarray):
         for idx, time in enumerate(t):
             for source in self.sources.values():
-                if time - source.time > 0:
+                if time - source.time >= 0:
                     self.conc[idx] += (source.mass / self.volume) *\
                         self.concentration(time - source.time)
         return array(self.conc)
@@ -34,7 +34,7 @@ class WellMixed:
     def infinite_duration(self, t: ndarray):
         for idx, time in enumerate(t):
             for source in self.sources.values():
-                if time - source.time > 0:
+                if time - source.time >= 0:
                     self.conc[idx] += (source.rate / self.fa_rate) *\
                         (1 - self.concentration(time - source.time))
         return array(self.conc)
