@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from config.idmfconfig import IDMFConfig
+from config import IDMFConfig
 
 
 class TestConsistencyChecker(unittest.TestCase):
