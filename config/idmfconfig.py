@@ -98,12 +98,10 @@ class IDMFConfig(Settings):
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
 
-        self.spatial_units = SpatialUnits
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
         self.modes = ModeSettings
-        self.monitor_locations = MonitorLocations
         self.thresholds = Thresholds
 
         self.models = ModelSettings
@@ -684,52 +682,26 @@ class FixedDurationSource(Settings):
         self.end_time = NonNegativeFloat
 
 
-class MonitorLocations(Dict):
-
-    """The :class:`~.MonitorLocations` class. It inherits from
-    :class:`~.Dict`.
-
-    Attributes
-    ---------
-    values: :class:`~.Monitor`
-        Path to the dictionary of values of the monitors
-        in the simulation.
-    """
-
-    @Dict.assign
-    def __init__(self, values: dict):
-        """The constructor for the :class:`~.MonitorLocations` class.
-
-        Parameters
-        ----------
-        values : :obj:`dict`
-            The dictionary corresponding to the fixed duration
-             sources configurations.
-        """
-        self.type = Monitor
-
-
-class Monitor(Settings):
-    """The :class:`~.Monitor` class. It inherits from
-    :class:`~.Settings`.
+class Point(Settings):
+    """The :class:`~.Point` class. It inherits from :class:`~.Settings`.
 
     Attributes
     ---------
     x: :class:`~.NonNegativeFloat`
-        The x coordinate of the monitor.
+        The x coordinate of the point.
     y: :class:`~.NonNegativeFloat`
-        The y coordinate of the monitor.
+        The y coordinate of the point.
     z: :class:`~.NonNegativeFloat`
-        The z coordinate of the monitor.
+        The z coordinate of the point.
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.Monitor` class.
+        """The constructor for the :class:`~.Point` class.
 
         Parameters
         ----------
         values : :obj:`dict`
-            The values corresponding to the monitor locations.
+            The values corresponding to the point location.
         """
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
@@ -817,12 +789,52 @@ class EddyDiffusion(Settings):
             The values corresponding to the eddy diffusion
             model type.
         """
+        self.spatial_units = SpatialUnits
         self.dimensions = Dimensions
         self.spatial_samples = SpatialSamples
+        self.monitor_locations = MonitorLocations
         self.coefficient = Coefficient
         self.images = Images
         self.contour_plots = ContourPlots
+        self.line_plots = LinePlots
 
+
+class LinePlots(Settings):
+    """The :class:`~.LinePlots` class. It inherits from
+    :class:`~.Settings`.
+
+    Attributes
+    ----------
+    output : :obj:`bool`
+        Whether or not we output the contour plots.
+
+    """
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.output = bool
+
+
+class MonitorLocations(Settings):
+    """The :class:`~.MonitorLocations` class. It inherits from
+    :class:`~.Settings`.
+
+    Attributes
+    ---------
+    points : :class:`~.Points`
+        The dictionary of points to be monitored.
+
+    lines : :class:`~.Lines`
+        The dictionary of lines to be monitored.
+
+    planes : :class:`~.Planes`
+        The dictionary of planes to be monitored.
+
+    """
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.points = Points
+        self.lines = Lines
+        self.planes = Planes
 
 class Dimensions(Settings):
     """The :class:`~.Dimensions` class. It inherits from
@@ -1009,27 +1021,33 @@ class ContourPlots(Settings):
 
     Attributes
     ---------
-    contour: :obj:`bool`
-        Whether or not we have contour plots.
+    output : :obj:`bool`
+        Whether or not we output the contour plots.
+
     concentration: :obj:`bool`
         Show contour plots of the concentration value.
+
     exposure: :obj:`bool`
         Show the contour plots of the exposure value.
-    planes: :class:`~.Planes`
-        The planes where the contour plots are located.
+
     creation_frequency: :class:`~.NonNegativeFloat`
         How often we wish to create a contour plot of each plane in 1/s.
+
     number_of_contours: :obj:`int`
         The number of contours depicted.
+
     range: :obj:`str`
         The range of the contours. Can be auto
         or manually set.
+
     scale: :obj:`str`
         The scale of the contours. Either logarithmic
         or linear.
+
     contours: :class:`~.ManualContours`
         If range is manual. Then set the min and max
         values of the contours.
+
     """
     @Settings.assign
     def __init__(self, values: dict):
@@ -1040,10 +1058,9 @@ class ContourPlots(Settings):
         values : :obj:`dict`
             The values corresponding to the contour plots.
         """
-        self.contour = bool
+        self.output = bool
         self.concentration = bool
         self.exposure = bool
-        self.planes = Planes
         self.creation_frequency = NonNegativeFloat
         self.number_of_contours = NonNegativeInteger
         self.range = RangeMode
@@ -1095,6 +1112,80 @@ class ScaleType(StringSelection):
         pass
 
 
+class Points(Dict):
+
+    """The :class:`~.Points` class. It inherits from
+    :class:`~.Dict`.
+
+    Attributes
+    ---------
+    type: :class:`~.Point`
+        Path to the dictionary of values for the points to be monitored
+
+    """
+    @Dict.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`~.Points` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the points to be monitored.
+
+        """
+        self.type = Point
+
+
+class Lines(Dict):
+
+    """The :class:`~.Lines` class. It inherits from
+    :class:`~.Dict`.
+
+    Attributes
+    ---------
+    type: :class:`~.Line`
+        Path to the dictionary of lines to be monitored.
+
+    """
+    @Dict.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`~.Lines` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the lines to be monitored.
+
+        """
+        self.type = Line
+
+
+class Line(Settings):
+    """The :class:`~.Line` class. It inherits from
+    :class:`~.Settings`.
+
+    Attributes
+    ---------
+    pointA: :class:`~.Point`
+        The first of two points defining the line in 3D space.
+
+    pointB: :class:`~.Point`
+        The second of two points defining the line in 3D space.
+
+    """
+    @Settings.assign
+    def __init__(self, value: dict):
+        """The constructor for the :class:`~.Line` class.
+
+        Parameters
+        ----------
+        value : :obj:`dict`
+            The values corresponding to each line.
+        """
+        self.pointA = Point
+        self.pointB = Point
+
+
 class Planes(Dict):
     """The :class:`~.Planes` class. It inherits from
     :class:`~.Dict`.
@@ -1102,8 +1193,7 @@ class Planes(Dict):
     Attributes
     ---------
     type: :class:`~.Plane`
-        Path to the dictionary of values for the
-        planes in the simulation.
+        Path to the dictionary of planes to be monitored.
     """
     @Dict.assign
     def __init__(self, values: dict):
@@ -1112,8 +1202,8 @@ class Planes(Dict):
         Parameters
         ----------
         values : :obj:`dict`
-            The values corresponding to the planes
-            of the contour plots.
+            The values corresponding to the planes to be monitored.
+
         """
         self.type = Plane
 
@@ -1144,24 +1234,27 @@ class Plane(Settings):
         self.distance = NonNegativeFloat
 
 
-class Axis(Terminus):
+class Axis(StringSelection):
     """The axis selection setting class.
 
     It inherits from :class:`~.Terminus`.
 
     """
     @Terminus.assign
-    def __init__(self, values: dict):
+    def __init__(self, value: str):
         """The constructor for the :class:`Axis` class.
 
         value : :obj:`str`
             The string indicating the axis.
         """
-        self.type = str
+        self.options = [
+            "xy",
+            "yz",
+            "xz"
+        ]
 
     def check(self):
-        if self.value not in ["xy", "yz", "xz"]:
-            raise ValueError("must be one of [xy, yz, xz]")
+        pass
 
 
 class ManualContours(Settings):
