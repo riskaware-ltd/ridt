@@ -10,7 +10,7 @@ from equation import WellMixed
 class TestWellMixed(unittest.TestCase):
 
     def setUp(self) -> None:
-        with open("../default/test_config.json") as f:
+        with open("/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
 
         self.config = IDMFConfig(loaded_json)
@@ -26,6 +26,7 @@ class TestWellMixed(unittest.TestCase):
             value = np.exp(-time)
 
             self.assertEqual(exp, value)
+            self.assertEqual(type(exp), np.float64)
 
     def test_instantaneous(self):
         self.wm.sources = getattr(self.wm.settings.modes, "instantaneous").sources
@@ -36,6 +37,8 @@ class TestWellMixed(unittest.TestCase):
             self.assertEqual(
                 inst_conc[idx], value
             )
+            self.assertEqual(type(inst_conc[idx]), np.float64)
+        self.assertEqual(type(inst_conc), np.ndarray)
 
     def test_infinite(self):
         self.wm.sources = getattr(self.wm.settings.modes, "infinite_duration").sources
@@ -46,6 +49,8 @@ class TestWellMixed(unittest.TestCase):
             self.assertEqual(
                 inf_conc[idx], value
             )
+            self.assertEqual(type(inf_conc[idx]), np.float64)
+        self.assertEqual(type(inf_conc), np.ndarray)
 
     def test_fixed(self):
         self.wm.sources = getattr(self.wm.settings.modes, "fixed_duration").sources
@@ -67,6 +72,8 @@ class TestWellMixed(unittest.TestCase):
             self.assertEqual(
                 fixed_conc[idx], value
             )
+            self.assertEqual(type(fixed_conc[idx]), np.float64)
+        self.assertEqual(type(fixed_conc), np.ndarray)
 
 
 if __name__ == "__main__":
