@@ -94,9 +94,9 @@
                 "z": 3.0
             },
             "spatial_samples": {
-                "x": 15,
-                "y": 15,
-                "z": 15 
+                "x": 10,
+                "y": 10,
+                "z": 10
             },
             "coefficient": {
                 "calculation": "EXPLICIT",

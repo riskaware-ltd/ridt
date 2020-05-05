@@ -18,55 +18,64 @@ class TestWellMixed(unittest.TestCase):
 
         self.ed = EddyDiffusion(self.config)
 
+        self.time_array = np.linspace(0, 10, 10)
+        self.x_space = np.linspace(0, 10, 10)
+        self.y_space = np.linspace(0, 10, 10)
+        self.z_space = np.linspace(0, 10, 10)
+
     def test_coeff(self):
-        time_array = np.linspace(0, 1, 10)
+        time_array = np.linspace(0, 10, 10)
         concentration = self.ed._EddyDiffusion__coeff(time_array)
         self.assertEqual(type(concentration), np.ndarray)
 
     def test_instantaneous(self):
         self.ed.sources = getattr(self.ed.settings.modes, "instantaneous").sources
-        time_array = np.linspace(0, 10, 10)
-        x_space = np.linspace(0, 10, 10)
-        y_space = np.linspace(0, 10, 10)
-        z_space = np.linspace(0, 10, 10)
 
-        concentration = self.ed.instantaneous(x_space, y_space, z_space, time_array)
-        print(concentration)
+        concentration = self.ed.instantaneous(
+            self.x_space, self.y_space, self.z_space, self.time_array)
+        self.assertEqual(type(concentration), np.ndarray)
 
     def test_infinite(self):
-        self.wm.sources = getattr(self.wm.settings.modes, "infinite_duration").sources
-        time_array = np.linspace(0, 10, 10)
-        concentration = 1 - np.exp(-time_array)
-        inf_conc = self.wm.infinite_duration(time_array)
-        for idx, value in enumerate(concentration):
-            self.assertEqual(
-                inf_conc[idx], value
-            )
-            self.assertEqual(type(inf_conc[idx]), np.float64)
-        self.assertEqual(type(inf_conc), np.ndarray)
+        self.ed.sources = getattr(self.ed.settings.modes, "infinite_duration").sources
+
+        concentration = self.ed.infinite_duration(
+            self.x_space, self.y_space, self.z_space, self.time_array)
+        self.assertEqual(type(concentration), np.ndarray)
 
     def test_fixed(self):
-        self.wm.sources = getattr(self.wm.settings.modes, "fixed_duration").sources
-        time_array = np.linspace(0, 1, 10)
-        concentration = np.zeros(time_array.shape)
-        for idx, time in enumerate(time_array):
-            for source in self.wm.sources.values():
-                if time - source.start_time < 0:
-                    concentration[idx] += 0
-                if source.start_time <= time <= source.end_time:
-                    concentration[idx] += 1 - np.exp(-(time - source.start_time))
-                if time > source.end_time:
-                    concentration[idx] += concentration[4] * \
-                        np.exp(-(time - source.end_time))
+        self.ed.sources = getattr(self.ed.settings.modes, "fixed_duration").sources
 
-        fixed_conc = self.wm.fixed_duration(time_array)
+        concentration = self.ed.fixed_duration(
+            self.x_space, self.y_space, self.z_space, self.time_array)
+        self.assertEqual(type(concentration), np.ndarray)
 
-        for idx, value in enumerate(concentration):
+    def test_exp(self):
+        bound = 1
+        source_loc = 1
+        t = 1
+        rv = self.ed._EddyDiffusion__exp(
+            self.x_space, t, bound, source_loc
+        )
+        self.assertEqual(type(rv), np.ndarray)
+
+    def test_diffusion_coefficient(self):
+        self.ed.settings.models.eddy_diffusion.coefficient.calculation = "EXPLICIT"
+        self.assertEqual(
+            type(self.ed._EddyDiffusion__diffusion_coefficient()), float
+        )
+        self.ed.settings.models.eddy_diffusion.coefficient.calculation = "VALUE"
+        self.assertEqual(
+            type(self.ed._EddyDiffusion__diffusion_coefficient()), np.float64
+        )
+
+    def test_concentration(self):
+        self.ed.sources = getattr(self.ed.settings.modes, "fixed_duration").sources
+        time = 1
+        for source in self.ed.sources.values():
             self.assertEqual(
-                fixed_conc[idx], value
+                type(self.ed._EddyDiffusion__concentration(source, self.x_space, self.y_space, self.z_space, time)),
+                np.ndarray
             )
-            self.assertEqual(type(fixed_conc[idx]), np.float64)
-        self.assertEqual(type(fixed_conc), np.ndarray)
 
 
 if __name__ == "__main__":
