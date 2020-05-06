@@ -1,28 +1,27 @@
 {
+    £$%^&*: 132
     "dispersion_model": "eddy_diffusion",
-    "release_type": "infinite_duration",
+    "release_type": "fixed_duration",
 
     "time_units": "s",
-    "time_samples": 10,
-    "total_time": 1.0,
+    "time_samples": 50,
+    "total_time": 10.0,
 
     "concentration_units": "kgm-3",
     "exposure_units": "mgminm-3",
 
-    "spatial_units": "m",
-
     "total_air_change_rate": 1.0,
-    "fresh_air_change_rate": 1.0,
+    "fresh_air_change_rate": 0.2,
 
     "modes": {
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0,
-                    "mass": 1.0,
-                    "time": 0.0
+                    "x": 1.5, 
+                    "y": 1.5,
+                    "z": 1.5,
+                    "mass": 0.01,
+                    "time": 1.0
                 }
             }
         },
@@ -31,10 +30,10 @@
             "sources": {
                 "source_1": {
                     "x": 1.0, 
-                    "y": 1.0,
-                    "z": 1.0,
-                    "rate": 1.0,
-                    "time": 0.0
+                    "y": 1.5,
+                    "z": 1.5,
+                    "rate": 0.0001,
+                    "time": 3.0
                 }
             }
         },
@@ -42,39 +41,23 @@
         "fixed_duration": {
             "sources": {
                 "source_1": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0,
-                    "rate": 1.0,
-                    "start_time": 0.2,
-                    "end_time": 0.5
+                    "x": 1.5, 
+                    "y": 1.5,
+                    "z": 1.5,
+                    "rate": 0.0001,
+                    "start_time": 1.0,
+                    "end_time": 5.5
                 }
             }
-        }
-    },
-
-    "monitor_locations": {
-        "monitor_1": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-        },
-        "monitor_2": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
         }
     },
 
     "thresholds": {
         "concentration": [
             0.0,
+            1.0,
             2.0,
-            {
-                "min": 0.0,
-                "max": 1.0,
-                "num": 3
-            },
+            3.0,
             4.0
         ],
         "exposure": [
@@ -95,9 +78,9 @@
                 "z": 3.0
             },
             "spatial_samples": {
-                "x": 10,
-                "y": 10,
-                "z": 10
+                "x": 15,
+                "y": 15,
+                "z": 15 
             },
             "coefficient": {
                 "calculation": "EXPLICIT",
