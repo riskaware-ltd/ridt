@@ -55,27 +55,3 @@ class LinePlot:
         title += f" \n From {[line.pointA.x, line.pointA.y, line.pointA.z]}, " \
                  f"to {[line.pointB.x, line.pointB.y, line.pointB.z]}"
         return title
-
-from config.configfileparser import ConfigFileParser
-from config.configfileparser import ConfigFileParserJSONError
-from config.configfileparser import ConfigFileParserOSError
-from config.configfileparser import ConfigFileParserValidationError
-import sys
-
-try:
-    with ConfigFileParser() as cfp:
-        s = cfp("../default/config.json")
-except (ConfigFileParserJSONError,
-        ConfigFileParserOSError,
-        ConfigFileParserValidationError) as e:
-    sys.exit(e)
-
-line_dict = {"pointA":{"x":1.0, "y":1.0, "z":1.0}, "pointB":{"x":2.0, "y":2.0, "z":2.0}}
-
-line = Line(line_dict)
-
-conc = [float(np.sin(i) + np.exp(i) - np.cos(i)) for i in range(-100, 100)]
-time = 10
-
-lp = LinePlot(s)
-lp(conc, line, time, "C:/Work/EDM/idmf/analysis")
