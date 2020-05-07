@@ -3,6 +3,7 @@ from config.idmfconfig import Plane
 
 from matplotlib import cm, ticker
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 
@@ -14,9 +15,9 @@ class ContourPlot:
         self.sources = getattr(
             self.settings.modes, self.settings.release_type).sources
 
-    def __call__(self, concentrations: np.ndarray, plane: Plane, time: float, save_dir):
+    def __call__(self, concentrations: np.ndarray, plane: Plane, time: float):
         self.plot(concentrations, plane)
-        self.save_fig(plane, time, save_dir)
+        self.save_fig(plane, time)
 
     def plot(self, concentrations: np.ndarray, plane: Plane):
         title = self.make_title(plane)
@@ -30,14 +31,14 @@ class ContourPlot:
             locator=ticker.LinearLocator(),
             cmap=cm.RdBu)
 
-        plt.colorbar()
+
         plt.title(title)
         self.__set_labels(plane)
 
         return plot
 
-    def save_fig(self, plane: Plane, time, save_dir):
-        plt.savefig(f"{save_dir}/{self.settings.dispersion_model.capitalize()} "
+    def save_fig(self, plane: Plane, time):
+        plt.savefig(f"{self.settings.output_dir}/{self.settings.dispersion_model.capitalize()} "
                     f"{self.settings.release_type.capitalize()} {len(self.sources)} Source(s) "
                     f"{plane.axis} plane, "
                     f"{plane.distance} distance, "
