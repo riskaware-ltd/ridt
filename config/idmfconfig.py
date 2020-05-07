@@ -88,6 +88,7 @@ class IDMFConfig(Settings):
         None
 
         """
+        self.output_dir = str
         self.dispersion_model = DispersionModel
         self.release_type = ReleaseType
 
@@ -703,9 +704,9 @@ class Point(Settings):
         values : :obj:`dict`
             The values corresponding to the point location.
         """
-        self.x = NonNegativeFloat
-        self.y = NonNegativeFloat
-        self.z = NonNegativeFloat
+        self.x = NonNegativeInteger
+        self.y = NonNegativeInteger
+        self.z = NonNegativeInteger
 
 
 class Thresholds(Settings):
@@ -797,6 +798,7 @@ class EddyDiffusion(Settings):
         self.images = Images
         self.contour_plots = ContourPlots
         self.line_plots = LinePlots
+        self.point_plots = PointPlots
 
 
 class LinePlots(Settings):
@@ -806,7 +808,22 @@ class LinePlots(Settings):
     Attributes
     ----------
     output : :obj:`bool`
-        Whether or not we output the contour plots.
+        Whether or not we output line plots.
+
+    """
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.output = bool
+
+
+class PointPlots(Settings):
+    """The :class:`~.PointPlots` class. It inherits from
+    :class:`~.Settings`.
+
+    Attributes
+    ----------
+    output : :obj:`bool`
+        Whether or not we output point plots.
 
     """
     @Settings.assign
@@ -1166,11 +1183,14 @@ class Line(Settings):
 
     Attributes
     ---------
-    pointA: :class:`~.Point`
-        The first of two points defining the line in 3D space.
+    start_point: :class:`~.Point`
+        The location of the start of the line in 3D space.
 
-    pointB: :class:`~.Point`
-        The second of two points defining the line in 3D space.
+    length: :class:`~.Point`
+        The length of the line in 3D space.
+
+    direction: :obj:`str`
+        The axis in which the line extends.
 
     """
     @Settings.assign
@@ -1182,8 +1202,9 @@ class Line(Settings):
         value : :obj:`dict`
             The values corresponding to each line.
         """
-        self.pointA = Point
-        self.pointB = Point
+        self.start_point = Point
+        self.length = NonNegativeInteger
+        self.direction = str
 
 
 class Planes(Dict):
@@ -1231,7 +1252,7 @@ class Plane(Settings):
             The values corresponding to each plane.
         """
         self.axis = Axis
-        self.distance = NonNegativeFloat
+        self.distance = NonNegativeInteger
 
 
 class Axis(StringSelection):
