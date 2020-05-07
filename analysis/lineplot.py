@@ -15,9 +15,9 @@ class LinePlot:
         self.sources = getattr(
             self.settings.modes, self.settings.release_type).sources
 
-    def __call__(self, concentrations: List[float], line: Line, time: float, save_dir):
+    def __call__(self, concentrations: List[float], line: Line, time: float):
         self.plot(concentrations, line)
-        self.save_fig(line, time, save_dir)
+        self.save_fig(line, time)
 
     def plot(self, concentrations: List[float], line: Line):
         title = self.make_title(line)
@@ -33,8 +33,8 @@ class LinePlot:
 
         return plot
 
-    def save_fig(self, line: Line, time, save_dir):
-        plt.savefig(f"{save_dir}/{self.settings.dispersion_model.capitalize()} "
+    def save_fig(self, line: Line, time):
+        plt.savefig(f"{self.settings.output_dir}/{self.settings.dispersion_model.capitalize()} "
                     f"{self.settings.release_type.capitalize()} {len(self.sources)} Source(s) "
                     f"Line {line.pointA.x, line.pointA.y, line.pointA.z}, "
                     f"to {line.pointB.x, line.pointB.y, line.pointB.z} "
@@ -52,6 +52,6 @@ class LinePlot:
                 title += f" \n{key} at {[val.x, val.y, val.z]}, rate of {val.rate}, start time {val.start_time}," \
                          f" end time {val.end_time}."
 
-        title += f" \n From {[line.pointA.x, line.pointA.y, line.pointA.z]}, " \
-                 f"to {[line.pointB.x, line.pointB.y, line.pointB.z]}"
+        title += f" \n From {[line.start_point.x, line.start_point.y, line.start_point.z]}, " \
+                 f"length {line.length} in {line.direction} axis"
         return title
