@@ -12,8 +12,9 @@ from analysis import PointPlot
 
 class WellMixedRun:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: IDMFConfig, output_dir: str):
         self._settings = settings
+        self._output_dir = output_dir
         self.build_parameter_space()
         self.run(settings)
         # self.prepare()
@@ -38,12 +39,16 @@ class WellMixedRun:
         return self._settings
 
     @property
+    def output_dir(self):
+        return self._output_dir
+
+    @property
     def time(self):
         return self._time
 
     ############################## To be reviewed before implementation
     def run(self, settings: IDMFConfig):
         wm = WellMixed(settings)
-        conc = wm(self._time)
-        pp = PointPlot(settings)
+        conc = wm(self.time)
+        pp = PointPlot(settings, self.output_dir)
         pp(conc)
