@@ -53,6 +53,6 @@ class WellMixed:
                 else:
                     if not end_int:
                         end_int = idx - 1
-                    temp_conc[idx] += self.conc[end_int] * self.concentration(
+                    temp_conc[idx] += temp_conc[end_int] * self.concentration(
                         time - source.end_time)
             self.conc = [sum(x) for x in zip(self.conc, temp_conc)]
