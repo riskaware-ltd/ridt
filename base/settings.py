@@ -12,6 +12,8 @@ from copy import copy
 
 from collections.abc import Iterable
 
+from itertools import chain
+
 from typing import Union
 from typing import TypeVar
 from typing import Type
@@ -548,6 +550,10 @@ class Number(Terminus):
     @property
     def is_range(self):
         return self._range
+    
+    @property
+    def match(self):
+        return self._match
 
     def distribute(self, value):
         if not hasattr(self, "type"):
@@ -557,26 +563,32 @@ class Number(Terminus):
 
         if type(value) is self.type:
             self.__value(value)
-        elif type(value) is list:
-            self.__list(value)
+        elif type(value) is dict and "array" in value:
+            self.__array(value)
         elif type(value) is dict:
             self.__range(value)
         else:
             raise SettingTypeError(
-        f"{self.type} || List[{self.type}] || "
+        f"{self.type} || {'array': [{self.type}]} || "
         f"{{'min': {self.type}, 'max': {self.type}, 'num': {int}}}",
         type(value))
     
     def __value(self, value):
         self.value = value
         self._range = False
+        self._match = None
     
-    def __list(self, value: list):
-        for item in value:
+    def __array(self, value: dict):
+        for item in value["array"]:
             if not isinstance(item, self.type):
                 raise SettingTypeError(self.type, type(item))
-        self.value = value
+        self.value = value["array"]
         self._range = True
+        try:
+            self._match = value["match"]
+        except KeyError:
+            self._match = None
+
     
     def __range(self, value: dict):
         try:
@@ -598,6 +610,11 @@ class Number(Terminus):
                                    value['max'],
                                    abs(value['num'])))
         self._range = True
+        try:
+            self._match = value["match"]
+        except KeyError:
+            self._match = None
+
     
     def lower_bound(self, value):
         if isinstance(self.value, self.type):
@@ -635,6 +652,9 @@ class ComputationalSpace:
         self.restrict = restrict
         self.addresses = list()
         self.values = list()
+        self.space = list()
+        self.matched = dict()
+        self.unmatched = list()
         self.configuration_space = list()
         self.explore(self.setting, list())
         self.build_configuration_space()
@@ -661,8 +681,20 @@ class ComputationalSpace:
             if issubclass(type(item), Number):
                 if item.is_range:
                     new_path.append(key)
-                    self.addresses.append(new_path)
-                    self.values.append(item.get)
+                    if item.match:
+                        if item.match in self.matched:
+                            self.matched[item.match]["addresses"].append(new_path)
+                            self.matched[item.match]["values"].append(item.get)
+                        else:
+                            self.matched[item.match] = {
+                                "addresses": [new_path],
+                                "values": [item.get] 
+                            }
+                    else:
+                        self.unmatched.append(new_path)
+                        self.addresses.append(new_path)
+                        self.space.append(new_path)
+                        self.values.append(item.get)
             else:
                 new_path.append(key)
                 for k, v in self.restrict.items():
@@ -671,9 +703,20 @@ class ComputationalSpace:
                 self.explore(item, new_path, new_restrict)
    
     def build_configuration_space(self):
+        for match, items in self.matched.items():
+            self.addresses += items["addresses"]
+            self.space.append(items["addresses"])
+            self.values.append(list(zip(*items["values"])))
         for batch in itertools.product(*self.values):
+            flat_batch = list()
+            for item in batch:
+                if isinstance(item, Iterable):
+                    for subitem in item:
+                        flat_batch.append(subitem)
+                else:
+                    flat_batch.append(item)
             rv = copy(self.setting.__source__)
-            for address, value in zip(self.addresses, batch):
+            for address, value in zip(self.addresses, flat_batch):
                 self.set_by_address(rv, address, float(value))
             
             self.configuration_space.append(type(self.setting)(rv))
@@ -706,14 +749,37 @@ class ComputationalSpace:
         rv = ""
         for item in elements:
             rv += f"{item} -> "
-        return rv
+        return rv[:-4]
+
+    def cout_summary(self):
+        from textwrap import fill
+        print(f"Computational space dimensions: " + f"{self.shape}\n"\
+            .replace(",", " x")\
+            .replace(")", "")\
+            .replace("(", ""))
+        axis = 0
+        for idx, item in enumerate(self.unmatched):
+            print(f"axis: {axis}:\n")
+            print(f"\t{self.build_path(item)}")
+            print(fill(f"\tvalues:  {self.values[idx]}\n",
+                       width=70,
+                       subsequent_indent="\t"))
+            axis += 1
+        for key, value in self.matched.items():
+            print(f"axis: {axis}:\n")
+            print(f"\tmatch_id: {key}")
+            for idx, item in enumerate(value["addresses"]):
+                print(f"\t{self.build_path(item)}")
+            print(fill(f"\tvalues: {list(zip(*value['values']))}\n",
+                       width=70,
+                       subsequent_indent="\t"))
+            axis += 1
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
-
 
 
 class SettingRangeKeyError(Error):

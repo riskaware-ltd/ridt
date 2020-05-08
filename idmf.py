@@ -7,6 +7,7 @@ from config.configfileparser import ConfigFileParserOSError
 from config.configfileparser import ConfigFileParserValidationError
 from container.wellmixedrun import WellMixedRun
 from container.eddydiffusionrun import EddyDiffusionRun
+from base.settings import ComputationalSpace
 
 
 @click.command()
@@ -22,12 +23,15 @@ def idmf(config_file):
         sys.exit(e)
 
     s.consistency_check()
+    p = ComputationalSpace(s, {"models": "eddy_diffusion"})
+    p.cout_summary()
 
-    if s.dispersion_model == "well_mixed":
-        WellMixedRun(s)
 
-    if s.dispersion_model == "eddy_diffusion":
-        EddyDiffusionRun(s)
+    # if s.dispersion_model == "well_mixed":
+    #     WellMixedRun(s)
+
+    # if s.dispersion_model == "eddy_diffusion":
+    #     EddyDiffusionRun(s)
 
 
 if __name__ == '__main__':
