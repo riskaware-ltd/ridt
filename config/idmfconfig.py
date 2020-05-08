@@ -704,9 +704,9 @@ class Point(Settings):
         values : :obj:`dict`
             The values corresponding to the point location.
         """
-        self.x = NonNegativeInteger
-        self.y = NonNegativeInteger
-        self.z = NonNegativeInteger
+        self.x = NonNegativeFloat
+        self.y = NonNegativeFloat
+        self.z = NonNegativeFloat
 
 
 class Thresholds(Settings):
@@ -1202,9 +1202,8 @@ class Line(Settings):
         value : :obj:`dict`
             The values corresponding to each line.
         """
-        self.start_point = Point
-        self.length = NonNegativeInteger
-        self.direction = str
+        self.pointA = Point
+        self.pointB = Point
 
 
 class Planes(Dict):
@@ -1252,7 +1251,7 @@ class Plane(Settings):
             The values corresponding to each plane.
         """
         self.axis = Axis
-        self.distance = NonNegativeInteger
+        self.distance = NonNegativeFloat
 
 
 class Axis(StringSelection):

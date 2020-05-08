@@ -569,7 +569,7 @@ class Number(Terminus):
             self.__range(value)
         else:
             raise SettingTypeError(
-        f"{self.type} || {'array': [{self.type}]} || "
+        f"{self.type} || {{'array': [{self.type}]}} || "
         f"{{'min': {self.type}, 'max': {self.type}, 'num': {int}}}",
         type(value))
     
