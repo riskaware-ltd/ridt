@@ -29,44 +29,49 @@ class EddyDiffusion:
         samples = self.settings.models.eddy_diffusion.spatial_samples
         self.shape = (samples.x, samples.y, samples.z)
         self.zero = zeros(self.shape)
-        self.conc = [copy(self.zero) for i in range(self.settings.time_samples)]
+        self.conc = array([copy(self.zero) for i in range(self.settings.time_samples)])
         self.delta_t = self.settings.total_time / self.settings.time_samples
         self.diff_coeff = self.__diffusion_coefficient()
-        self.sources = getattr(self.settings.modes, self.settings.release_type).sources
 
     def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: ndarray):
-        return getattr(self, f"{self.settings.release_type}")(x, y, z, t)
+        modes = ["instantaneous", "infinite_duration", "fixed_duration"]
+        for mode in modes:
+            self.sources = getattr(self.settings.modes, mode).sources
+            getattr(self, f"{mode}")(x, y, z, t)
+        return self.conc
 
     def instantaneous(self, x: ndarray, y: ndarray, z: ndarray, t: List[float]): 
-        for idx, time in enumerate(t):
-            for source in self.sources.values():
+        for source in self.sources.values():
+            temp_conc = self.temp_conc()
+            for idx, time in enumerate(t):
                 if time - source.time > 0:
-                    self.conc[idx] += source.mass * self.__concentration(
+                    temp_conc[idx] += source.mass * self.__concentration(
                         source, x, y, z, time - source.time)
-        return array(self.conc)
+            self.conc += array(temp_conc)
 
     def infinite_duration(self, x: ndarray, y: ndarray, z: ndarray, t: List[float]):
-        for idx, time in enumerate(t):
-            for source in self.sources.values():
+        for source in self.sources.values():
+            temp_conc = self.temp_conc()
+            for idx, time in enumerate(t):
                 if time - source.time > 0:
-                    self.conc[idx] += source.rate * self.__concentration(
+                    temp_conc[idx] += source.rate * self.__concentration(
                         source, x, y, z, time - source.time)
-        self.conc = array(self.conc)
-        return cumsum(self.conc, axis=0) * self.delta_t
+            self.conc += cumsum(array(temp_conc), axis=0) * self.delta_t
     
     def fixed_duration(self, x: ndarray, y: ndarray, z: ndarray, t: List[float]):
-        self.conc_decay = [copy(self.zero) for i in range(self.settings.time_samples)]
-        for idx, time in enumerate(t):
-            for source in self.sources.values():
+        for source in self.sources.values():
+            temp_conc = self.temp_conc()
+            temp_conc_decay = self.temp_conc()
+            for idx, time in enumerate(t):
                 if time - source.start_time > 0:
-                    self.conc[idx] += source.rate * self.__concentration(
+                    temp_conc[idx] += source.rate * self.__concentration(
                         source, x, y, z, time - source.start_time)
                 if time - source.start_time - source.end_time > 0:
-                    self.conc_decay[idx] += source.rate * self.__concentration(
+                    temp_conc_decay[idx] += source.rate * self.__concentration(
                         source, x, y, z, time - source.end_time)
-        self.conc = cumsum(array(self.conc), axis=0) * self.delta_t
-        self.conc_decay = cumsum(array(self.conc_decay), axis=0) * self.delta_t
-        return self.conc - self.conc_decay
+            temp_conc = cumsum(array(temp_conc), axis=0) * self.delta_t
+            temp_conc_decay = cumsum(array(temp_conc_decay), axis=0) * self.delta_t
+            self.conc += temp_conc - temp_conc_decay
     
     def __concentration(self,
                        source: InstantaneousSource,
@@ -119,3 +124,6 @@ class EddyDiffusion:
 
             # TODO ASK DSTL about which or all coeffs to evaulate.
             return regression
+
+    def temp_conc(self):
+        return [copy(self.zero) for i in range(self.settings.time_samples)]
