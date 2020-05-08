@@ -4,6 +4,7 @@ import json
 
 from base.exceptions import Error
 from config.configfileparser import ConfigFileParser
+from config.configfilewriter import ConfigFileWriter
 
 class CSVToConfigFile:
 
@@ -36,11 +37,12 @@ class CSVToConfigFile:
             with open(self.csv_file_path, 'r') as f:
                 c = csv.reader(f, delimiter=",")
                 for row in c:
-                    if row[0] in self.parsed_items:
-                        self.parsed_items[row[0]].append(
-                            [item for item in row[1:] if item != ""])
-                    else:
-                        print(f"Invalid spec: {row[0]}")
+                    if row[0]:
+                        if row[0] in self.parsed_items:
+                            self.parsed_items[row[0]].append(
+                                [item for item in row[1:] if item != ""])
+                        else:
+                            print(f"Invalid spec: {row[0]}")
         except OSError as e:
             raise CSVToConfigFileOSError(self.csv_file_path, e)
         try:
@@ -171,12 +173,12 @@ class CSVToConfigFile:
     
     def write_new_config_file(self):
         if not self.output_file_path:
-            with open(self.append_id(self.config_file_path), 'w') as f:
-                f.write(json.dumps(self.new, indent=4))
+            path = self.append_id(self.config_file_path)
         else:
-            with open(self.output_file_path, 'w') as f:
-                f.write(json.dumps(self.new, indent=4))
-            
+            path = self.output_file_path
+        
+        with ConfigFileWriter() as cfw:
+            cfw(path, self.new)
 
     def ord(self, n):
         return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}\
