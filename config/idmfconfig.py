@@ -89,7 +89,6 @@ class IDMFConfig(Settings):
 
         """
         self.dispersion_model = DispersionModel
-        self.release_type = ReleaseType
 
         self.time_units = TimeUnits
         self.time_samples = NonNegativeInteger

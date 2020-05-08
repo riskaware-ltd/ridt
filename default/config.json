@@ -1,6 +1,5 @@
 {
     "dispersion_model": "well_mixed",
-    "release_type": "instantaneous",
 
     "time_units": "s",
     "time_samples": 50,
