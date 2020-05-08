@@ -11,20 +11,16 @@ class WellMixed:
 
     def __init__(self, settings: IDMFConfig):
         self.settings = settings
-        self.sources = getattr(self.settings.modes, self.settings.release_type).sources
         self.volume = settings.models.well_mixed.volume
         self.fa_rate = settings.fresh_air_change_rate
         self.shape = (self.settings.time_samples,)
         self.conc = zeros(self.shape)
 
     def __call__(self, t: np.ndarray):
-        modes = [
-            "instantaneous",
-            "infinite_duration",
-            "fixed_duration"
-        ]
+        modes = ["instantaneous", "infinite_duration", "fixed_duration"]
         for mode in modes:
-            getattr(self, f"{self.settings.release_type}")(t)
+            self.sources = getattr(self.settings.modes, mode).sources
+            getattr(self, f"{mode}")(t)
         return array(self.conc)
 
     def concentration(self, t: float):
