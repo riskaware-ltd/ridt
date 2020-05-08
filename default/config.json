@@ -1,6 +1,6 @@
 {
     "output_dir": "analysis",
-    "dispersion_model": "eddy_diffusion",
+    "dispersion_model": "well_mixed",
     "release_type": "instantaneous",
 
     "time_units": "s",
