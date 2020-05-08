@@ -88,7 +88,6 @@ class IDMFConfig(Settings):
         None
 
         """
-        self.output_dir = str
         self.dispersion_model = DispersionModel
         self.release_type = ReleaseType
 

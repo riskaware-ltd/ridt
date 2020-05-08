@@ -1,5 +1,4 @@
 {
-    "output_dir": "analysis",
     "dispersion_model": "well_mixed",
     "release_type": "instantaneous",
 
