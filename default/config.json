@@ -17,18 +17,8 @@
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": {
-                        "min": 1.5,
-                        "max": 2.0,
-                        "num": 10,
-                        "match": "xs1"
-                    }, 
-                    "y": {
-                        "min": 1.5,
-                        "max": 2.0,
-                        "num": 10,
-                        "match": "xs1"
-                    },
+                    "x": 2.0, 
+                    "y": 2.0,
                     "z": 1.0,
                     "mass": 0.01,
                     "time": 1.0
@@ -38,7 +28,7 @@
                     "y": 1.0,
                     "z": 1.0,
                     "mass": 0.01,
-                    "time": 1.0
+                    "time": 2.0
                 }
             }
         },
