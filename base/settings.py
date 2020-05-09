@@ -200,6 +200,15 @@ class Settings:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
+    def __hash__(self):
+        return hash(str(self.__source__))
+    
+    def __eq__(self, other):
+        if other.__hash__() == self.__hash__():
+            return True
+        else:
+            return False
+
 
 class Terminus(ABC):
     """A base class for a terminating setting.
@@ -722,23 +731,36 @@ class ComputationalSpace:
             self.configuration_space.append(type(self.setting)(rv))
     
     def __getitem__(self, indices):
-        if not isinstance(indices, tuple):
+        if isinstance(indices, tuple):
+            if len(indices) > len(self.values):
+                raise IndexError(f"too many indices for array {self.shape}")
+            for idx, item in enumerate(indices):
+                if not isinstance(item, int):
+                    raise IndexError("only integers are valid when accessing arrays")
+                if not 0 <= item < self.shape[idx]:
+                    raise IndexError(f"index {item} is out of bounds for axis "
+                                     f"{idx} with size {self.shape[idx]}")
+            index = 0
+            for idx, item in enumerate(indices):
+                index += item * int(prod([len(v) for v in self.values[idx + 1:]]))
+        elif isinstance(indices, int):
+            if len(self.values) > 1:
+                raise IndexError(f"too many indices for array {self.shape}")
+            if not 0 <= indices < self.shape[0]:
+                raise IndexError(f"index {item} is out of bounds for axis {0} "
+                                 f"with size {self.shape[0]}")
+            index = indices
+        else:
             raise IndexError("only integers are valid when accessing arrays")
-        if len(indices) > len(self.values):
-            raise IndexError(f"too many indices for array {self.shape}")
-        for idx, item in enumerate(indices):
-            if not isinstance(item, int):
-                raise IndexError("only integers are valid when accessing arrays")
-            if not 0 <= item < len(self.values[idx]):
-                raise IndexError(f"index {item} is out of bounds for axis {idx} with size {len(self.values[idx])}")
-        index = 0
-        for idx, item in enumerate(indices):
-            index += item * int(prod([len(v) for v in self.values[idx + 1:]]))
+
         return self.configuration_space[index]
 
     @property
     def shape(self):
-        return tuple((len(v) for v in self.values))
+        if len(self.values):
+            return tuple((len(v) for v in self.values))
+        else:
+            return (1,)
     
     @property
     def axes(self):
