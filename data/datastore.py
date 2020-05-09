@@ -14,40 +14,28 @@ class DataStore:
         self.domain = dict()
     
     def add_point_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
-        if not isinstance(data, ndarray):
-            raise DataStoreTypeError(type(data))
-        if len(data.shape) is not 1:
-            raise DataStoreDimensionalityError(len(data.shape), 1)
+        self.verify(data, 1)
         if setting not in self.points:
             self.points[setting] = dict()
         else:
             self.points[setting][id_str] = data
 
     def add_line_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
-        if not isinstance(data, ndarray):
-            raise DataStoreTypeError(type(data))
-        if len(data.shape) is not 2:
-            raise DataStoreDimensionalityError(len(data.shape), 2)
+        self.verify(data, 2)
         if setting not in self.lines:
             self.lines[setting] = dict()
         else:
             self.lines[setting][id_str] = data
 
     def add_plane_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
-        if not isinstance(data, ndarray):
-            raise DataStoreTypeError(type(data))
-        if len(data.shape) is not 3:
-            raise DataStoreDimensionalityError(len(data.shape), 3)
+        self.verify(data, 3)
         if setting not in self.planes:
             self.planes[setting] = dict()
         else:
             self.planes[setting][id_str] = data
     
     def add_domain_data(self, setting: IDMFConfig, data: ndarray):
-        if not isinstance(data, ndarray):
-            raise DataStoreTypeError(type(data))
-        if len(data.shape) is not 4:
-            raise DataStoreDimensionalityError(len(data.shape), 4)
+        self.verify(data, 4)
         self.domain[setting] = data
     
     def get_point_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
@@ -73,6 +61,13 @@ class DataStore:
             return self.domain
         else:
             raise DataStoreIDError(setting, "", "domain")
+
+    def verify(self, data: ndarray, dimensions: int):
+        if not isinstance(data, ndarray):
+            raise DataStoreTypeError(type(data))
+        if len(data.shape) is not dimensions:
+            raise DataStoreDimensionalityError(len(data.shape), dimensions)
+
 
 
 class DataStoreIDError(Error):
