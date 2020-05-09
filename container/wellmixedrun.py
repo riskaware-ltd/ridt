@@ -1,13 +1,18 @@
+from tqdm import tqdm
+
 from numpy import zeros
 from numpy import meshgrid
 from numpy import linspace
 
 from config.idmfconfig import IDMFConfig
+from data.datastore import DataStore
+from container.domain import Domain
 from base.settings import ComputationalSpace
 
-#################### Review imports before implementation
 from equation import WellMixed
 from analysis import PointPlot
+
+BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
 
 class WellMixedRun:
@@ -15,24 +20,23 @@ class WellMixedRun:
     def __init__(self, settings: IDMFConfig, output_dir: str):
         self._settings = settings
         self._output_dir = output_dir
-        self.build_parameter_space()
-        self.run(settings)
-        # self.prepare()
-
-    def build_parameter_space(self):
-        self._time = linspace(0.0,
-                              self.settings.total_time,
-                              self.settings.time_samples)
-        self._space = (self.settings.time_samples)
+        self.data_store = DataStore()
+        self.space = self.prepare()
+        self.evaluate()
 
     def prepare(self):
-        restrict = {
-            "modes": self.settings.release_type,
-            "models": self.settings.dispersion_model
-        }
+        restrict = {"models": self.settings.dispersion_model}
+        return ComputationalSpace(self.settings, restrict)
+    
+    def evaluate(self):
+        for setting in tqdm(self.space.configuration_space, bar_format=BF):
+            self.run(setting)
 
-        space = ComputationalSpace(self.settings, restrict)
-        data = zeros(shape=(*space.shape, *self._space))
+    def run(self, setting: IDMFConfig):
+        domain = Domain
+        solver = WellMixed(settings)
+        output = solver(self.time)
+        self.data_store.add_point_data(setting, output)
 
     @property
     def settings(self):
@@ -46,9 +50,3 @@ class WellMixedRun:
     def time(self):
         return self._time
 
-    ############################## To be reviewed before implementation
-    def run(self, settings: IDMFConfig):
-        wm = WellMixed(settings)
-        conc = wm(self.time)
-        pp = PointPlot(settings, self.output_dir)
-        pp(conc)
