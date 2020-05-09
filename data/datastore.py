@@ -56,10 +56,10 @@ class DataStore:
         except KeyError as e:
             raise DataStoreIDError(setting, id_str, "plane")
     
-    def get_domain_data(self, setting: IDMFConfig):
-        if self.domain:
-            return self.domain
-        else:
+    def get_domain_data(self, setting: IDMFConfig) -> ndarray:
+        try:
+            return self.domain[setting]
+        except KeyError as e:
             raise DataStoreIDError(setting, "", "domain")
 
     def verify(self, data: ndarray, dimensions: int):
