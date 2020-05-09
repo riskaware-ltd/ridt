@@ -1,5 +1,5 @@
 {
-    "dispersion_model": "well_mixed",
+    "dispersion_model": "eddy_diffusion",
 
     "time_units": "s",
     "time_samples": 50,
@@ -15,8 +15,8 @@
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": 2.0, 
-                    "y": 2.0,
+                    "x": 1.0, 
+                    "y": 1.0,
                     "z": 1.0,
                     "mass": 0.01,
                     "time": 1.0
@@ -113,25 +113,17 @@
                 },
                 "lines": {
                     "line_1": {
-                        "pointA": {
+                        "point": {
                             "x": 1.0,
                             "y": 1.0,
                             "z": 1.0
                         },
-                        "pointB": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0
-                        }
+                        "parallel_axis": "x"
                     }
                 },
                 "planes": {
                     "plane_1": {
                         "axis": "xy",
-                        "distance": 2.0
-                    },
-                    "plane_2": {
-                        "axis": "yz",
                         "distance": 1.0
                     }
                 }
@@ -140,7 +132,8 @@
                 "output": false
             },
             "line_plots": {
-                "output": true
+                "output": true,
+                "spatial_resolution": 10.0
             },
             "contour_plots": {
                 "output": false,

@@ -138,16 +138,12 @@ class CSVToConfigFile:
                         ["monitor_locations"]\
                         ["lines"]\
                         [f"line_{idx}"] = {
-                    "pointA": {
+                    "point": {
                         "x": float(item[0]),
                         "y": float(item[1]),
                         "z": float(item[2]),
                     },
-                    "pointB": {
-                        "x": float(item[3]),
-                        "y": float(item[4]),
-                        "z": float(item[5]),
-                    }
+                    "axis": item[3]
                 }
             except ValueError as e:
                 raise CSVToConfigFileValueError("LIN", self.ord(idx))

@@ -812,6 +812,7 @@ class LinePlots(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.output = bool
+        self.spatial_resolution = NonNegativeFloat
 
 
 class PointPlots(Settings):
@@ -1200,8 +1201,31 @@ class Line(Settings):
         value : :obj:`dict`
             The values corresponding to each line.
         """
-        self.pointA = Point
-        self.pointB = Point
+        self.point = Point
+        self.parallel_axis = ParallelAxis
+
+
+class ParallelAxis(StringSelection):
+    """The parallel axis selection setting class.
+
+    It inherits from :class:`~.Terminus`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: str):
+        """The constructor for the :class:`ParallelAxis` class.
+
+        value : :obj:`str`
+            The string indicating the parallel axis.
+        """
+        self.options = [
+            "x",
+            "y",
+            "z"
+        ]
+
+    def check(self):
+        pass
 
 
 class Planes(Dict):
