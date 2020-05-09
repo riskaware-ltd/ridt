@@ -27,14 +27,14 @@ class EddyDiffusion:
         self.dim = self.settings.models.eddy_diffusion.dimensions
         self.volume = self.dim.x * self.dim.y * self.dim.z
         samples = self.settings.models.eddy_diffusion.spatial_samples
-        self.shape = (samples.x, samples.y, samples.z)
-        self.zero = zeros(self.shape)
-        self.conc = array([copy(self.zero) for i in range(self.settings.time_samples)])
         self.delta_t = self.settings.total_time / self.settings.time_samples
         self.diff_coeff = self.__diffusion_coefficient()
 
     def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: ndarray):
         modes = ["instantaneous", "infinite_duration", "fixed_duration"]
+        self.shape = x.shape
+        self.zero = zeros(self.shape)
+        self.conc = array(self.temp_conc())
         for mode in modes:
             self.sources = getattr(self.settings.modes, mode).sources
             getattr(self, f"{mode}")(x, y, z, t)
