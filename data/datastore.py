@@ -1,6 +1,7 @@
 from numpy import ndarray
 
 from base.settings import ComputationalSpace
+from config.idmfconfig import IDMFConfig
 from base.exceptions import Error
 
 
@@ -10,59 +11,68 @@ class DataStore:
         self.points = dict()
         self.lines = dict()
         self.planes = dict()
-        self.domain = None
+        self.domain = dict()
     
-    def add_point_data(self, id_str: str, data: ndarray):
+    def add_point_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
         if not isinstance(data, ndarray):
             raise DataStoreTypeError(type(data))
         if len(data.shape) is not 1:
             raise DataStoreDimensionalityError(len(data.shape), 1)
-        self.points[id_str] = data
+        if setting not in self.points:
+            self.points[setting] = dict()
+        else:
+            self.points[setting][id_str] = data
 
-    def add_line_data(self, id_str: str, data: ndarray):
+    def add_line_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
         if not isinstance(data, ndarray):
             raise DataStoreTypeError(type(data))
         if len(data.shape) is not 2:
             raise DataStoreDimensionalityError(len(data.shape), 2)
-        self.lines[id_str] = data
+        if setting not in self.lines:
+            self.lines[setting] = dict()
+        else:
+            self.lines[setting][id_str] = data
 
-    def add_plane_data(self, id_str: str, data: ndarray):
+    def add_plane_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
         if not isinstance(data, ndarray):
             raise DataStoreTypeError(type(data))
         if len(data.shape) is not 3:
             raise DataStoreDimensionalityError(len(data.shape), 3)
-        self.planes[id_str] = data
+        if setting not in self.planes:
+            self.planes[setting] = dict()
+        else:
+            self.planes[setting][id_str] = data
     
-    def add_domain_data(self, data: ndarray):
+    def add_domain_data(self, setting: IDMFConfig, data: ndarray):
         if not isinstance(data, ndarray):
             raise DataStoreTypeError(type(data))
         if len(data.shape) is not 4:
             raise DataStoreDimensionalityError(len(data.shape), 4)
-        self.domain = data
+        self.domain[setting] = data
     
-    def get_point_data(self, id_str: str) -> ndarray:
+    def get_point_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
         try:
-            return self.points[id_str]
+            return self.points[setting][id_str]
         except KeyError as e:
-            raise DataStoreIDError(id_str, "point")
+            raise DataStoreIDError(setting, id_str, "point")
     
-    def get_line_data(self, id_str: str) -> ndarray:
+    def get_line_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
         try:
-            return self.lines[id_str]
+            return self.lines[setting][id_str]
         except KeyError as e:
-            raise DataStoreIDError(id_str, "line")
+            raise DataStoreIDError(setting, id_str, "line")
     
-    def get_plane_data(self, id_str: str) -> ndarray:
+    def get_plane_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
         try:
-            return self.planes[id_str]
+            return self.planes[setting][id_str]
         except KeyError as e:
-            raise DataStoreIDError(id_str, "plane")
+            raise DataStoreIDError(setting, id_str, "plane")
     
-    def get_domain_data(self):
+    def get_domain_data(self, setting: IDMFConfig):
         if self.domain:
             return self.domain
         else:
-            raise DataStoreIDError("", "domain")
+            raise DataStoreIDError(setting, "", "domain")
 
 
 class DataStoreIDError(Error):
@@ -70,14 +80,16 @@ class DataStoreIDError(Error):
     it does not recognise.
 
     """
-    def __init__(self, id_str: str, kind: str):
+    def __init__(self, setting: IDMFConfig, id_str: str, kind: str):
         """The constructor for the :class:`DataStoreIDError` class.
 
         """
         if id_str:
-            msg = f"The data store does not contain any {kind} data with ID {id_str}"
+            msg = f"The data store does not contain any {kind} data with ID "\
+                  f"{id_str} for setting object {setting}"
         else:
-            msg = f"The data store does not contain any {kind} data"
+            msg = f"The data store does not contain any {kind} data for "\
+                  f"settings object {setting}."
         super().__init__(msg)
 
 
