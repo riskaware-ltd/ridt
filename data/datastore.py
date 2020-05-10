@@ -15,52 +15,43 @@ class DataStore:
     
     def add_point_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
         self.verify(data, 1)
-        if setting not in self.points:
-            self.points[setting] = dict()
-        else:
-            self.points[setting][id_str] = data
+        self.points[id_str] = data
 
     def add_line_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
         self.verify(data, 2)
-        if setting not in self.lines:
-            self.lines[setting] = dict()
-        else:
-            self.lines[setting][id_str] = data
+        self.lines[id_str] = data
 
     def add_plane_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
         self.verify(data, 3)
-        if setting not in self.planes:
-            self.planes[setting] = dict()
-        else:
-            self.planes[setting][id_str] = data
+        self.planes[id_str] = data
     
     def add_domain_data(self, setting: IDMFConfig, data: ndarray):
         self.verify(data, 4)
-        self.domain[setting] = data
+        self.domain = data
     
     def get_point_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
         try:
-            return self.points[setting][id_str]
+            return self.points[id_str]
         except KeyError as e:
-            raise DataStoreIDError(setting, id_str, "point")
+            raise DataStoreIDError(id_str, "point")
     
     def get_line_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
         try:
-            return self.lines[setting][id_str]
+            return self.lines[id_str]
         except KeyError as e:
-            raise DataStoreIDError(setting, id_str, "line")
+            raise DataStoreIDError(id_str, "line")
     
     def get_plane_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
         try:
-            return self.planes[setting][id_str]
+            return self.planes[id_str]
         except KeyError as e:
-            raise DataStoreIDError(setting, id_str, "plane")
+            raise DataStoreIDError(id_str, "plane")
     
     def get_domain_data(self, setting: IDMFConfig) -> ndarray:
         try:
-            return self.domain[setting]
+            return self.domain
         except KeyError as e:
-            raise DataStoreIDError(setting, "", "domain")
+            raise DataStoreIDError("", "domain")
 
     def verify(self, data: ndarray, dimensions: int):
         if not isinstance(data, ndarray):
@@ -75,16 +66,15 @@ class DataStoreIDError(Error):
     it does not recognise.
 
     """
-    def __init__(self, setting: IDMFConfig, id_str: str, kind: str):
+    def __init__(self, id_str: str, kind: str):
         """The constructor for the :class:`DataStoreIDError` class.
 
         """
         if id_str:
             msg = f"The data store does not contain any {kind} data with ID "\
-                  f"{id_str} for setting object {setting}"
+                  f"{id_str}."
         else:
-            msg = f"The data store does not contain any {kind} data for "\
-                  f"settings object {setting}."
+            msg = f"The data store does not contain any {kind} data."
         super().__init__(msg)
 
 
