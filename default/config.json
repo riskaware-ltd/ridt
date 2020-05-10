@@ -8,14 +8,26 @@
     "concentration_units": "kgm-3",
     "exposure_units": "mgminm-3",
 
-    "total_air_change_rate": 1.0,
-    "fresh_air_change_rate": 0.1,
+    "total_air_change_rate": {
+        "array": [1.0, 2.0, 3.0]
+    },
+    "fresh_air_change_rate": {
+        "min": 1.0,
+        "max": 5.0,
+        "num": 4,
+        "match": "fish"
+    },
 
     "modes": {
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": 1.0, 
+                    "x": {
+                        "min": 1.0,
+                        "max": 2.0,
+                        "num": 4,
+                        "match": "fish"
+                    }, 
                     "y": 1.0,
                     "z": 1.0,
                     "mass": 0.01,
@@ -83,9 +95,9 @@
                 "z": 3.0
             },
             "spatial_samples": {
-                "x": 15,
-                "y": 15,
-                "z": 15 
+                "x": 3,
+                "y": 3,
+                "z": 3 
             },
             "coefficient": {
                 "calculation": "EXPLICIT",
