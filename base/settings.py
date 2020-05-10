@@ -661,12 +661,11 @@ class ComputationalSpace:
         self.restrict = restrict
         self.addresses = list()
         self.values = list()
-        self.space = list()
         self.matched = dict()
         self.unmatched = list()
-        self.configuration_space = list()
+        self.space = list()
         self.explore(self.setting, list())
-        self.build_configuration_space()
+        self.build_space()
 
     def get_by_address(self, root: dict, address: List[str]):
         return reduce(operator.getitem, address, root)
@@ -702,7 +701,6 @@ class ComputationalSpace:
                     else:
                         self.unmatched.append(new_path)
                         self.addresses.append(new_path)
-                        self.space.append(new_path)
                         self.values.append(item.get)
             else:
                 new_path.append(key)
@@ -711,10 +709,9 @@ class ComputationalSpace:
                     break
                 self.explore(item, new_path, new_restrict)
    
-    def build_configuration_space(self):
+    def build_space(self):
         for match, items in self.matched.items():
             self.addresses += items["addresses"]
-            self.space.append(items["addresses"])
             self.values.append(list(zip(*items["values"])))
         for batch in itertools.product(*self.values):
             flat_batch = list()
@@ -728,7 +725,7 @@ class ComputationalSpace:
             for address, value in zip(self.addresses, flat_batch):
                 self.set_by_address(rv, address, float(value))
             
-            self.configuration_space.append(type(self.setting)(rv))
+            self.space.append(type(self.setting)(rv))
     
     def __getitem__(self, indices):
         if isinstance(indices, tuple):
@@ -753,7 +750,7 @@ class ComputationalSpace:
         else:
             raise IndexError("only integers are valid when accessing arrays")
 
-        return self.configuration_space[index]
+        return self.space[index]
 
     @property
     def shape(self):
@@ -761,6 +758,13 @@ class ComputationalSpace:
             return tuple((len(v) for v in self.values))
         else:
             return (1,)
+        
+    @property
+    def zero(self) -> Union[Type[Settings], None]:
+        if len(self.space) == 1:
+            return self.space[0]
+        else:
+            return None
     
     @property
     def axes(self):
@@ -772,30 +776,38 @@ class ComputationalSpace:
         for item in elements:
             rv += f"{item} -> "
         return rv[:-4]
-
+    
     def cout_summary(self):
         from textwrap import fill
-        print(f"Computational space dimensions: " + f"{self.shape}\n"\
-            .replace(",", " x")\
-            .replace(")", "")\
-            .replace("(", ""))
+        rv = ""
+        rv += f"Computational space dimensions: " + f"{self.shape}\n"\
+                .replace(",", " x")\
+                .replace(")", "")\
+                .replace("(", "")
         axis = 0
         for idx, item in enumerate(self.unmatched):
-            print(f"axis: {axis}:\n")
-            print(f"\t{self.build_path(item)}")
-            print(fill(f"\tvalues:  {self.values[idx]}\n",
+            rv += f"\naxis: {axis}:"
+            rv += "\n"
+            rv += f"\t{self.build_path(item)}"
+            rv += "\n"
+            rv += fill(f"\tvalues:  {self.values[idx]}\n",
                        width=70,
-                       subsequent_indent="\t"))
+                       subsequent_indent="\t")
             axis += 1
+        rv += "\n"
         for key, value in self.matched.items():
-            print(f"axis: {axis}:\n")
-            print(f"\tmatch_id: {key}")
+            rv += f"\naxis: {axis}:"
+            rv += "\n"
+            rv += f"\tmatch_id: {key}"
             for idx, item in enumerate(value["addresses"]):
-                print(f"\t{self.build_path(item)}")
-            print(fill(f"\tvalues: {list(zip(*value['values']))}\n",
+                rv += "\n"
+                rv += f"\t{self.build_path(item)}"
+            rv += "\n"
+            rv += fill(f"\tvalues: {list(zip(*value['values']))}",
                        width=70,
-                       subsequent_indent="\t"))
+                       subsequent_indent="\t\t")
             axis += 1
+        return rv
 
     def __enter__(self):
         return self
