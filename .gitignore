@@ -49,3 +49,6 @@ docs/_build/
 
 # Virtual environments
 .venv/
+
+# Working test dir
+run/
