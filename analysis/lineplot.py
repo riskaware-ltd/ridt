@@ -9,11 +9,9 @@ import numpy as np
 
 class LinePlot:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: IDMFConfig, output_dir: str):
         self.settings = settings
-
-        self.sources = getattr(
-            self.settings.modes, self.settings.release_type).sources
+        self.output_dir = output_dir
 
     def __call__(self, concentrations: List[float], line: Line, time: float):
         self.plot(concentrations, line)
@@ -34,23 +32,13 @@ class LinePlot:
         return plot
 
     def save_fig(self, line: Line, time):
-        plt.savefig(f"{self.settings.output_dir}/{self.settings.dispersion_model.capitalize()} "
-                    f"{self.settings.release_type.capitalize()} {len(self.sources)} Source(s) "
+        plt.savefig(f"{self.output_dir}/{self.settings.dispersion_model.capitalize()} "
                     f"Line {line.pointA.x, line.pointA.y, line.pointA.z}, "
                     f"to {line.pointB.x, line.pointB.y, line.pointB.z} "
                     f"time {time}.pdf")
 
     def make_title(self, line: Line):
-        title = f"{self.settings.dispersion_model.capitalize()} model with " \
-                f"{self.settings.release_type.capitalize()} release type."
-        for key, val in self.sources.items():
-            if self.settings.release_type == "instantaneous":
-                title += f" \n{key} at {[val.x, val.y, val.z]}, mass of {val.mass}, release time {val.time}."
-            elif self.settings.release_type == "infinite_duration":
-                title += f" \n{key} at {[val.x, val.y, val.z]}, rate of {val.rate}, release time {val.time}."
-            elif self.settings.release_type == "fixed_duration":
-                title += f" \n{key} at {[val.x, val.y, val.z]}, rate of {val.rate}, start time {val.start_time}," \
-                         f" end time {val.end_time}."
+        title = f"{self.settings.dispersion_model.capitalize()}" \
 
         title += f" \n From {[line.start_point.x, line.start_point.y, line.start_point.z]}, " \
                  f"length {line.length} in {line.direction} axis"
