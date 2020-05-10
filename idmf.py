@@ -30,10 +30,10 @@ def run(config_file, output_dir):
         sys.exit(e)
 
     if s.dispersion_model == "well_mixed":
-        r = WellMixedRun(s)
+        r = WellMixedRun(s, output_dir)
 
     if s.dispersion_model == "eddy_diffusion":
-        EddyDiffusionRun(s)
+        EddyDiffusionRun(s, output_dir)
 
 
 @idmf.command()
