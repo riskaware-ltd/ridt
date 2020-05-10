@@ -9,15 +9,14 @@ import numpy as np
 
 class ContourPlot:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: IDMFConfig, output_dir: str):
         self.settings = settings
-
-        self.sources = getattr(
-            self.settings.modes, self.settings.release_type).sources
+        self.output_dir = output_dir
 
     def __call__(self, concentrations: np.ndarray, plane: Plane, time: float):
         self.plot(concentrations, plane)
         self.save_fig(plane, time)
+        plt.close()
 
     def plot(self, concentrations: np.ndarray, plane: Plane):
         title = self.make_title(plane)
@@ -38,23 +37,13 @@ class ContourPlot:
         return plot
 
     def save_fig(self, plane: Plane, time):
-        plt.savefig(f"{self.settings.output_dir}/{self.settings.dispersion_model.capitalize()} "
-                    f"{self.settings.release_type.capitalize()} {len(self.sources)} Source(s) "
+        plt.savefig(f"{self.output_dir}/{self.settings.dispersion_model.capitalize()} "
                     f"{plane.axis} plane, "
                     f"{plane.distance} distance, "
                     f"time {time}.pdf")
 
     def make_title(self, plane: Plane):
-        title = f"{self.settings.dispersion_model.capitalize()} model with " \
-                f"{self.settings.release_type.capitalize()} release type."
-        for key, val in self.sources.items():
-            if self.settings.release_type == "instantaneous":
-                title += f" \n{key} at {[val.x, val.y, val.z]}, mass of {val.mass}, release time {val.time}."
-            elif self.settings.release_type == "infinite_duration":
-                title += f" \n{key} at {[val.x, val.y, val.z]}, rate of {val.rate}, release time {val.time}."
-            elif self.settings.release_type == "fixed_duration":
-                title += f" \n{key} at {[val.x, val.y, val.z]}, rate of {val.rate}, start time {val.start_time}," \
-                         f" end time {val.end_time}."
+        title = f"{self.settings.dispersion_model.capitalize()} model with "
         title += f" \n Plane parallel to {plane.axis} axis, " \
                  f"located {plane.distance} {self.settings.models.eddy_diffusion.spatial_units} along "
         return title
