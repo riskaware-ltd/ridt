@@ -11,7 +11,7 @@ class DataStore:
         self.points = dict()
         self.lines = dict()
         self.planes = dict()
-        self.domain = dict()
+        self.domain = None
     
     def add_point_data(self, id_str: str, data: ndarray):
         self.verify(data, 1)
@@ -58,8 +58,7 @@ class DataStore:
             raise DataStoreTypeError(type(data))
         if len(data.shape) is not dimensions:
             raise DataStoreDimensionalityError(len(data.shape), dimensions)
-
-
+    
 
 class DataStoreIDError(Error):
     """The exception raised when the data store is queries with an id string
