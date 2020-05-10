@@ -1,5 +1,5 @@
 from config import IDMFConfig
-from config.idmfconfig import Point
+from config import Point
 
 from typing import List
 

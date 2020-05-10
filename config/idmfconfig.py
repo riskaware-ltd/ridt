@@ -1,10 +1,10 @@
-from base.settings import Settings
-from base.settings import Terminus
-from base.settings import List
-from base.settings import Dict
-from base.settings import Number
-from base.settings import StringSelection
-from base.exceptions import Error
+from base import Settings
+from base import Terminus
+from base import List
+from base import Dict
+from base import Number
+from base import StringSelection
+from base import Error
 
 
 class IDMFConfig(Settings):

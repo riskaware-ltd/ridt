@@ -15,9 +15,9 @@ from numpy import clip
 from typing import List
 from copy import copy
 
-from config.configfileparser import ConfigFileParser
-from config.idmfconfig import IDMFConfig
-from config.idmfconfig import InstantaneousSource
+from config import ConfigFileParser
+from config import IDMFConfig
+from config import InstantaneousSource
 
 
 class EddyDiffusion:

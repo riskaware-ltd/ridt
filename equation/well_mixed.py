@@ -2,7 +2,7 @@ from numpy import ndarray
 from numpy import zeros
 from numpy import array 
 
-from config.idmfconfig import IDMFConfig
+from config import IDMFConfig
 
 import numpy as np
 

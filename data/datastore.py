@@ -1,8 +1,9 @@
 from numpy import ndarray
 
-from base.settings import ComputationalSpace
-from config.idmfconfig import IDMFConfig
-from base.exceptions import Error
+from base import Error
+from base import ComputationalSpace
+
+from config import IDMFConfig
 
 
 class DataStore:

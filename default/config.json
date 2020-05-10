@@ -1,5 +1,5 @@
 {
-    "dispersion_model": "eddy_diffusion",
+    "dispersion_model": "well_mixed",
 
     "time_units": "s",
     "time_samples": 50,

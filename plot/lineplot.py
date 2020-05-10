@@ -1,5 +1,5 @@
 from config import IDMFConfig
-from config.idmfconfig import Line
+from config import Line
 
 from typing import List
 

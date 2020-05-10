@@ -6,13 +6,15 @@ from numpy import zeros
 from numpy import meshgrid
 from numpy import linspace
 
-from base.settings import ComputationalSpace
-from equation.well_mixed import WellMixed
-from config.idmfconfig import IDMFConfig
-from data.datastore import DataStore
-from data.batchdatastore import BatchDataStore
-from data.batchdatastorewriter import BatchDataStoreWriter
-from container.domain import Domain
+from base import ComputationalSpace
+from equation import WellMixed
+
+from config import IDMFConfig
+
+from data import BatchDataStore
+from data import BatchDataStoreWriter
+
+from container import Domain
 
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'

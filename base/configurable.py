@@ -1,8 +1,8 @@
 import sys
 import json
 
-from base.settings import Settings
-from base.exceptions import Error
+from base import Settings
+from base import Error
 
 
 class Configurable:

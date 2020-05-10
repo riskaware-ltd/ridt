@@ -1,6 +1,8 @@
-from base.exceptions import Error
-from config.idmfconfig import IDMFConfig
-from data.datastore import DataStore
+from base import Error
+
+from config import IDMFConfig
+
+from .datastore import DataStore
 
 
 class BatchDataStore:

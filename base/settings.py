@@ -30,7 +30,7 @@ from numpy import linspace
 from numpy import prod
 from numpy import meshgrid
 
-from base.exceptions import Error
+from .exceptions import Error
 
 T = TypeVar("T")
 

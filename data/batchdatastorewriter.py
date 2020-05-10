@@ -1,11 +1,13 @@
 from os.path import join
 
-from data.batchdatastore import BatchDataStore
-from data.directoryagent import DirectoryAgent
-from data.datastorewriter import DataStoreWriter
-from config.idmfconfig import IDMFConfig
-from config.configfilewriter import ConfigFileWriter
-from base.settings import ComputationalSpace
+from base import ComputationalSpace
+
+from config import IDMFConfig
+from config import ConfigFileWriter
+
+from .batchdatastore import BatchDataStore
+from .directoryagent import DirectoryAgent
+from .datastorewriter import DataStoreWriter
 
 
 class BatchDataStoreWriter:

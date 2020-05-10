@@ -6,19 +6,17 @@ from numpy import zeros
 from numpy import meshgrid
 from numpy import squeeze 
 
-from config.idmfconfig import IDMFConfig
-from config.configfilewriter import ConfigFileWriter
-from base.settings import ComputationalSpace
-from data.datastore import DataStore
-from data.batchdatastore import BatchDataStore
-from data.batchdatastorewriter import BatchDataStoreWriter
-from data.directoryagent import DirectoryAgent
-from container.domain import Domain
+from base import ComputationalSpace
+
+from config import IDMFConfig
 
 from equation import EddyDiffusion
-from analysis import PointPlot
-from analysis import LinePlot
-from analysis import ContourPlot
+
+from data import BatchDataStore
+from data import BatchDataStoreWriter
+
+from container import Domain
+
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 

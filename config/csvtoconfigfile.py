@@ -5,9 +5,10 @@ import json
 from os.path import basename
 from os.path import dirname
 
-from base.exceptions import Error
-from config.configfileparser import ConfigFileParser
-from config.configfilewriter import ConfigFileWriter
+from base import Error
+
+from config import ConfigFileParser
+from config import ConfigFileWriter
 
 class CSVToConfigFile:
 

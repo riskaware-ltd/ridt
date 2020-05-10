@@ -4,9 +4,10 @@ from os.path import join
 
 from typing import Type
 
-from config.idmfconfig import IDMFConfig
-from base.exceptions import Error
-from base.settings import SettingErrorMessage
+from base import Error
+from base import SettingErrorMessage
+
+from config import IDMFConfig
 
 
 class ConfigFileWriter:

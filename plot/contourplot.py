@@ -1,5 +1,5 @@
 from config import IDMFConfig
-from config.idmfconfig import Plane
+from config import Plane
 
 from matplotlib import cm, ticker
 import matplotlib.pyplot as plt
