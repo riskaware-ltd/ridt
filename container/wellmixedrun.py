@@ -6,6 +6,7 @@ from numpy import linspace
 
 from config.idmfconfig import IDMFConfig
 from data.datastore import DataStore
+from data.batchdatastore import BatchDataStore
 from container.domain import Domain
 from base.settings import ComputationalSpace
 
@@ -20,7 +21,7 @@ class WellMixedRun:
     def __init__(self, settings: IDMFConfig, output_dir: str):
         self._settings = settings
         self._output_dir = output_dir
-        self.data_store = DataStore()
+        self.data_store = BatchDataStore()
         self.space = self.prepare()
         self.evaluate()
 
@@ -33,10 +34,11 @@ class WellMixedRun:
             self.run(setting)
 
     def run(self, setting: IDMFConfig):
+        self.data_store.add_run(setting)
         domain = Domain
         solver = WellMixed(settings)
-        output = solver(self.time)
-        self.data_store.add_point_data(setting, output)
+        output = solver(domain.time)
+        self.data_store[setting].add_point_data(output)
 
     @property
     def settings(self):

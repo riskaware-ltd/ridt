@@ -7,6 +7,7 @@ from numpy import squeeze
 from config.idmfconfig import IDMFConfig
 from base.settings import ComputationalSpace
 from data.datastore import DataStore
+from data.batchdatastore import BatchDataStore
 from container.domain import Domain
 
 from equation import EddyDiffusion
@@ -23,7 +24,7 @@ class EddyDiffusionRun:
 
         self._settings = settings
         self._output_dir = output_dir
-        self.data_store = DataStore()
+        self.data_store = BatchDataStore()
         self.space = self.prepare()
         self.evaluate()
 
@@ -37,6 +38,7 @@ class EddyDiffusionRun:
 
     def run(self, setting: IDMFConfig):
 
+        self.data_store.add_run(setting)
         domain = Domain(setting)
         solver = EddyDiffusion(setting)
 
@@ -45,19 +47,19 @@ class EddyDiffusionRun:
         planes = setting.models.eddy_diffusion.monitor_locations.planes
 
         for point_name, point in points.items():
-            output = solver(*domain.point(point), self.time)
-            self.data_store.add_point_data(setting, point_name, squeeze(output))
+            output = solver(*domain.point(point), domain.time)
+            self.data_store[setting].add_point_data(point_name, squeeze(output))
 
         for line_name, line in lines.items():
-            output = solver(*domain.line(line), self.time)
-            self.data_store.add_line_data(setting, line_name, squeeze(output))
+            output = solver(*domain.line(line), domain.time)
+            self.data_store[setting].add_line_data(line_name, squeeze(output))
 
         for plane_name, plane in planes.items():
-            output = solver(*domain.plane(plane), self.time)
-            self.data_store.add_plane_data(setting, plane_name, squeeze(output))
+            output = solver(*domain.plane(plane), domain.time)
+            self.data_store[setting].add_plane_data(plane_name, squeeze(output))
         
-        output = solver(self._X, self._Y, self._Z, self.time)
-        self.data_store.add_domain_data(setting, output)
+        output = solver(*domain.full, domain.time)
+        self.data_store[setting].add_domain_data(output)
 
     @property
     def settings(self):
