@@ -1,3 +1,4 @@
+from base.exceptions import Error
 from config.idmfconfig import IDMFConfig
 from data.datastore import DataStore
 
@@ -13,7 +14,7 @@ class BatchDataStore:
         else:
             pass
 
-    def get_run(self, setting: IDMFConfig) -> DataStore:
+    def __getitem__(self, setting: IDMFConfig) -> DataStore:
         try:
             return self.store[setting]
         except KeyError as e:

@@ -13,41 +13,41 @@ class DataStore:
         self.planes = dict()
         self.domain = dict()
     
-    def add_point_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
+    def add_point_data(self, id_str: str, data: ndarray):
         self.verify(data, 1)
         self.points[id_str] = data
 
-    def add_line_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
+    def add_line_data(self, id_str: str, data: ndarray):
         self.verify(data, 2)
         self.lines[id_str] = data
 
-    def add_plane_data(self, setting: IDMFConfig, id_str: str, data: ndarray):
+    def add_plane_data(self, id_str: str, data: ndarray):
         self.verify(data, 3)
         self.planes[id_str] = data
     
-    def add_domain_data(self, setting: IDMFConfig, data: ndarray):
+    def add_domain_data(self, data: ndarray):
         self.verify(data, 4)
         self.domain = data
     
-    def get_point_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
+    def get_point_data(self, id_str: str) -> ndarray:
         try:
             return self.points[id_str]
         except KeyError as e:
             raise DataStoreIDError(id_str, "point")
     
-    def get_line_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
+    def get_line_data(self, id_str: str) -> ndarray:
         try:
             return self.lines[id_str]
         except KeyError as e:
             raise DataStoreIDError(id_str, "line")
     
-    def get_plane_data(self, setting: IDMFConfig, id_str: str) -> ndarray:
+    def get_plane_data(self, id_str: str) -> ndarray:
         try:
             return self.planes[id_str]
         except KeyError as e:
             raise DataStoreIDError(id_str, "plane")
     
-    def get_domain_data(self, setting: IDMFConfig) -> ndarray:
+    def get_domain_data(self) -> ndarray:
         try:
             return self.domain
         except KeyError as e:
