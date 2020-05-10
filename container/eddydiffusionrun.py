@@ -1,3 +1,5 @@
+from os.path import join
+
 from tqdm import tqdm
 
 from numpy import zeros
@@ -5,9 +7,12 @@ from numpy import meshgrid
 from numpy import squeeze 
 
 from config.idmfconfig import IDMFConfig
+from config.configfilewriter import ConfigFileWriter
 from base.settings import ComputationalSpace
 from data.datastore import DataStore
 from data.batchdatastore import BatchDataStore
+from data.batchdatastorewriter import BatchDataStoreWriter
+from data.directoryagent import DirectoryAgent
 from container.domain import Domain
 
 from equation import EddyDiffusion
@@ -27,13 +32,14 @@ class EddyDiffusionRun:
         self.data_store = BatchDataStore()
         self.space = self.prepare()
         self.evaluate()
+        self.write()
 
     def prepare(self) -> ComputationalSpace:
         restrict = {"models": self.settings.dispersion_model}
         return ComputationalSpace(self.settings, restrict)
     
     def evaluate(self):
-        for setting in tqdm(self.space.configuration_space, bar_format=BF):
+        for setting in tqdm(self.space.space, bar_format=BF):
             self.run(setting)
 
     def run(self, setting: IDMFConfig):
@@ -60,6 +66,13 @@ class EddyDiffusionRun:
         
         output = solver(*domain.full, domain.time)
         self.data_store[setting].add_domain_data(output)
+
+
+    def write(self):
+        with BatchDataStoreWriter(self.settings,
+                                  self.data_store,
+                                  self.space) as dsw:
+            dsw.write(self.output_dir)
 
     @property
     def settings(self):
