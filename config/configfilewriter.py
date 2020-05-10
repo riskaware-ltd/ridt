@@ -1,5 +1,7 @@
 import json
 
+from os.path import join
+
 from typing import Type
 
 from config.idmfconfig import IDMFConfig
@@ -24,8 +26,8 @@ class ConfigFileWriter:
 
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
 
     def __enter__(self):
         return self
@@ -33,7 +35,7 @@ class ConfigFileWriter:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def __call__(self, path: str, data: dict):
+    def __call__(self, file_name: str, data: dict):
         """The way that the functionality of the :class:`~.ConfigFileWriter`
         class is accessed.
 
@@ -52,7 +54,7 @@ class ConfigFileWriter:
             from `path`.
 
         """
-        self.path = path
+        self.path = join(self.output_dir, file_name)
         self.data = data
         self.__write_file()
         

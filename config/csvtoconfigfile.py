@@ -2,6 +2,9 @@ import csv
 import sys
 import json
 
+from os.path import basename
+from os.path import dirname
+
 from base.exceptions import Error
 from config.configfileparser import ConfigFileParser
 from config.configfilewriter import ConfigFileWriter
@@ -173,8 +176,8 @@ class CSVToConfigFile:
         else:
             path = self.output_file_path
         
-        with ConfigFileWriter() as cfw:
-            cfw(path, self.new)
+        with ConfigFileWriter(dirname(path)) as cfw:
+            cfw(basename(path), self.new)
 
     def ord(self, n):
         return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}\
