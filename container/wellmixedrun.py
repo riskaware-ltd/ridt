@@ -35,7 +35,7 @@ class WellMixedRun:
 
     def run(self, setting: IDMFConfig):
         self.data_store.add_run(setting)
-        domain = Domain
+        domain = Domain(setting)
         solver = WellMixed(settings)
         output = solver(domain.time)
         self.data_store[setting].add_point_data(output)
