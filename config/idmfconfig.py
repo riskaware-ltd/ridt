@@ -172,7 +172,6 @@ class IDMFConfig(Settings):
                         f"{mode} source {key} x position is "
                         f"outside simulation space domain (0, {bound}).")
 
-
         for mode in ["instantaneous", "infinite_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
                 if isinstance(value.time, list):
@@ -212,10 +211,58 @@ class IDMFConfig(Settings):
                 f"{mode} source {key} end time is "
                 f"outside simulation time domain [0, {self.total_time}).")
 
-        contours = self.models.eddy_diffusion.contour_plots.contours
-        if contours.min >= contours.max:
+        c_plots = self.models.eddy_diffusion.contour_plots
+        if c_plots.contours.min >= c_plots.contours.max:
             raise ConsistencyError(
-        f"contour min ({contours.min}) >= contour max ({contours.max}).")
+                f"contour min ({c_plots.contours.min})"
+                f" >= contour max ({c_plots.contours.max}).")
+        if c_plots.range not in ["auto", "manual"]:
+            raise ConsistencyError(f"Contour plot range must be either"
+                                   f"auto or manual.")
+        if c_plots.scale not in ["linear", "logarithmic"]:
+            raise ConsistencyError(f"Contour plot scale must be either"
+                                   f"linear or logarithmic.")
+
+        t_unit = self.time_units
+        if t_unit not in ["m", "s", "h"]:
+            raise ConsistencyError(
+                f"time units must be ['s', 'm', 'h'] received: {t_unit}")
+
+        s_units = self.models.eddy_diffusion.spatial_units
+        if s_units not in ["mm", "cm", "m"]:
+            raise ConsistencyError(
+                f"spatial units must be ['mm', 'cm', 'm'] received: "
+                f"{s_units}")
+
+        c_units = self.concentration_units
+        if c_units not in ["kgm-3", "mgm-3", "ppm", "ppb", "ppt"]:
+            raise ConsistencyError(
+                f"spatial units must be ['kgm-3', 'mgm-3', 'ppm', 'ppb', 'ppt'] received: "
+                f"{c_units}")
+
+        e_units = self.exposure_units
+        if e_units not in ["mgminm-3", "kgsm-3"]:
+            raise ConsistencyError(
+                f"spatial units must be ['mgminm-3', 'kgsm-3'] received: "
+                f"{e_units}")
+
+        thresh = self.thresholds
+        if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
+            raise ConsistencyError(f"Cannot exceed more than 5 thresholds")
+
+        if self.dispersion_model not in ["well_mixed", "eddy_diffusion"]:
+            raise ConsistencyError(
+                f"dispersion model must be either well_mixed or eddy_diffusion"
+                f"received: {self.dispersion_model}")
+
+        ed = self.models.eddy_diffusion
+        dims = ["x", "y", "z"]
+        for plane in ed.monitor_locations.planes.values():
+            if plane.axis not in ["xy", "xz", "zy"]:
+                raise ConsistencyError(f"plane axis must be either xy, xz, zy")
+            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
+            if plane.distance > getattr(ed.dimensions, dim):
+                raise ConsistencyError(f"plane lies outside of dimension {dim}")
 
 
 class DispersionModel(StringSelection):
