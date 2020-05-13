@@ -1,5 +1,7 @@
 from os.path import join
 
+import numpy as np
+
 from base import ComputationalSpace
 
 from config import IDMFConfig
@@ -20,24 +22,28 @@ class BatchDataStorePlotter:
         self.data_store = data_store
         self.space = space
 
-    def plot(self, outdir: str, time: int):
-        if self.space.zero:
-            with ConfigFileWriter(outdir) as cfw:
-                cfw("config.json", self.settings.__source__)
-            with DataStorePlotter(outdir) as w:
-                w.plot(self.data_store[self.settings], self.settings, time)
-        else:
-            with ConfigFileWriter(outdir) as cfw:
-                cfw("batch_config.json", self.settings.__source__)
-            with open(join(outdir, "run_summary.txt"), "w") as f:
-                f.write(self.space.cout_summary())
-            with DirectoryAgent(outdir, self.space.shape) as da:
-                for idx, setting in enumerate(self.space.space):
-                    da.create_rundir(idx)
-                    with ConfigFileWriter(da.build_rundir_path(idx)) as cfw:
-                        cfw("config.json", setting.__source__)
-                    with DataStorePlotter(da.build_rundir_path(idx)) as w:
-                        w.plot(self.data_store[setting], self.settings, time)
+        self.time_array = np.linspace(
+            0, settings.total_time, settings.time_samples)
+
+    def plot(self, outdir: str):
+        for i, time in enumerate(self.time_array):
+            if self.space.zero:
+                with ConfigFileWriter(outdir) as cfw:
+                    cfw("config.json", self.settings.__source__)
+                with DataStorePlotter(outdir) as w:
+                    w.plot(self.data_store[self.settings], self.settings, time)
+            else:
+                with ConfigFileWriter(outdir) as cfw:
+                    cfw("batch_config.json", self.settings.__source__)
+                with open(join(outdir, "run_summary.txt"), "w") as f:
+                    f.write(self.space.cout_summary())
+                with DirectoryAgent(outdir, self.space.shape) as da:
+                    for idx, setting in enumerate(self.space.space):
+                        da.create_rundir(idx)
+                        with ConfigFileWriter(da.build_rundir_path(idx)) as cfw:
+                            cfw("config.json", setting.__source__)
+                        with DataStorePlotter(da.build_rundir_path(idx)) as w:
+                            w.plot(self.data_store[setting], self.settings, i)
 
     def __enter__(self):
         return self
