@@ -73,9 +73,9 @@
         "eddy_diffusion": {
             "spatial_units": "m",
             "dimensions": {
-                "x": 3.0,
-                "y": 3.0,
-                "z": 3.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "spatial_samples": {
                 "x": 10,
@@ -84,7 +84,7 @@
             },
             "coefficient": {
                 "calculation": "EXPLICIT",
-                "value": 0.001,    
+                "value": 1.0,
                 "tkeb": {
                     "number_of_supply_vents": 1
                 }

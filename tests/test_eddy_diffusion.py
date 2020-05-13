@@ -7,10 +7,10 @@ from config import IDMFConfig
 from equation import EddyDiffusion
 
 
-class TestWellMixed(unittest.TestCase):
+class TestEddyDiffusion(unittest.TestCase):
 
     def setUp(self) -> None:
-        with open("test_resources/test_config.json") as f:
+        with open("tests/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
 
         self.config = IDMFConfig(loaded_json)
@@ -23,40 +23,17 @@ class TestWellMixed(unittest.TestCase):
         self.y_space = np.linspace(0, 10, 10)
         self.z_space = np.linspace(0, 10, 10)
 
-    def test_coeff(self):
-        time_array = np.linspace(0, 10, 10)
-        concentration = self.ed._EddyDiffusion__coeff(time_array)
-        self.assertEqual(type(concentration), np.ndarray)
-
-    def test_instantaneous(self):
-        self.ed.sources = getattr(self.ed.settings.modes, "instantaneous").sources
-
-        concentration = self.ed.instantaneous(
-            self.x_space, self.y_space, self.z_space, self.time_array)
-        self.assertEqual(type(concentration), np.ndarray)
-
-    def test_infinite(self):
-        self.ed.sources = getattr(self.ed.settings.modes, "infinite_duration").sources
-
-        concentration = self.ed.infinite_duration(
-            self.x_space, self.y_space, self.z_space, self.time_array)
-        self.assertEqual(type(concentration), np.ndarray)
-
-    def test_fixed(self):
-        self.ed.sources = getattr(self.ed.settings.modes, "fixed_duration").sources
-
-        concentration = self.ed.fixed_duration(
-            self.x_space, self.y_space, self.z_space, self.time_array)
-        self.assertEqual(type(concentration), np.ndarray)
-
-    def test_exp(self):
-        bound = 1
-        source_loc = 1
-        t = 1
-        rv = self.ed._EddyDiffusion__exp(
-            self.x_space, t, bound, source_loc
+    def test_outputs(self):
+        concentration = self.ed(
+            self.x_space, self.y_space, self.z_space, self.time_array
         )
-        self.assertEqual(type(rv), np.ndarray)
+        self.assertEqual(type(concentration), np.ndarray)
+
+    def test__coeff(self):
+        coeff = self.ed._EddyDiffusion__coeff(1)
+        self.assertEqual(
+            coeff, 1 / (8 * np.power(np.pi, 3/2) * np.exp(1))
+        )
 
     def test_diffusion_coefficient(self):
         self.ed.settings.models.eddy_diffusion.coefficient.calculation = "EXPLICIT"
@@ -67,6 +44,15 @@ class TestWellMixed(unittest.TestCase):
         self.assertEqual(
             type(self.ed._EddyDiffusion__diffusion_coefficient()), np.float64
         )
+
+    def test_exp(self):
+        bound = 1
+        source_loc = 1
+        t = 1
+        rv = self.ed._EddyDiffusion__exp(
+            self.x_space, t, bound, source_loc
+        )
+        self.assertEqual(type(rv), np.ndarray)
 
     def test_concentration(self):
         self.ed.sources = getattr(self.ed.settings.modes, "fixed_duration").sources
