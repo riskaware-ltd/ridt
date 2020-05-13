@@ -1,10 +1,9 @@
 {
     "dispersion_model": "eddy_diffusion",
-    "release_type": "infinite_duration",
 
     "time_units": "s",
     "time_samples": 10,
-    "total_time": 1.0,
+    "total_time": 10.0,
 
     "concentration_units": "kgm-3",
     "exposure_units": "mgminm-3",
@@ -30,7 +29,7 @@
         "infinite_duration": {
             "sources": {
                 "source_1": {
-                    "x": 1.0, 
+                    "x": 1.0,
                     "y": 1.0,
                     "z": 1.0,
                     "rate": 1.0,
@@ -53,28 +52,12 @@
         }
     },
 
-    "monitor_locations": {
-        "monitor_1": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-        },
-        "monitor_2": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-        }
-    },
-
     "thresholds": {
         "concentration": [
             0.0,
+            1.0,
             2.0,
-            {
-                "min": 0.0,
-                "max": 1.0,
-                "num": 3
-            },
+            3.0,
             4.0
         ],
         "exposure": [
@@ -113,43 +96,39 @@
             "monitor_locations": {
                 "points": {
                     "point_1": {
-                        "x": 3.0,
-                        "y": 3.0,
-                        "z": 3.0
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     },
                     "point_2": {
-                        "x": 3.0,
-                        "y": 3.0,
-                        "z": 3.0
+                        "x": 2.0,
+                        "y": 2.0,
+                        "z": 2.0
                     }
                 },
                 "lines": {
                     "line_1": {
-                        "pointA": {
-                            "x": 3.0,
-                            "y": 3.0,
-                            "z": 3.0
+                        "point": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
                         },
-                        "pointB": {
-                            "x": 3.0,
-                            "y": 3.0,
-                            "z": 3.0
-                        }
+                        "parallel_axis": "x"
                     }
                 },
                 "planes": {
                     "plane_1": {
                         "axis": "xy",
-                        "distance": 0.1
-                    },
-                    "plane_2": {
-                        "axis": "yz",
-                        "distance": 0.1
+                        "distance": 1.0
                     }
                 }
             },
+            "point_plots": {
+                "output": false
+            },
             "line_plots": {
-                "output": true
+                "output": true,
+                "spatial_resolution": 10.0
             },
             "contour_plots": {
                 "output": true,
