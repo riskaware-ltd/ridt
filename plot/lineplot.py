@@ -40,6 +40,6 @@ class LinePlot:
     def make_title(self, line: Line):
         title = f"{self.settings.dispersion_model.capitalize()}" \
 
-        title += f" \n From {[line.start_point.x, line.start_point.y, line.start_point.z]}, " \
-                 f"length {line.length} in {line.direction} axis"
+        title += f" \n From {[line.point.x, line.point.y, line.point.z]}, " \
+                 f"in {line.parallel_axis} axis"
         return title
