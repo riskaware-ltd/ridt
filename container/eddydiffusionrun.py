@@ -14,6 +14,7 @@ from equation import EddyDiffusion
 
 from data import BatchDataStore
 from data import BatchDataStoreWriter
+from data import BatchDataStorePlotter
 
 from container import Domain
 
@@ -31,6 +32,7 @@ class EddyDiffusionRun:
         self.space = self.prepare()
         self.evaluate()
         self.write()
+        self.plot()
 
     def prepare(self) -> ComputationalSpace:
         restrict = {"models": self.settings.dispersion_model}
@@ -65,12 +67,17 @@ class EddyDiffusionRun:
         output = solver(*domain.full, domain.time)
         self.data_store[setting].add_domain_data(output)
 
-
     def write(self):
         with BatchDataStoreWriter(self.settings,
                                   self.data_store,
                                   self.space) as dsw:
             dsw.write(self.output_dir)
+
+    def plot(self):
+        with BatchDataStorePlotter(self.settings,
+                                   self.data_store,
+                                   self.space) as dsp:
+            dsp.plot(self.output_dir)
 
     @property
     def settings(self):
@@ -79,4 +86,3 @@ class EddyDiffusionRun:
     @property
     def output_dir(self):
         return self._output_dir
-   
