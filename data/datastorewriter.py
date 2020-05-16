@@ -6,8 +6,6 @@ from numpy import ndarray
 from numpy import savetxt
 from numpy import save
 
-from container import Domain
-
 from .datastore import DataStore
 
 class DataStoreWriter:
