@@ -13,10 +13,14 @@ class ContourPlot:
         self.settings = settings
         self.output_dir = output_dir
 
-    def __call__(self, concentrations: np.ndarray, plane: Plane, time: float):
-        self.plot(concentrations, plane)
-        self.save_fig(plane, time)
-        plt.close()
+        self.time_array = np.linspace(
+            0, settings.total_time, settings.time_samples)
+
+    def __call__(self, concentrations: np.ndarray, plane: Plane):
+        for idx, time in enumerate(self.time_array):
+            self.plot(concentrations[idx], plane)
+            self.save_fig(plane, idx)
+            plt.clf()
 
     def plot(self, concentrations: np.ndarray, plane: Plane):
         title = self.make_title(plane)
@@ -30,7 +34,6 @@ class ContourPlot:
             locator=ticker.LinearLocator(),
             cmap=cm.RdBu)
 
-
         plt.title(title)
         self.__set_labels(plane)
 
@@ -40,7 +43,7 @@ class ContourPlot:
         plt.savefig(f"{self.output_dir}/{self.settings.dispersion_model.capitalize()} "
                     f"{plane.axis} plane, "
                     f"{plane.distance} distance, "
-                    f"time {time}.pdf")
+                    f"time index {time}.pdf")
 
     def make_title(self, plane: Plane):
         title = f"{self.settings.dispersion_model.capitalize()} model with "
