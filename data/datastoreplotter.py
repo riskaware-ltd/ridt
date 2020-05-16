@@ -2,11 +2,7 @@ import csv
 
 from os.path import join
 
-from numpy import ndarray
-from numpy import savetxt
 from numpy import save
-
-from container import Domain
 
 from plot import PointPlot
 from plot import LinePlot
@@ -22,15 +18,18 @@ class DataStorePlotter:
     def __init__(self, output_dir: str):
         self.output_dir = output_dir
 
-    def plot(self, data_store: DataStore, settings: IDMFConfig, time: int) -> None:
+    def plot(self, data_store: DataStore, settings: IDMFConfig) -> None:
         pp = PointPlot(settings, self.output_dir)
         for name, data in data_store.points.items():
-            point = settings.\
-                    models.\
-                    eddy_diffusion.\
-                    monitor_locations.\
-                    points[name]
-            pp(data, point)
+            try:
+                point = settings.\
+                        models.\
+                        eddy_diffusion.\
+                        monitor_locations.\
+                        points[name]
+                pp(data, point)
+            except KeyError:
+                pp(data)
 
         lp = LinePlot(settings, self.output_dir)
         for name, data in data_store.lines.items():
@@ -39,7 +38,7 @@ class DataStorePlotter:
                    eddy_diffusion.\
                    monitor_locations.\
                    lines[name]
-            lp(data, line, time)
+            lp(data, line)
 
         cp = ContourPlot(settings, self.output_dir)
         for name, data in data_store.planes.items():
@@ -47,8 +46,8 @@ class DataStorePlotter:
                     models. \
                     eddy_diffusion. \
                     monitor_locations. \
-                    lines[name]
-            cp(data, plane, time)
+                    planes[name]
+            cp(data, plane)
         
         if data_store.domain is not None:
             save(self.path("domain"), data_store.domain)
