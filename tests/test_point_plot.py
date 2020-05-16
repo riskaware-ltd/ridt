@@ -11,7 +11,13 @@ from plot import PointPlot
 
 class TestPointPlot(unittest.TestCase):
 
+    "Unit tests for the :class:`~.PointPlot` class."""
+
     def setUp(self) -> None:
+
+        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        the :class:`~.PointPlot` class, and creates some initial
+        variables."""
 
         with open("tests/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
@@ -26,18 +32,30 @@ class TestPointPlot(unittest.TestCase):
         self.points = self.config.models.eddy_diffusion.monitor_locations.points
 
     def tearDown(self) -> None:
+
+        """tearDown method which removes and changes made in the
+        tests."""
+
         resource_list = os.listdir("tests/test_resources")
         for file in resource_list:
             if file.endswith(".pdf"):
                 os.remove(f"tests/test_resources/{file}")
 
     def test_plot(self):
+
+        """tests the plots to make sure that is plot is
+        of type :class:`~.Line2D.`"""
+
         plots = self.pp.plot(self.conc)
 
         for plot in plots:
             self.assertEqual(type(plot), Line2D)
 
     def test_make_title(self):
+
+        """tests to make sure that the title
+        is of type :obj:`str`."""
+
         title = self.pp.make_title()
         self.assertEqual(type(title), str)
 
