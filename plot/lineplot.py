@@ -13,9 +13,14 @@ class LinePlot:
         self.settings = settings
         self.output_dir = output_dir
 
-    def __call__(self, concentrations: List[float], line: Line, time: float):
-        self.plot(concentrations, line)
-        self.save_fig(line, time)
+        self.time_array = np.linspace(
+            0, settings.total_time, settings.time_samples)
+
+    def __call__(self, concentrations: List[float], line: Line):
+        for idx, time in enumerate(self.time_array):
+            self.plot(concentrations, line)
+            self.save_fig(line, idx)
+            plt.clf()
 
     def plot(self, concentrations: List[float], line: Line):
         title = self.make_title(line)
@@ -33,9 +38,9 @@ class LinePlot:
 
     def save_fig(self, line: Line, time):
         plt.savefig(f"{self.output_dir}/{self.settings.dispersion_model.capitalize()} "
-                    f"Line {line.pointA.x, line.pointA.y, line.pointA.z}, "
-                    f"to {line.pointB.x, line.pointB.y, line.pointB.z} "
-                    f"time {time}.pdf")
+                    f"Line {line.point.x, line.point.y, line.point.z}, "
+                    f"along {line.parallel_axis} axis "
+                    f"time index {time}.pdf")
 
     def make_title(self, line: Line):
         title = f"{self.settings.dispersion_model.capitalize()}" \
