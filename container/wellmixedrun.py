@@ -13,6 +13,7 @@ from config import IDMFConfig
 
 from data import BatchDataStore
 from data import BatchDataStoreWriter
+from data import BatchDataStorePlotter
 
 from container import Domain
 
@@ -29,6 +30,7 @@ class WellMixedRun:
         self.space = self.prepare()
         self.evaluate()
         self.write()
+        self.plot()
 
     def prepare(self):
         restrict = {"models": self.settings.dispersion_model}
@@ -50,6 +52,12 @@ class WellMixedRun:
                                   self.data_store,
                                   self.space) as dsw:
             dsw.write(self.output_dir)
+
+    def plot(self):
+        with BatchDataStorePlotter(self.settings,
+                                   self.data_store,
+                                   self.space) as dsp:
+            dsp.plot(self.output_dir)
 
     @property
     def settings(self):
