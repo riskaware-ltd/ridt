@@ -11,13 +11,18 @@ from plot import LinePlot
 
 class TestLinePlot(unittest.TestCase):
 
+    "Unit tests for the :class:`~.LinePlot` class."""
+
     def setUp(self) -> None:
+
+        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        the :class:`~.LinePlot` class, and creates some initial
+        variables."""
 
         with open("tests/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
 
         self.config = IDMFConfig(loaded_json)
-        self.config.consistency_check()
 
         self.lp = LinePlot(self.config, "tests/test_resources")
 
@@ -26,18 +31,30 @@ class TestLinePlot(unittest.TestCase):
         self.lines = self.config.models.eddy_diffusion.monitor_locations.lines
 
     def tearDown(self) -> None:
+
+        """tearDown method which removes and changes made in the
+        tests."""
+
         resource_list = os.listdir("tests/test_resources")
         for file in resource_list:
             if file.endswith(".pdf"):
                 os.remove(f"tests/test_resources/{file}")
 
     def test_plot(self):
+
+        """tests the plots to make sure that is plot is
+        of type :class:`~.Line2D.`"""
+
         for line in self.lines.values():
             plots = self.lp.plot(self.conc, line)
             for plot in plots:
                 self.assertEqual(type(plot), Line2D)
 
     def test_make_title(self):
+
+        """tests to make sure that the title
+        is of type :obj:`str`."""
+
         for line in self.lines.values():
             title = self.lp.make_title(line)
             self.assertEqual(type(title), str)
