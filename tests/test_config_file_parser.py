@@ -17,7 +17,6 @@ class TestConfigFileParser(unittest.TestCase):
         and the :class:`~.ConfigFileParser` class."""
 
         self.idmf = IDMFConfig
-        self.cfp = ConfigFileParser()
 
     def test_parse_file(self):
 
@@ -27,7 +26,7 @@ class TestConfigFileParser(unittest.TestCase):
         is passed when there isa decode error in the json file."""
 
         with self.assertRaises(ConfigFileParserOSError):
-            self.cfp("random_path")
+            ConfigFileParser("random_path")
 
         with self.assertRaises(ConfigFileParserJSONError):
             self.cfp("tests/test_resources/decode_error_config.json")

@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from data import DataStore
+from data.datastore import DataStore
 
 from data.datastore import DataStoreDimensionalityError
 from data.datastore import DataStoreTypeError

@@ -12,6 +12,7 @@
 
     "total_air_change_rate": 1.0,
     "fresh_air_change_rate": 0.2,
+    "human_readable_data_output": true,
 
     "modes": {
         "instantaneous": {
