@@ -18,6 +18,8 @@ from data import BatchDataStorePlotter
 
 from container import Domain
 
+from analysis import BatchDataStoreAnalyser
+
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
@@ -33,6 +35,7 @@ class EddyDiffusionRun:
         self.evaluate()
         self.write()
         self.plot()
+        self.analyse()
 
     def prepare(self) -> ComputationalSpace:
         restrict = {"models": self.settings.dispersion_model}
@@ -78,6 +81,15 @@ class EddyDiffusionRun:
                                    self.data_store,
                                    self.space) as dsp:
             dsp.plot(self.output_dir)
+        pass
+
+    def analyse(self):
+
+        b = BatchDataStoreAnalyser(self.settings,
+                               self.data_store,
+                               self.space)
+        b.write(self.output_dir)
+
 
     @property
     def settings(self):
