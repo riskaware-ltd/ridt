@@ -8,7 +8,7 @@ import itertools
 
 from pprint import pprint
 
-from copy import copy
+from copy import deepcopy
 
 from collections.abc import Iterable
 
@@ -29,6 +29,7 @@ from functools import reduce
 from numpy import linspace
 from numpy import prod
 from numpy import meshgrid
+from numpy import unravel_index
 
 from .exceptions import Error
 
@@ -179,7 +180,6 @@ class Settings:
                 except SettingErrorMessage as e:
                     SettingErrorMessage(setting, original_error=e)
         self.__source__ = values
-
 
     def __getattribute__(self, name):
         rv = object.__getattribute__(self, name)
@@ -685,7 +685,7 @@ class ComputationalSpace:
         if restrict:
             branch = [(k, v) for k, v in branch if k == restrict]
         for key, item in branch:
-            new_path = copy(path)
+            new_path = deepcopy(path)
             if issubclass(type(item), Number):
                 if item.is_range:
                     new_path.append(key)
@@ -721,12 +721,11 @@ class ComputationalSpace:
                         flat_batch.append(subitem)
                 else:
                     flat_batch.append(item)
-            rv = copy(self.setting.__source__)
+            rv = deepcopy(self.setting.__source__)
             for address, value in zip(self.addresses, flat_batch):
                 self.set_by_address(rv, address, float(value))
-            
             self.space.append(type(self.setting)(rv))
-    
+
     def __getitem__(self, indices):
         if isinstance(indices, tuple):
             if len(indices) > len(self.values):
@@ -808,6 +807,10 @@ class ComputationalSpace:
                        subsequent_indent="\t\t")
             axis += 1
         return rv
+    
+    def index(self, setting: Type[Settings]):
+        linear_index = self.space.index(setting)
+        return unravel_index(linear_index, self.shape)
 
     def __enter__(self):
         return self
