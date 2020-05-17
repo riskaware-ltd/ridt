@@ -8,37 +8,20 @@
     "concentration_units": "kgm-3",
     "exposure_units": "mgminm-3",
 
-    "total_air_change_rate": {
-        "array": [1.0, 2.0, 3.0]
-    },
+    "total_air_change_rate": 1.0,
     "fresh_air_change_rate": {
-        "min": 1.0,
-        "max": 5.0,
-        "num": 4,
-        "match": "fish"
+        "array": [0.01, 0.001, 0.0001]
     },
-
+    "human_readable_data_output": true,
     "modes": {
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": {
-                        "min": 1.0,
-                        "max": 2.0,
-                        "num": 4,
-                        "match": "fish"
-                    }, 
+                    "x": 1.0,
                     "y": 1.0,
                     "z": 1.0,
                     "mass": 0.01,
                     "time": 1.0
-                },
-                "source_2": {
-                    "x": 1.0, 
-                    "y": 1.0,
-                    "z": 1.0,
-                    "mass": 0.01,
-                    "time": 2.0
                 }
             }
         },
@@ -46,11 +29,11 @@
         "infinite_duration": {
             "sources": {
                 "source_1": {
-                    "x": 1.0, 
-                    "y": 1.5,
-                    "z": 1.5,
-                    "rate": 0.0001,
-                    "time": 3.0
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "rate": 0.01,
+                    "time": 1.0
                 }
             }
         },
@@ -58,12 +41,12 @@
         "fixed_duration": {
             "sources": {
                 "source_1": {
-                    "x": 1.5, 
-                    "y": 1.5,
-                    "z": 1.5,
-                    "rate": 0.0001,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "rate": 0.01,
                     "start_time": 1.0,
-                    "end_time": 5.5
+                    "end_time": 5.0
                 }
             }
         }
@@ -95,12 +78,12 @@
                 "z": 3.0
             },
             "spatial_samples": {
-                "x": 3,
-                "y": 3,
-                "z": 3 
+                "x": 10,
+                "y": 10,
+                "z": 10 
             },
             "coefficient": {
-                "calculation": "EXPLICIT",
+                "calculation": "TKEB",
                 "value": 0.001,    
                 "tkeb": {
                     "number_of_supply_vents": 1
@@ -126,9 +109,9 @@
                 "lines": {
                     "line_1": {
                         "point": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0
+                            "x": 1.5,
+                            "y": 1.5,
+                            "z": 1.5
                         },
                         "parallel_axis": "x"
                     }
@@ -136,7 +119,9 @@
                 "planes": {
                     "plane_1": {
                         "axis": "xy",
-                        "distance": 1.0
+                        "distance": {
+                            "array": [1.0, 2.0, 3.0]
+                        }
                     }
                 }
             },
@@ -148,7 +133,7 @@
                 "spatial_resolution": 10.0
             },
             "contour_plots": {
-                "output": false,
+                "output": true,
                 "concentration": true,
                 "exposure": true,
                 "creation_frequency": 0.01,
