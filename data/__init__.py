@@ -11,3 +11,5 @@ from .directoryagent import DirectoryAgent
 from .datastoreplotter import DataStorePlotter
 
 from .batchdatastoreplotter import BatchDataStorePlotter
+
+from .datastorereader import DataStoreReader

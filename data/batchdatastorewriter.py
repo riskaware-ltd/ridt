@@ -22,22 +22,18 @@ class BatchDataStoreWriter:
 
     def write(self, outdir: str):
         if self.space.zero:
-            with ConfigFileWriter(outdir) as cfw:
-                cfw("config.json", self.settings.__source__)
-            with DataStoreWriter(outdir) as w:
-                w.write(self.data_store[self.settings])
+            ConfigFileWriter(outdir, "config.json", self.settings.__source__)
+            DataStoreWriter(self.settings, self.data_store[self.settings], outdir)
         else:
-            with ConfigFileWriter(outdir) as cfw:
-                cfw("batch_config.json", self.settings.__source__)
+            ConfigFileWriter(outdir, "batch_config.json", self.settings.__source__)
             with open(join(outdir, "run_summary.txt"), "w") as f:
                 f.write(self.space.cout_summary())
             with DirectoryAgent(outdir, self.space.shape) as da:
                 for idx, setting in enumerate(self.space.space):
                     da.create_rundir(idx)
-                    with ConfigFileWriter(da.build_rundir_path(idx)) as cfw:
-                        cfw("config.json", setting.__source__)
-                    with DataStoreWriter(da.build_rundir_path(idx)) as w:
-                        w.write(self.data_store[setting])
+                    path = da.build_rundir_path(idx)
+                    ConfigFileWriter(path, "config.json", setting.__source__)
+                    DataStoreWriter(setting, self.data_store[setting], path)
 
     def __enter__(self):
         return self

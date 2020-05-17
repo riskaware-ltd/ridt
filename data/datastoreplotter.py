@@ -19,35 +19,38 @@ class DataStorePlotter:
         self.output_dir = output_dir
 
     def plot(self, data_store: DataStore, settings: IDMFConfig) -> None:
-        pp = PointPlot(settings, self.output_dir)
-        for name, data in data_store.points.items():
-            try:
-                point = settings.\
-                        models.\
-                        eddy_diffusion.\
-                        monitor_locations.\
-                        points[name]
-                pp(data, point)
-            except KeyError:
-                pp(data)
+        if settings.models.eddy_diffusion.point_plots.output:
+            pp = PointPlot(settings, self.output_dir)
+            for name, data in data_store.points.items():
+                try:
+                    point = settings.\
+                            models.\
+                            eddy_diffusion.\
+                            monitor_locations.\
+                            points[name]
+                    pp(data, point)
+                except KeyError:
+                    pp(data)
 
-        lp = LinePlot(settings, self.output_dir)
-        for name, data in data_store.lines.items():
-            line = settings.\
-                   models.\
-                   eddy_diffusion.\
-                   monitor_locations.\
-                   lines[name]
-            lp(data, line)
+        if settings.models.eddy_diffusion.line_plots.output:
+            lp = LinePlot(settings, self.output_dir)
+            for name, data in data_store.lines.items():
+                line = settings.\
+                    models.\
+                    eddy_diffusion.\
+                    monitor_locations.\
+                    lines[name]
+                lp(data, line)
 
-        cp = ContourPlot(settings, self.output_dir)
-        for name, data in data_store.planes.items():
-            plane = settings. \
-                    models. \
-                    eddy_diffusion. \
-                    monitor_locations. \
-                    planes[name]
-            cp(data, plane)
+        if settings.models.eddy_diffusion.contour_plots.output:
+            cp = ContourPlot(settings, self.output_dir)
+            for name, data in data_store.planes.items():
+                plane = settings. \
+                        models. \
+                        eddy_diffusion. \
+                        monitor_locations. \
+                        planes[name]
+                cp(data, plane)
         
         if data_store.domain is not None:
             save(self.path("domain"), data_store.domain)

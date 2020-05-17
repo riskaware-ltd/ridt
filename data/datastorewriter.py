@@ -6,12 +6,23 @@ from numpy import ndarray
 from numpy import savetxt
 from numpy import save
 
+from config import IDMFConfig
+
+from container import Domain
+
 from .datastore import DataStore
 
 class DataStoreWriter:
 
-    def __init__(self, output_dir: str):
+    def __new__(cls, *args, **kwargs):
+        instance = super(DataStoreWriter, cls).__new__(cls)
+        instance.__init__(*args, **kwargs)
+        return instance
+
+    def __init__(self, setting: IDMFConfig, data_store: DataStore, output_dir: str):
         self.output_dir = output_dir
+        self.setting = setting
+        self.write(data_store)
     
     def write(self, data_store: DataStore) -> None:
         for name, data in data_store.points.items():
@@ -28,10 +39,3 @@ class DataStoreWriter:
 
     def path(self, name: str) -> str:
         return join(self.output_dir, name)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
