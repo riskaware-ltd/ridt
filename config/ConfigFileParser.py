@@ -24,36 +24,16 @@ class ConfigFileParser:
         The parsed JSON, stored as a :obj:`dict`.
 
     """
+    def __new__(cls, *args, **kwargs):
+        instance = super(ConfigFileParser, cls).__new__(cls)
+        instance.__init__(*args, **kwargs)
+        return instance.settings
 
-    def __init__(self):
-        pass
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    def __call__(self, path: str):
-        """The way that the functionality of the :class:`~.ConfigFileParser`
-        class is accessed.
-
-        Parameters
-        ----------
-        path : :obj:`str`
-            The path to the file which contains the configuration to be parsed.
-
-        Returns
-        -------
-        :class:`~.IDMFConfig`
-            The :class:`~.IDMFConfig` instances created with the data parsed
-            from `path`.
-
-        """
+    def __init__(self, path: str):
         self.path = path
         self.__parse_file()
-        return self.__instantiate_settings()
-        
+        self.settings = self.__instantiate_settings()
+
     def __parse_file(self):
         """The method which parses the configuration file.
 

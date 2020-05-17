@@ -100,6 +100,8 @@ class IDMFConfig(Settings):
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
+        self.human_readable_data_output = bool
+
         self.modes = ModeSettings
         self.thresholds = Thresholds
 

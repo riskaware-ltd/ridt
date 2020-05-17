@@ -30,8 +30,7 @@ class CSVToConfigFile:
             "LIN": [],
             "PLA": []
         }
-        with ConfigFileParser() as cfp:
-            self.config = cfp(config_file_path)
+        self.config = ConfigFileParser(config_file_path)
         self.new = self.config.__source__
         self.parse_csv()
         self.write_new_config_file()

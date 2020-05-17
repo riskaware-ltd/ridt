@@ -26,39 +26,16 @@ class ConfigFileWriter:
         The configuration stored as a :obj:`dict`.
 
     """
+    def __new__(cls, *args, **kwargs):
+        instance = super(ConfigFileWriter, cls).__new__(cls)
+        instance.__init__(*args, **kwargs)
 
-    def __init__(self, output_dir: str):
+    def __init__(self, output_dir: str, file_name: str, data: dict):
         self.output_dir = output_dir
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    def __call__(self, file_name: str, data: dict):
-        """The way that the functionality of the :class:`~.ConfigFileWriter`
-        class is accessed.
-
-        Parameters
-        ----------
-        path : :obj:`str`
-            The path to the file where the configuration will be written.
-
-        data : :obj:`dict`
-            The data to be written.
-
-        Returns
-        -------
-        :class:`~.IDMFConfig`
-            The :class:`~.IDMFConfig` instances created with the data written
-            from `path`.
-
-        """
         self.path = join(self.output_dir, file_name)
         self.data = data
         self.__write_file()
-        
+       
     def __write_file(self):
         """The method which writes the configuration file.
 
