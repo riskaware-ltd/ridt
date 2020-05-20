@@ -58,10 +58,10 @@ class DataStoreReader:
                 raise DataStoreParsingError(fname, directory, e)
 
         for plane_name, plane in locations.planes.items():
-            fname = line_name + ".npy"
+            fname = plane_name + ".npy"
             try:
                 with open(join(directory, fname), 'rb') as f:
-                    rv.add_line_data(line_name, load(f))
+                    rv.add_plane_data(plane_name, load(f))
             except OSError as e:
                 raise DataStoreParsingError(fname, directory, e)
         
