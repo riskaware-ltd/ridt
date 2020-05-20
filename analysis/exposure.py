@@ -13,13 +13,15 @@ class Exposure:
         instance.__init__(*args, **kwargs)
         return instance.data_store
     
-    def __init__(self, data_store: DataStore, delta_t: float):
-        self.data_store = self.evaluate(data_store, delta_t)
+    def __init__(self, setting: IDMFConfig, data_store: DataStore):
+        self.setting = setting
+        self.delta_t = self.setting.total_time / self.setting.time_samples
+        self.data_store = self.evaluate(data_store)
     
-    def compute(self, data: ndarray, delta_t: float):
-        return cumsum(data, axis=0) * delta_t
+    def compute(self, data: ndarray):
+        return cumsum(data, axis=0) * self.delta_t
 
-    def evaluate(self, data_store: DataStore, delta_t: float):
+    def evaluate(self, data_store: DataStore):
         rv = DataStore()
 
         for point_name, data in data_store.points.items():
