@@ -8,8 +8,6 @@ from numpy import save
 
 from config import IDMFConfig
 
-from container import Domain
-
 from .datastore import DataStore
 
 class DataStoreWriter:
