@@ -843,9 +843,29 @@ class EddyDiffusion(Settings):
         self.monitor_locations = MonitorLocations
         self.coefficient = Coefficient
         self.images = Images
+        self.analysis = AnalysisSettings
         self.contour_plots = ContourPlots
         self.line_plots = LinePlots
         self.point_plots = PointPlots
+
+
+class AnalysisSettings(Settings):
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.percentage = Percentage
+        self.maximum_anywhere = DomainSelection
+        self.threshold_percentage = DomainSelection
+        self.threshold_anywhere = DomainSelection
+        self.maximum_percentage = DomainSelection
+
+
+class DomainSelection(Settings):
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.all_points = bool
+        self.all_lines = bool
+        self.all_planes = bool
+        self.all_domain = bool
 
 
 class LinePlots(Settings):
