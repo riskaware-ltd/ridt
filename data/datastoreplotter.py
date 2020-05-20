@@ -19,7 +19,8 @@ class DataStorePlotter:
         self.output_dir = output_dir
 
     def plot(self, data_store: DataStore, settings: IDMFConfig) -> None:
-        if settings.models.eddy_diffusion.point_plots.output:
+        if settings.models.eddy_diffusion.point_plots.output \
+                or settings.dispersion_model == "well_mixed":
             pp = PointPlot(settings, self.output_dir)
             for name, data in data_store.points.items():
                 try:
