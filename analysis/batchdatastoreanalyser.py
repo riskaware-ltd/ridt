@@ -53,6 +53,16 @@ class BatchDataStoreAnalyser:
         
         return rv
     
+    def percent_exposure(self):
+        for setting, analyser in self.analysed_stores.items():
+            print(setting)
+            print(analyser.time_to_percent_exposure(0.1, 0.01))
+    
+    def percent_exposure_lifetime(self):
+        for setting, analyser in self.analysed_stores.items():
+            print(setting)
+            print(analyser.percent_exceed_exposure_lifetime(0.01))
+    
     def exceeds_exposure(self, value: float):
         exceeds = dict()
         for setting, analysis in self.analysed_stores.items():

@@ -51,5 +51,8 @@ docs/_build/
 .venv/
 .v/
 
+# Visual Studio Code files
+.vscode/
+
 # Working test dir
 run/
