@@ -63,6 +63,36 @@ class TestConsistencyChecker(unittest.TestCase):
             self.config.thresholds.exposure.append(1)
         self.assertRaises(ConsistencyError, self.config.consistency_check)
 
+    def test_lines(self):
+
+        """Checks to see if the :class:`.ConsistencyError` error
+        triggers if the line does not lie in the bounds of the container
+        or is not parallel to one of the principle axes."""
+
+        ed = self.config.models.eddy_diffusion
+        lines = ed.monitor_locations.lines
+        for line in lines.values():
+            axis = getattr(line, "parallel_axis")
+            with self.assertRaises(ConsistencyError):
+                setattr(line.point, axis, getattr(ed.dimensions, axis) + 1)
+                self.config.consistency_check()
+            setattr(line.point, axis, getattr(ed.dimensions, axis) - 1)
+
+    def test_points(self):
+
+        """Checks to see if the :class:`.ConsistencyError` error
+        triggers if the point does not lie in the bounds of the container."""
+
+        ed = self.config.models.eddy_diffusion
+        points = ed.monitor_locations.points
+        dims = ["x", "y", "z"]
+        for point in points.values():
+            for dim in dims:
+                setattr(point, dim, getattr(ed.dimensions, dim) + 1)
+                with self.assertRaises(ConsistencyError):
+                    self.config.consistency_check()
+                setattr(point, dim, getattr(ed.dimensions, dim) - 1)
+
     def test_planes(self):
 
         """Checks to see if the :class:`.ConsistencyError` error
