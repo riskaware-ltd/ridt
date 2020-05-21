@@ -4,10 +4,11 @@ from config import ConfigFileParser
 from config import ConsistencyError
 
 
-class ST09(unittest.TestCase):
+class ST11(unittest.TestCase):
 
-    """System Test 09. Test the system can interpret
-       ranges of values in the configuration file."""
+    """System Test 11. Test the system can convert
+       config files with ranges of values into a set of
+       config object, each which can be evaluated separately."""
 
     def setUp(self) -> None:
 
