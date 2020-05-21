@@ -81,9 +81,6 @@ class ST02(unittest.TestCase):
                 setattr(line.point, axis, getattr(ed.dimensions, axis) + 1)
                 self.c.consistency_check()
             setattr(line.point, axis, getattr(ed.dimensions, axis) - 1)
-            with self.assertRaises(ConsistencyError):
-                setattr(line, "parallel_axis", "TEST_VALUE")
-                self.c.consistency_check()
 
     def test_points(self):
 
