@@ -94,6 +94,33 @@
                 "quantity": 3,
                 "max_error": 1.0
             },
+            "analysis": {
+                "percentage": 10.0,
+                "maximum_anywhere": {
+                    "all_points": true,
+                    "all_lines": true,
+                    "all_planes": true,
+                    "all_domain": true
+                },
+                "threshold_percentage": {
+                    "all_points": true,
+                    "all_lines": true,
+                    "all_planes": true,
+                    "all_domain": true
+                },
+                "threshold_anywhere": {
+                    "all_points": true,
+                    "all_lines": true,
+                    "all_planes": true,
+                    "all_domain": true
+                },
+                "maximum_percentage": {
+                    "all_points": true,
+                    "all_lines": true,
+                    "all_planes": true,
+                    "all_domain": true
+                }
+            },
             "monitor_locations": {
                 "points": {
                     "point_1": {
