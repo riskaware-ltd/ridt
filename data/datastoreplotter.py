@@ -3,6 +3,8 @@ import csv
 from os.path import join
 
 from numpy import save
+from numpy import min
+from numpy import max
 
 from plot import PointPlot
 from plot import LinePlot
@@ -18,20 +20,19 @@ class DataStorePlotter:
     def __init__(self, output_dir: str):
         self.output_dir = output_dir
 
-    def plot(self, data_store: DataStore, settings: IDMFConfig) -> None:
+    def plot(self,
+             data_store: DataStore,
+             settings: IDMFConfig,
+             plot_type: str) -> None:
+
         if settings.models.eddy_diffusion.point_plots.output \
                 or settings.dispersion_model == "well_mixed":
             pp = PointPlot(settings, self.output_dir)
             for name, data in data_store.points.items():
                 try:
-                    point = settings.\
-                            models.\
-                            eddy_diffusion.\
-                            monitor_locations.\
-                            points[name]
-                    pp(data, point)
+                    pp(data, plot_type, name)
                 except KeyError:
-                    pp(data)
+                    pp(data, plot_type)
 
         if settings.models.eddy_diffusion.line_plots.output:
             lp = LinePlot(settings, self.output_dir)
@@ -41,7 +42,11 @@ class DataStorePlotter:
                     eddy_diffusion.\
                     monitor_locations.\
                     lines[name]
-                lp(data, line)
+
+                min_value = min(data)
+                max_value = max(data)
+
+                lp(data, line, name, plot_type, min_value, max_value)
 
         if settings.models.eddy_diffusion.contour_plots.output:
             cp = ContourPlot(settings, self.output_dir)
@@ -51,7 +56,11 @@ class DataStorePlotter:
                         eddy_diffusion. \
                         monitor_locations. \
                         planes[name]
-                cp(data, plane)
+
+                min_value = min(data)
+                max_value = max(data)
+
+                cp(data, plane, name, plot_type, min_value, max_value)
         
         if data_store.domain is not None:
             save(self.path("domain"), data_store.domain)
