@@ -21,6 +21,11 @@ class BatchDataStorePlotter:
         self.space = space
 
     def plot(self, outdir: str):
+
+        #### Tempory measure setting plot_type to concentration
+        plot_type = "concentration"
+        #######################################################
+
         if self.space.zero:
             with ConfigFileWriter(outdir) as cfw:
                 cfw("config.json", self.settings.__source__)
@@ -33,7 +38,7 @@ class BatchDataStorePlotter:
                 for idx, setting in enumerate(self.space.space):
                     da.create_rundir(idx)
                     with DataStorePlotter(da.build_rundir_path(idx)) as p:
-                        p.plot(self.data_store[setting], self.settings)
+                        p.plot(self.data_store[setting], self.settings, plot_type)
 
     def __enter__(self):
         return self
