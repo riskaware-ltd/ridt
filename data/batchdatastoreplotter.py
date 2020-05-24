@@ -21,6 +21,11 @@ class BatchDataStorePlotter:
         self.space = space
 
     def plot(self, outdir: str):
+
+        #### Tempory measure setting plot_type to concentration
+        plot_type = "concentration"
+        #######################################################
+
         if self.space.zero:
             with DataStorePlotter(outdir) as p:
                 p.plot(self.data_store[self.settings], self.settings)
@@ -31,7 +36,7 @@ class BatchDataStorePlotter:
                 for idx, setting in enumerate(self.space.space):
                     da.create_root_dir(idx)
                     with DataStorePlotter(da) as p:
-                        p.plot(self.data_store[setting], self.settings)
+                        p.plot(self.data_store[setting], self.settings, plot_type)
 
     def __enter__(self):
         return self

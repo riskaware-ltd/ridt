@@ -259,11 +259,23 @@ class IDMFConfig(Settings):
         ed = self.models.eddy_diffusion
         dims = ["x", "y", "z"]
         for plane in ed.monitor_locations.planes.values():
-            if plane.axis not in ["xy", "xz", "zy"]:
-                raise ConsistencyError(f"plane axis must be either xy, xz, zy")
             dim = [axis for axis in dims if axis not in str(plane.axis)][0]
-            if plane.distance > getattr(ed.dimensions, dim):
-                raise ConsistencyError(f"plane lies outside of dimension {dim}")
+            if isinstance(plane.distance, list):
+                if max(plane.distance) > getattr(ed.dimensions, dim):
+                    raise ConsistencyError(f"plane lies outside of dimension {dim}")
+            else:
+                if plane.distance > getattr(ed.dimensions, dim):
+                    raise ConsistencyError(f"plane lies outside of dimension {dim}")
+
+        ml = self.models.eddy_diffusion.monitor_locations
+        for key, point in ml.points.items():
+            for dim in dims:
+                if getattr(point, dim) > getattr(ed.dimensions, dim):
+                    raise ConsistencyError(f"{key}'s {dim} value, exceeds bounds of container ")
+        for key, line in ml.lines.items():
+            for dim in dims:
+                if getattr(line.point, dim) > getattr(ed.dimensions, dim):
+                    raise ConsistencyError(f"{key}'s {dim} value, exceeds bounds of container ")
 
 
 class DispersionModel(StringSelection):

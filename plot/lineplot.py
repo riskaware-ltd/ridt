@@ -1,5 +1,9 @@
+import os
+
 from config import IDMFConfig
 from config import Line
+
+from container.domain import Domain
 
 from typing import List
 
@@ -13,38 +17,60 @@ class LinePlot:
         self.settings = settings
         self.output_dir = output_dir
 
-        self.time_array = np.linspace(
-            0, settings.total_time, settings.time_samples)
+        self.domain = Domain(self.settings)
 
-    def __call__(self, concentrations: List[float], line: Line):
-        for idx, time in enumerate(self.time_array):
-            self.plot(concentrations, line)
-            self.save_fig(line, idx)
-            plt.clf()
+    def __call__(self,
+                 concentrations: np.ndarray,
+                 line: Line,
+                 line_name: str,
+                 plot_type: str,
+                 min_value: float,
+                 max_value: float):
 
-    def plot(self, concentrations: List[float], line: Line):
-        title = self.make_title(line)
+        """Future Reference: plot_type must be either concentration or exposure."""
 
-        x_range = np.array([i for i in range(len(concentrations))])
-        x_range = x_range / max(x_range)
+        self.line_name = line_name
+        self.dir_name = "LinePlots"
+        try:
+            os.mkdir(f"{self.output_dir}/{self.dir_name}")
+        except FileExistsError:
+            pass
+
+        self.min = min_value
+        self.max = max_value
+        self.plot_type = plot_type
+        for idx, time in enumerate(self.domain.time):
+            self.plot(concentrations[idx], line)
+            self.save_fig(round(time, 1))
+            plt.close()
+
+    def plot(self, concentrations: np.ndarray, line: Line):
+        title = self.make_title()
+
+        x_range = self.__get_ranges(line)
+
+        plt.ylim(self.min, self.max)
 
         plt.title(title)
-        plt.ylabel(f"Concentration in {self.settings.concentration_units}")
-        plt.xlabel(f"Relative unit along line")
+        plt.ylabel(
+            f"{self.plot_type.capitalize()} "
+            f"({getattr(self.settings, f'{self.plot_type}_units')})")
+        plt.xlabel(f"Distance ({line.parallel_axis})")
 
         plot = plt.plot(x_range, concentrations)
 
         return plot
 
-    def save_fig(self, line: Line, time):
-        plt.savefig(f"{self.output_dir}/{self.settings.dispersion_model.capitalize()} "
-                    f"Line {line.point.x, line.point.y, line.point.z}, "
-                    f"along {line.parallel_axis} axis "
-                    f"time index {time}.pdf")
+    def save_fig(self, time):
+        plt.savefig(f"{self.output_dir}/{self.dir_name}/{self.settings.dispersion_model.capitalize()} "
+                    f"{self.line_name.capitalize()}, "
+                    f"time = {time}.pdf")
 
-    def make_title(self, line: Line):
-        title = f"{self.settings.dispersion_model.capitalize()}" \
-
-        title += f" \n From {[line.point.x, line.point.y, line.point.z]}, " \
-                 f"in {line.parallel_axis} axis"
+    def make_title(self):
+        title = f"{self.plot_type.capitalize()} vs time at " \
+                f"{self.line_name.capitalize()}"
         return title
+
+    def __get_ranges(self, line: Line):
+        x_range = getattr(self.domain, line.parallel_axis)
+        return x_range
