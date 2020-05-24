@@ -48,47 +48,26 @@ class EddyDiffusionRun:
     def run(self, setting: IDMFConfig):
 
         self.data_store.add_run(setting)
+
         domain = Domain(setting)
         solver = EddyDiffusion(setting)
+        locations = setting.models.eddy_diffusion.monitor_locations
 
-        points = setting.models.eddy_diffusion.monitor_locations.points
-        lines = setting.models.eddy_diffusion.monitor_locations.lines
-        planes = setting.models.eddy_diffusion.monitor_locations.planes
-
-        for point_name, point in points.items():
-            output = solver(*domain.point(point), domain.time)
-            self.data_store[setting].add_point_data(point_name, squeeze(output))
-
-        for line_name, line in lines.items():
-            output = solver(*domain.line(line), domain.time)
-            self.data_store[setting].add_line_data(line_name, squeeze(output))
-
-        for plane_name, plane in planes.items():
-            output = solver(*domain.plane(plane), domain.time)
-            self.data_store[setting].add_plane_data(plane_name, squeeze(output))
-        
-        output = solver(*domain.full, domain.time)
-        self.data_store[setting].add_domain_data(output)
+        for geometry in self.data_store[setting].geometries:
+            for name, item in getattr(locations, geometry).items():
+                output = solver(*getattr(domain, geometry)(item), domain.time)
+                self.data_store[setting].add(geometry, name, squeeze(output))
 
     def write(self):
-        with BatchDataStoreWriter(self.settings,
-                                  self.data_store,
-                                  self.space) as dsw:
+        with BatchDataStoreWriter(self.settings, self.data_store, self.space) as dsw:
             dsw.write(self.output_dir)
 
     def plot(self):
-        with BatchDataStorePlotter(self.settings,
-                                   self.data_store,
-                                   self.space) as dsp:
+        with BatchDataStorePlotter(self.settings, self.data_store, self.space) as dsp:
             dsp.plot(self.output_dir)
-        pass
 
     def analyse(self):
-
-        b = BatchDataStoreAnalyser(self.settings,
-                               self.data_store,
-                               self.space)
-        b.write(self.output_dir)
+        BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir)
 
 
     @property
