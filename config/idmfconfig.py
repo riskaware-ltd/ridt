@@ -5,6 +5,7 @@ from base import Dict
 from base import Number
 from base import StringSelection
 from base import Error
+from base import ConsistencyError
 
 
 class IDMFConfig(Settings):
@@ -91,16 +92,17 @@ class IDMFConfig(Settings):
         self.well_mixed = bool
         self.eddy_diffusion = bool
 
+
         self.time_units = TimeUnits
-        self.spatial_units = SpatialUnits
         self.time_samples = NonNegativeInteger
         self.total_time = NonNegativeFloat
 
+        self.spatial_units = SpatialUnits
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
         self.mass_units = MassUnits
-        self.fresh_air_change_rate_units = FreshAirChangeRateUnits
 
+        self.fresh_air_change_rate_units = FreshAirChangeRateUnits
         self.fresh_air_change_rate = NonNegativeFloat
 
         self.modes = ModeSettings
@@ -168,12 +170,12 @@ class IDMFConfig(Settings):
                             if item < 0 or item > bound:
                                 raise ConsistencyError(
                             f"{mode} source {key} x position is "
-                            f"outside simulation space domain (0, {bound}).")
+                            f"outside space domain (0, {bound}).")
                     else:
                         if par < 0 or par > bound:
                             raise ConsistencyError(
                         f"{mode} source {key} x position is "
-                        f"outside simulation space domain (0, {bound}).")
+                        f"outside space domain (0, {bound}).")
 
         for mode in ["instantaneous", "infinite_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
@@ -182,12 +184,12 @@ class IDMFConfig(Settings):
                         if item > self.total_time:
                             raise ConsistencyError(
                         f"{mode} source {key} time is "
-                        f"outside simulation time domain [0, {self.total_time}).")
+                        f"outside time domain [0, {self.total_time}).")
                 else:
                     if value.time > self.total_time:
                         raise ConsistencyError(
                     f"{mode} source {key} time is "
-                    f"outside simulation time domain [0, {self.total_time}).")
+                    f"outside time domain [0, {self.total_time}).")
 
         for key, value in getattr(self.modes, "fixed_duration").sources.items():
             if isinstance(value.start_time, list):
@@ -195,89 +197,28 @@ class IDMFConfig(Settings):
                     if item > self.total_time:
                         raise ConsistencyError(
                     f"{mode} source {key} start time is "
-                    f"outside simulation time domain [0, {self.total_time}).")
+                    f"outside time domain [0, {self.total_time}).")
             else:
                 if value.start_time > self.total_time:
                     raise ConsistencyError(
                 f"{mode} source {key} start time is "
-                f"outside simulation time domain [0, {self.total_time}).")
+                f"outside time domain [0, {self.total_time}).")
 
             if isinstance(value.end_time, list):
                 for item in value.end_time:
                     if item > self.total_time:
                         raise ConsistencyError(
                     f"{mode} source {key} end time is "
-                    f"outside simulation time domain [0, {self.total_time}).")
+                    f"outside time domain [0, {self.total_time}).")
             else:
                 if value.end_time > self.total_time:
                     raise ConsistencyError(
                 f"{mode} source {key} end time is "
-                f"outside simulation time domain [0, {self.total_time}).")
-
-        c_plots = self.models.eddy_diffusion.contour_plots
-        if c_plots.contours.min >= c_plots.contours.max:
-            raise ConsistencyError(
-                f"contour min ({c_plots.contours.min})"
-                f" >= contour max ({c_plots.contours.max}).")
-        if c_plots.range not in ["auto", "manual"]:
-            raise ConsistencyError(f"Contour plot range must be either"
-                                   f"auto or manual.")
-        if c_plots.scale not in ["linear", "logarithmic"]:
-            raise ConsistencyError(f"Contour plot scale must be either"
-                                   f"linear or logarithmic.")
-
-        t_unit = self.time_units
-        if t_unit not in ["m", "s", "h"]:
-            raise ConsistencyError(
-                f"time units must be ['s', 'm', 'h'] received: {t_unit}")
-
-        s_units = self.models.eddy_diffusion.spatial_units
-        if s_units not in ["mm", "cm", "m"]:
-            raise ConsistencyError(
-                f"spatial units must be ['mm', 'cm', 'm'] received: "
-                f"{s_units}")
-
-        c_units = self.concentration_units
-        if c_units not in ["kgm-3", "mgm-3", "ppm", "ppb", "ppt"]:
-            raise ConsistencyError(
-                f"spatial units must be ['kgm-3', 'mgm-3', 'ppm', 'ppb', 'ppt'] received: "
-                f"{c_units}")
-
-        e_units = self.exposure_units
-        if e_units not in ["mgminm-3", "kgsm-3"]:
-            raise ConsistencyError(
-                f"spatial units must be ['mgminm-3', 'kgsm-3'] received: "
-                f"{e_units}")
+                f"outside time domain [0, {self.total_time}).")
 
         thresh = self.thresholds
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
             raise ConsistencyError(f"Cannot exceed more than 5 thresholds")
-
-        if self.dispersion_model not in ["well_mixed", "eddy_diffusion"]:
-            raise ConsistencyError(
-                f"dispersion model must be either well_mixed or eddy_diffusion"
-                f"received: {self.dispersion_model}")
-
-        ed = self.models.eddy_diffusion
-        dims = ["x", "y", "z"]
-        for plane in ed.monitor_locations.planes.values():
-            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
-            if isinstance(plane.distance, list):
-                if max(plane.distance) > getattr(ed.dimensions, dim):
-                    raise ConsistencyError(f"plane lies outside of dimension {dim}")
-            else:
-                if plane.distance > getattr(ed.dimensions, dim):
-                    raise ConsistencyError(f"plane lies outside of dimension {dim}")
-
-        ml = self.models.eddy_diffusion.monitor_locations
-        for key, point in ml.points.items():
-            for dim in dims:
-                if getattr(point, dim) > getattr(ed.dimensions, dim):
-                    raise ConsistencyError(f"{key}'s {dim} value, exceeds bounds of container ")
-        for key, line in ml.lines.items():
-            for dim in dims:
-                if getattr(line.point, dim) > getattr(ed.dimensions, dim):
-                    raise ConsistencyError(f"{key}'s {dim} value, exceeds bounds of container ")
 
 
 class FreshAirChangeRate(Number):
@@ -466,21 +407,6 @@ class FreshAirChangeRateUnits(StringSelection):
 
     def check(self):
         pass
-
-
-class ConsistencyError(Error):
-    """The exception raised if a consistency check is failed.
-
-    """
-
-    def __init__(self, msg: str):
-        """The constructor for the :class:`ConsistencyError` class
-
-        Parameters
-        ----------
-
-        """
-        super().__init__(msg)
 
 
 class ModelSettings(Settings):
@@ -928,6 +854,30 @@ class EddyDiffusion(Settings):
         self.line_plots = LinePlots
         self.point_plots = PointPlots
 
+    def consistency_check(self):
+        dims = ["x", "y", "z"]
+        for plane in self.monitor_locations.planes.values():
+            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
+            if isinstance(plane.distance, list):
+                if max(plane.distance) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(f"{plane} is outside the space domain")
+            else:
+                if plane.distance > getattr(self.dimensions, dim):
+                    raise ConsistencyError(f"{plane} is outside the space domain")
+
+        for key, point in self.monitor_locations.points.items():
+            for dim in dims:
+                if getattr(point, dim) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(
+                f"{key}'s {dim} value, is outside space domain "
+                f"(0, {getattr(self.dimensions, dim)})")
+
+        for key, line in self.monitor_locations.lines.items():
+            for dim in dims:
+                if getattr(line.point, dim) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(
+                f"{key}'s {dim} value, is outside space domain "
+                f"(0, {getattr(self.dimensions, dim)})")
 
 class AnalysisSettings(Settings):
     @Settings.assign
@@ -1338,6 +1288,12 @@ class ContourPlots(Settings):
         self.range = RangeMode
         self.scale = ScaleType 
         self.contours = ManualContours
+    
+    def consistency_check(self):
+        if self.contours.min >= self.contours.max:
+            raise ConsistencyError(
+                f"contour min ({self.contours.min})"
+                f" >= contour max ({self.contours.max})")
 
 
 class RangeMode(StringSelection):

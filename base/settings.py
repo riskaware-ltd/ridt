@@ -95,6 +95,10 @@ class Settings:
         def wrapper(self, *args):
             method(self, *args)
             self.distribute(*args)
+            try:
+                self.consistency_check()
+            except AttributeError:
+                pass
         return wrapper
 
     @property
@@ -168,6 +172,8 @@ class Settings:
                 except SettingRangeKeyError as e:
                     raise SettingErrorMessage(setting, original_error=e)
                 except SettingStringSelectionError as e:
+                    raise SettingErrorMessage(setting, original_error=e)
+                except ConsistencyError as e:
                     raise SettingErrorMessage(setting, original_error=e)
                 except SettingErrorMessage as e:
                     raise SettingErrorMessage(setting, branch_error=e)
@@ -377,6 +383,8 @@ class List(Settings):
                     raise SettingErrorMessage(f"[{idx}]", original_error=e)
                 except SettingRangeKeyError as e:
                     raise SettingErrorMessage(f"[{idx}]", original_error=e)
+                except ConsistencyError as e:
+                    raise SettingErrorMessage(f"[{idx}]", original_error=e)
         else:
             for idx, item in enumerate(values):
                 try:
@@ -485,6 +493,8 @@ class Dict(Settings):
                 except SettingRangeKeyError as e:
                     raise SettingErrorMessage(key, original_error=e)
                 except SettingStringSelectionError as e:
+                    raise SettingErrorMessage(key, original_error=e)
+                except ConsistencyError as e:
                     raise SettingErrorMessage(key, original_error=e)
         else:
             for key, value in values.items():
@@ -809,7 +819,7 @@ class ComputationalSpace:
         return rv
     
     def index(self, setting: Type[Settings]):
-        linear_index = self.space.index(setting)
+        linear_index = self.linear_index(setting) 
         return unravel_index(linear_index, self.shape)
 
     def linear_index(self, setting: Type[Settings]):
@@ -1028,3 +1038,20 @@ class TypeAttributeTypeError(Error):
         self.msg = f"The {derived_class} class self.type attribute's value is"\
                    f" not of type `type`."
         super().__init__(self.msg)
+
+
+class ConsistencyError(Error):
+    """The exception raised if a consistency check is failed.
+
+    """
+
+    def __init__(self, msg: str):
+        """The constructor for the :class:`ConsistencyError` class
+
+        Parameters
+        ----------
+
+        """
+        self.msg = msg
+        super().__init__(msg)
+

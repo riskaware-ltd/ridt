@@ -1,4 +1,5 @@
 import sys
+from os.path import isdir
 import click
 
 from config.configfileparser import ConfigFileParser
@@ -20,6 +21,9 @@ def idmf():
 @click.argument('config_file', type=click.Path(exists=True))
 @click.argument('output_dir', type=click.Path(exists=True))
 def run(config_file, output_dir):
+    if not isdir(output_dir):
+        sys.exit(f"{output_dir} is not a directory.\n\nAborted.")
+
     """Run one or several config files and write all data to the given directory."""
     try:
         s = ConfigFileParser(config_file)

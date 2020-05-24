@@ -147,6 +147,10 @@
                     }
                 },
                 "planes": {
+                    "plane_1": {
+                        "axis": "xy",
+                        "distance": 1.0
+                    }
                 },
                 "domain": {
                     "domain": true 
@@ -168,7 +172,7 @@
                 "range": "auto",
                 "scale": "linear",
                 "contours": {
-                    "min": 1.0,
+                    "min": 0.0,
                     "max": 1.5
                 }
             }

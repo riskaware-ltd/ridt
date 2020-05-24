@@ -6,6 +6,7 @@ from .settings import Number
 from .settings import StringSelection
 from .settings import ComputationalSpace
 from .settings import SettingErrorMessage
+from .settings import ConsistencyError
 
 from .exceptions import Error
 from .exceptions import ListTypeError
