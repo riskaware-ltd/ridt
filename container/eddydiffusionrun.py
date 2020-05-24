@@ -38,7 +38,7 @@ class EddyDiffusionRun:
         self.analyse()
 
     def prepare(self) -> ComputationalSpace:
-        restrict = {"models": self.settings.dispersion_model}
+        restrict = {"models": "eddy_diffusion"}
         return ComputationalSpace(self.settings, restrict)
     
     def evaluate(self):
