@@ -88,7 +88,8 @@ class IDMFConfig(Settings):
         None
 
         """
-        self.dispersion_model = DispersionModel
+        self.well_mixed = bool
+        self.eddy_diffusion = bool
 
         self.time_units = TimeUnits
         self.spatial_units = SpatialUnits

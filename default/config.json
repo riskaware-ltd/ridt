@@ -1,5 +1,6 @@
 {
-    "dispersion_model": "eddy_diffusion",
+    "eddy_diffusion": true,
+    "well_mixed": true,
 
     "time_units": "s",
     "spatial_units": "m",
