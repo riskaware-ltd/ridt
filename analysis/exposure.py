@@ -1,10 +1,12 @@
+from typing import Union
+
 from numpy import cumsum
 from numpy import ndarray
 
 from config import IDMFConfig
 
 from data import DataStore
-
+from data import BatchDataStore
 
 class Exposure:
 
@@ -13,7 +15,7 @@ class Exposure:
         instance.__init__(*args, **kwargs)
         return instance.data_store
     
-    def __init__(self, setting: IDMFConfig, data_store: DataStore):
+    def __init__(self, setting: IDMFConfig, data_store: Union[DataStore, BatchDataStore]):
         self.setting = setting
         self.delta_t = self.setting.total_time / self.setting.time_samples
         self.data_store = self.evaluate(data_store)
@@ -22,18 +24,18 @@ class Exposure:
         return cumsum(data, axis=0) * self.delta_t
 
     def evaluate(self, data_store: DataStore):
-        rv = DataStore()
-
-        for point_name, data in data_store.points.items():
-            rv.add_point_data(point_name, self.compute(data, delta_t))
-
-        for line_name, data in data_store.lines.items():
-            rv.add_line_data(line_name, self.compute(data, delta_t))
-
-        for plane_name, data in data_store.planes.items():
-            rv.add_plane_data(plane_name, self.compute(data, delta_t))
-        
-        rv.add_domain_data(self.compute(data_store.domain, delta_t))
-
-        return rv
- 
+        if isinstance(data_store, DataStore):
+            rv = DataStore()
+            for geometry in rv.geometries:
+                for name, data in getattr(data_store, geometry).items():
+                    rv.add(geometry, name, self.compute(data))
+            return rv
+        elif isinstance(data_store, BatchDataStore):
+            rv = BatchDataStore()
+            for setting, store in data_store.items():
+                rv.add_run(setting)
+                rv[setting] = self.evaluate(data_store[setting])
+            return rv
+        else:
+            raise TypeError(f"Expecting {DataStore} or {BatchDataStore}.")
+    
