@@ -7,6 +7,22 @@ class Error(Exception):
     """
     pass
 
+class RIDTOSError(Error):
+    """The exception raised when RIDT attempts to modify a file but is unable.
+
+    """
+    def __init__(self, error):
+        """The constructor for the :class:`RIDTOSError` class
+
+        Parameters
+        ----------
+        obj
+            The object which is not a :class:`~datetime.datetime` object.
+
+        """
+        msg = f"The following error was encoutered: \n{error}"
+        super().__init__(msg)
+
 
 class NullError(Error):
     """The exception class raised when an operation is attempted on a null
@@ -15,6 +31,7 @@ class NullError(Error):
     """
 
     def __init__(self, msg):
+
         super().__init__(msg)
 
 

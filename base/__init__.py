@@ -12,3 +12,4 @@ from .exceptions import ListTypeError
 from .exceptions import FloatTypeError
 from .exceptions import IntTypeError
 from .exceptions import DimensionError
+from .exceptions import RIDTOSError

@@ -10,6 +10,8 @@ from numpy import ndarray
 from numpy import savetxt
 from numpy import save
 
+from base import RIDTOSError
+
 from config import IDMFConfig
 
 from .directoryagent import DirectoryAgent
@@ -47,15 +49,20 @@ class DataStoreCSVWriter:
         tu = self.setting.time_units
         su = self.setting.spatial_units
         path = join(self.dir_agent.qdir, id + ".csv")
-        with open(path, 'w', newline="") as f:
-            writer = csv.writer(f, delimiter=",")
-            writer.writerow([
-                f"time ({tu})",
-                f"x ({su})",
-                f"y ({su})",
-                f"z ({su})",
-                f"value ({qu})"
-            ])
-            for index in product(*[range(i) for i in data.shape]):
-                values = self.domain.values(geometry, id, index)
-                writer.writerow(list(values) + [data[index]])
+        try:
+            f = open(path, 'w', newline="")
+        except OSError as e:
+            raise RIDTOSError(e)
+
+        writer = csv.writer(f, delimiter=",")
+        writer.writerow([
+            f"time ({tu})",
+            f"x ({su})",
+            f"y ({su})",
+            f"z ({su})",
+            f"value ({qu})"
+        ])
+        for index in product(*[range(i) for i in data.shape]):
+            values = self.domain.values(geometry, id, index)
+            writer.writerow(list(values) + [data[index]])
+        f.close()

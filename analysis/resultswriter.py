@@ -8,6 +8,8 @@ from typing import Union
 from typing import List
 from typing import Iterable
 
+from base import RIDTOSError
+
 from config import IDMFConfig
 
 from container import Domain
@@ -40,11 +42,16 @@ class ResultsWriter:
         self.extrema()
 
     def write(self, file_path: str, header: List[str], lines: Iterable):
-        with open(file_path, 'w', newline="") as f:
-            writer = csv.writer(f, delimiter=",")
-            writer.writerow(header)
-            for line in lines:
-                writer.writerow(line)
+        try:
+            f = open(file_path, 'w', newline="")
+        except OSError as e:
+            raise RIDTOSError(e)
+
+        writer = csv.writer(f, delimiter=",")
+        writer.writerow(header)
+        for line in lines:
+            writer.writerow(line)
+        f.close()
     
 
     def maximum(self):

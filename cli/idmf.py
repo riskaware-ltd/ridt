@@ -9,6 +9,7 @@ from config.csvtoconfigfile import CSVToConfigFile
 from container.wellmixedrun import WellMixedRun
 from container.eddydiffusionrun import EddyDiffusionRun
 from base.settings import ComputationalSpace
+from base import RIDTOSError
 
 @click.group()
 def idmf():
@@ -27,11 +28,13 @@ def run(config_file, output_dir):
             ConfigFileParserValidationError) as e:
         sys.exit(e)
 
-    if s.well_mixed:
-        WellMixedRun(s, output_dir)
-
-    if s.eddy_diffusion:
-        EddyDiffusionRun(s, output_dir)
+    try:
+        if s.well_mixed:
+            WellMixedRun(s, output_dir)
+        if s.eddy_diffusion:
+            EddyDiffusionRun(s, output_dir)
+    except RIDTOSError as e:
+        sys.exit(f"\n{e}\n\nAborted.")
 
 
 @idmf.command()
