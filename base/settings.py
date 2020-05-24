@@ -33,6 +33,14 @@ from numpy import unravel_index
 
 from .exceptions import Error
 
+import warnings
+
+def custom_formatwarning(msg, *args, **kwargs):
+    return "Warning: " + str(msg) + '\n'
+
+warnings.formatwarning = custom_formatwarning
+
+
 T = TypeVar("T")
 
 
@@ -722,6 +730,9 @@ class ComputationalSpace:
     def build_space(self):
         for match, items in self.matched.items():
             self.addresses += items["addresses"]
+            if len({len(i) for i in items["values"]}) != 1:
+                warnings.warn(f"ranges with match id '{match}' have unequal "
+                              f"length. Zipped to shortest.")
             self.values.append(list(zip(*items["values"])))
         for batch in itertools.product(*self.values):
             flat_batch = list()

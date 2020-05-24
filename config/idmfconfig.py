@@ -7,6 +7,12 @@ from base import StringSelection
 from base import Error
 from base import ConsistencyError
 
+import warnings
+
+def custom_formatwarning(msg, *args, **kwargs):
+    return "Warning: " + str(msg) + '\n'
+
+warnings.formatwarning = custom_formatwarning
 
 class IDMFConfig(Settings):
 
@@ -158,6 +164,12 @@ class IDMFConfig(Settings):
         ValueError
             If the spatial units are not mm, cm, m.
         """
+        
+        dim = self.models.eddy_diffusion.dimensions
+        if dim.x * dim.y * dim.z != self.models.well_mixed.volume:
+            warnings.warn(
+                "The calculated volume for the eddy diffusion model is "
+                "different from the volume specified in the well mixed model.")
 
         for mode in ["instantaneous", "infinite_duration", "fixed_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
@@ -1176,7 +1188,6 @@ class NumberOfSupplyVents(Number):
     def check(self):
         self.lower_bound(1)
         self.upper_bound(50)
-
 
 
 class Images(Settings):
