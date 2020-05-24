@@ -812,6 +812,9 @@ class ComputationalSpace:
         linear_index = self.space.index(setting)
         return unravel_index(linear_index, self.shape)
 
+    def linear_index(self, setting: Type[Settings]):
+        return self.space.index(setting)
+
     def __enter__(self):
         return self
 
