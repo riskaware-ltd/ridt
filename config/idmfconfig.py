@@ -1091,7 +1091,7 @@ class SpatialDiscretisation(Number):
         self.type = int
     
     def check(self):
-        self.lower_bound(1)
+        self.lower_bound(2)
 
 
 class Coefficient(Settings):
