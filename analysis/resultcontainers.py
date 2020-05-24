@@ -3,6 +3,7 @@ from typing import Tuple
 from container import Domain
 
 from config import IDMFConfig
+from config import Units
 
 
 class ResultContainer:
@@ -30,33 +31,32 @@ class Maximum(ResultContainer):
         return True if self.value < other.value else False
     
     def string(self, setting: IDMFConfig, domain: Domain):
-        unit = getattr(setting, f"{self.quantity}_units")
-        time_unit = setting.time_units
-        spatial_unit = setting.spatial_units
+        units = Units(setting)
+        u = getattr(units, self.quantity)
         rv = str()
         if self.index:
             t, x, y, z = domain.values(self.geometry, self.id, self.index)
             rv += f"id: {self.id}\n"
-            rv += f"time: {t}{time_unit}\n"
-            rv += f"x: {x}{spatial_unit}\n"
-            rv += f"y: {y}{spatial_unit}\n"
-            rv += f"z: {z}{spatial_unit}\n"
-            rv += f"value: {self.value}{unit}\n\n"
+            rv += f"time: {t}{units.time}\n"
+            rv += f"x: {x}{units.space}\n"
+            rv += f"y: {y}{units.space}\n"
+            rv += f"z: {z}{units.space}\n"
+            rv += f"value: {self.value}{u}\n\n"
         else:
             rv += "None\n\n"
         return rv
     
     def header(self, setting: IDMFConfig):
-        time_unit = setting.time_units
-        spatial_unit = setting.spatial_units
-        unit = getattr(setting, f"{self.quantity}_units")
+        units = Units(setting)
+        u = getattr(units, self.quantity)
+        rv = str()
         return [
             "id",
-            f"time ({time_unit})",
-            f"x ({spatial_unit})",
-            f"y ({spatial_unit})",
-            f"z ({spatial_unit})",
-            f"value ({unit})"
+            f"time ({units.time})",
+            f"x ({units.space})",
+            f"y ({units.space})",
+            f"z ({units.space})",
+            f"value ({u})"
         ]
     
     def row(self, domain: Domain):
@@ -85,29 +85,28 @@ class Exceedance(ResultContainer):
         return True if self.index[0] < other.index[0] else False
     
     def string(self, setting: IDMFConfig, domain: Domain):
-        time_unit = getattr(setting, f"time_units")
-        spatial_unit = setting.spatial_units
+        units = Units(setting)
         rv = str()
         if self.index:
             t, x, y, z = domain.values(self.geometry, self.id, self.index)
             rv += f"id: {self.id}\n"
-            rv += f"time: {t}{time_unit}\n"
-            rv += f"x: {x}{spatial_unit}\n"
-            rv += f"y: {y}{spatial_unit}\n"
-            rv += f"z: {z}{spatial_unit}\n"
+            rv += f"time: {t}{units.time}\n"
+            rv += f"x: {x}{units.space}\n"
+            rv += f"y: {y}{units.space}\n"
+            rv += f"z: {z}{units.space}\n"
         else:
             rv += "None\n\n"
         return rv
     
     def header(self, setting: IDMFConfig):
-        time_unit = setting.time_units
-        spatial_unit = setting.spatial_units
+        units = Units(setting)
+        rv = str()
         return [
             "id",
-            f"time ({time_unit})",
-            f"x ({spatial_unit})",
-            f"y ({spatial_unit})",
-            f"z ({spatial_unit})",
+            f"time ({units.time})",
+            f"x ({units.space})",
+            f"y ({units.space})",
+            f"z ({units.space})",
         ]
 
     def row(self, domain: Domain):
@@ -136,23 +135,22 @@ class PercentExceedance(ResultContainer):
         return True if self.index < other.index else False
     
     def string(self, setting: IDMFConfig, domain: Domain):
-        time_unit = getattr(setting, f"time_units")
-        spatial_unit = setting.spatial_units
+        units = Units(setting)
         rv = str()
         if self.index:
             t = domain.time[self.index]
             rv += f"id: {self.id}\n"
-            rv += f"time: {t}{time_unit}\n\n"
+            rv += f"time: {t}{units.time}\n\n"
         else:
             rv += "None\n\n"
         return rv
 
     
     def header(self, setting: IDMFConfig):
-        time_unit = setting.time_units
+        units = Units(setting)
         return [
             "id",
-            f"time ({time_unit})",
+            f"time ({units.time})",
         ]
 
     def row(self, domain: Domain):
@@ -181,23 +179,22 @@ class MaxPercentExceedance(ResultContainer):
         return True if self.value < other.value else False
     
     def string(self, setting: IDMFConfig, domain: Domain):
-        time_unit = getattr(setting, f"time_units")
-        spatial_unit = setting.spatial_units
+        units = Units(setting)
         rv = str()
         if self.index:
             t = domain.time[self.index]
             rv += f"id: {self.id}\n"
-            rv += f"time: {t}{time_unit}\n"
+            rv += f"time: {t}{units.time}\n"
             rv += f"value: {self.value}%\n\n"
         else:
             rv += "None\n\n"
         return rv
     
     def header(self, setting: IDMFConfig):
-        time_unit = setting.time_units
+        units = Units(setting)
         return [
             "id",
-            f"time ({time_unit})",
+            f"time ({units.time})",
             f"value (%)"
         ]
 

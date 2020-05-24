@@ -6,6 +6,8 @@ from base import RIDTOSError
 from base import ComputationalSpace
 
 from config import IDMFConfig
+from config import Units
+
 from container import Domain
 
 from .datastoreanalyser import DataStoreAnalyser
@@ -28,6 +30,7 @@ class BatchResults:
         self.setting = setting
         self.thresholds = getattr(self.setting.thresholds, quantity)
         self.domain = Domain(setting)
+        self.units = Units(setting)
         self.space = space
         self.quantity = quantity
         self.analysis = analysis
@@ -39,6 +42,9 @@ class BatchResults:
             f = open(join(self.outdir, f"batch_{self.quantity}_extrema.txt"), 'w')
         except OSError as e:
             raise RIDTOSError(e)
+
+        u = getattr(self.units, self.quantity)
+
         for geometry in BatchResults.geometries:
             over = []
             for setting, analysis in self.analysis.items():
@@ -74,7 +80,7 @@ class BatchResults:
                         over.append(item)
                 if over:
                     item = min(over)
-                    f.write(f"Minimum time to {t.value}{self.unit} for {geometry}\n")
+                    f.write(f"Minimum time to {t.value}{u} for {geometry}\n")
                     f.write(f"run id: {self.space.index(item.setting)}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
@@ -96,7 +102,7 @@ class BatchResults:
                         over.append(item)
                 if over:
                     item = min(over)
-                    f.write(f"Minimum time to {t.value}{self.unit} for {p}% of domain for {geometry}\n")
+                    f.write(f"Minimum time to {t.value}{u} for {p}% of domain for {geometry}\n")
                     f.write(f"run id: {self.space.index(item.setting)}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
@@ -118,13 +124,9 @@ class BatchResults:
 
                     if over:
                         item = max(over)
-                        f.write(f"Maximum percentage exceeding {t.value}{self.unit} for {geometry}\n")
+                        f.write(f"Maximum percentage exceeding {t.value}{u} for {geometry}\n")
                         f.write(f"run id: {self.space.index(item.setting)}\n")
                         f.write(item.string(self.setting, self.domain))
                 f.write("===================================\n")
                 f.write("===================================\n\n")
         f.close()
-
-    @property
-    def unit(self):
-        return getattr(self.setting, f"{self.quantity}_units")

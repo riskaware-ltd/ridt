@@ -11,6 +11,7 @@ from typing import Iterable
 from base import RIDTOSError
 
 from config import IDMFConfig
+from config import Units
 
 from container import Domain
 
@@ -26,15 +27,18 @@ from .resultcontainers import MaxPercentExceedance
 class ResultsWriter:
 
 
-    def __init__(self, setting: IDMFConfig, analysis: DataStoreAnalyser, dir_agent: DirectoryAgent, quantity: str):
+    def __init__(self,
+                 setting: IDMFConfig,
+                 analysis: DataStoreAnalyser,
+                 dir_agent: DirectoryAgent,
+                 quantity: str):
         self.setting = setting
+        self.units = Units(setting)
         self.analysis = analysis
         self.dir_agent = dir_agent 
         self.quantity = quantity
         self.domain = Domain(setting)
         self.thresholds = getattr(self.setting.thresholds, quantity)
-        self.time_unit = self.setting.time_units
-        self.spatial_unit = self.setting.spatial_units
         self.maximum()
         self.exceedance()
         self.percent_exceedance()
@@ -124,66 +128,70 @@ class ResultsWriter:
                     self.write(path, items[0].header(self.setting), rows)
     
     def extrema(self):
-        with open(join(self.dir_agent.outdir, f"{self.quantity}_extrema.txt"), 'w') as f:
+        try:
+            f = open(join(self.dir_agent.outdir, f"{self.quantity}_extrema.txt"), 'w')
+        except OSError as e:
+            raise RIDTOSError(e)
+        for geometry in self.analysis.data_store.geometries:
+            items = [
+                i for i in self.analysis.maximum 
+                if i.geometry == geometry
+                and i.valid
+            ]
+            if items:
+                item = max(items)
+                f.write(f"Maxium value for {geometry}:\n")
+                f.write(item.string(self.setting, self.domain))
+        f.write("===================================\n")
+        f.write("===================================\n\n")
+        for t in self.thresholds:
             for geometry in self.analysis.data_store.geometries:
                 items = [
-                    i for i in self.analysis.maximum 
+                    i for i in self.analysis.exceedance
                     if i.geometry == geometry
+                    and i.threshold == t.value
+                    and i.valid
+                ]
+                if items:
+                    item = min(items)
+                    f.write(f"Minimum time to {t.value}{self.unit} for {geometry}\n")
+                    f.write(item.string(self.setting, self.domain))
+            f.write("===================================\n")
+            f.write("===================================\n\n")
+        p = self.setting.models.eddy_diffusion.analysis.percentage_exceedance
+        for t in self.thresholds:
+            for geometry in self.analysis.data_store.geometries:
+                items = [
+                    i for i in self.analysis.percent_exceedance
+                    if i.geometry == geometry
+                    and i.threshold == t.value
+                    and i.valid
+                ]
+                if items:
+                    item = min(items)
+                    f.write(f"Minimum time to {t.value}{self.unit} for {p}% of domain for {geometry}\n")
+                    f.write(item.string(self.setting, self.domain))
+            f.write("===================================\n")
+            f.write("===================================\n\n")
+        for t in self.thresholds:
+            for geometry in self.analysis.data_store.geometries:
+                items = [
+                    i for i in self.analysis.max_percent_exceedance
+                    if i.geometry == geometry
+                    and i.threshold == t.value
                     and i.valid
                 ]
                 if items:
                     item = max(items)
-                    f.write(f"Maxium value for {geometry}:\n")
+                    f.write(f"Maximum percentage exceeding {t.value}{self.unit} for {geometry}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
             f.write("===================================\n\n")
-            for t in self.thresholds:
-                for geometry in self.analysis.data_store.geometries:
-                    items = [
-                        i for i in self.analysis.exceedance
-                        if i.geometry == geometry
-                        and i.threshold == t.value
-                        and i.valid
-                    ]
-                    if items:
-                        item = min(items)
-                        f.write(f"Minimum time to {t.value}{self.unit} for {geometry}\n")
-                        f.write(item.string(self.setting, self.domain))
-                f.write("===================================\n")
-                f.write("===================================\n\n")
-            p = self.setting.models.eddy_diffusion.analysis.percentage_exceedance
-            for t in self.thresholds:
-                for geometry in self.analysis.data_store.geometries:
-                    items = [
-                        i for i in self.analysis.percent_exceedance
-                        if i.geometry == geometry
-                        and i.threshold == t.value
-                        and i.valid
-                    ]
-                    if items:
-                        item = min(items)
-                        f.write(f"Minimum time to {t.value}{self.unit} for {p}% of domain for {geometry}\n")
-                        f.write(item.string(self.setting, self.domain))
-                f.write("===================================\n")
-                f.write("===================================\n\n")
-            for t in self.thresholds:
-                for geometry in self.analysis.data_store.geometries:
-                    items = [
-                        i for i in self.analysis.max_percent_exceedance
-                        if i.geometry == geometry
-                        and i.threshold == t.value
-                        and i.valid
-                    ]
-                    if items:
-                        item = max(items)
-                        f.write(f"Maximum percentage exceeding {t.value}{self.unit} for {geometry}\n")
-                        f.write(item.string(self.setting, self.domain))
-                f.write("===================================\n")
-                f.write("===================================\n\n")
+        f.close()
 
     @property
     def unit(self):
-        return getattr(self.setting, f"{self.quantity}_units")
+        return getattr(self.units, self.quantity)
 
     def __enter__(self):
         return self

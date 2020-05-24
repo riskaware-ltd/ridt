@@ -338,8 +338,6 @@ class TimeUnits(StringSelection):
         """
         self.options = [
             "s",
-            "m",
-            "h"
         ]
 
     def check(self):
@@ -360,9 +358,9 @@ class ConcentrationUnits(StringSelection):
             The string indicating the concentration units selection.
         """
         self.options = [
-            "kgm-3",
-            "mgm-3",
-            "kgm-3",
+            "kg.m-3",
+            "g.m-3",
+            "mg.m-3",
             "ppm",
             "ppb",
             "ppt"
@@ -385,8 +383,8 @@ class ExposureUnits(StringSelection):
             The string indicating the exposure units selection.
         """
         self.options = [
-            "mgminm-3",
-            "kgsm-3"
+            "mg.min.m-3",
+            "kg.s.m-3"
         ]
 
     def check(self):
@@ -408,8 +406,6 @@ class SpatialUnits(StringSelection):
         """
         self.options = [
             "m",
-            "cm",
-            "mm"
         ]
 
     def check(self):
