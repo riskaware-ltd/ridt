@@ -91,6 +91,7 @@ class IDMFConfig(Settings):
         self.dispersion_model = DispersionModel
 
         self.time_units = TimeUnits
+        self.spatial_units = SpatialUnits
         self.time_samples = NonNegativeInteger
         self.total_time = NonNegativeFloat
 
@@ -99,8 +100,6 @@ class IDMFConfig(Settings):
 
         self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
-
-        self.human_readable_data_output = bool
 
         self.modes = ModeSettings
         self.thresholds = Thresholds
@@ -837,7 +836,6 @@ class EddyDiffusion(Settings):
             The values corresponding to the eddy diffusion
             model type.
         """
-        self.spatial_units = SpatialUnits
         self.dimensions = Dimensions
         self.spatial_samples = SpatialSamples
         self.monitor_locations = MonitorLocations
@@ -852,7 +850,7 @@ class EddyDiffusion(Settings):
 class AnalysisSettings(Settings):
     @Settings.assign
     def __init__(self, values: dict):
-        self.percentage = Percentage
+        self.percentage_exceedance = Percentage
         self.maximum_anywhere = DomainSelection
         self.threshold_percentage = DomainSelection
         self.threshold_anywhere = DomainSelection
@@ -920,6 +918,7 @@ class MonitorLocations(Settings):
         self.points = Points
         self.lines = Lines
         self.planes = Planes
+        self.domain = Domain
 
 class Dimensions(Settings):
     """The :class:`~.Dimensions` class. It inherits from
@@ -1317,6 +1316,29 @@ class Planes(Dict):
 
         """
         self.type = Plane
+
+
+class Domain(Dict):
+    """The :class:`~.Domain` class. It inherits from
+    :class:`~.Dict`.
+
+    Attributes
+    ---------
+    type: :obj:`bool`
+        The boolean value to idicate whether to evaluate the domain.
+    """
+    @Dict.assign
+    def __init__(self, value: bool):
+        """The constructor for the :class:`~.Domain` class.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the domain to be monitored.
+
+        """
+        self.type = bool 
+
 
 
 class Plane(Settings):
