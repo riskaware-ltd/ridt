@@ -105,17 +105,23 @@ class EddyDiffusion:
 
     def diffusion_coefficient(self):
         vent_number = self.settings\
-            .models\
-            .eddy_diffusion\
-            .coefficient\
-            .tkeb\
-            .number_of_supply_vents
+                          .models\
+                          .eddy_diffusion\
+                          .coefficient\
+                          .tkeb\
+                          .number_of_supply_vents
+        air_change_rate = self.settings\
+                              .models\
+                              .eddy_diffusion\
+                              .coefficient\
+                              .tkeb\
+                              .total_air_change_rate
 
         coeff = self.settings.models.eddy_diffusion.coefficient
         if coeff.calculation == "EXPLICIT":
             return coeff.value
         else:
-            tkeb_term = self.settings.total_air_change_rate /\
+            tkeb_term = air_change_rate /\
                 power(self.volume * power(vent_number, 2), 1/3)
 
             upper_pi = 0.827 * tkeb_term + 0.0565

@@ -99,7 +99,6 @@ class IDMFConfig(Settings):
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
 
-        self.total_air_change_rate = NonNegativeFloat
         self.fresh_air_change_rate = NonNegativeFloat
 
         self.modes = ModeSettings
@@ -1080,6 +1079,7 @@ class TKEB(Settings):
             The values corresponding to the TKEB
             equation.
         """
+        self.total_air_change_rate = NonNegativeFloat
         self.number_of_supply_vents = int
 
 

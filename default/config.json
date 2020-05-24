@@ -11,7 +11,6 @@
     "total_time": 10.0,
 
 
-    "total_air_change_rate": 1.0,
     "fresh_air_change_rate": 5.0,
     "modes": {
         "instantaneous": {
@@ -85,8 +84,9 @@
             },
             "coefficient": {
                 "calculation": "TKEB",
-                "value": 0.001,    
+                "value": 0.001,
                 "tkeb": {
+                    "total_air_change_rate": 1.0,
                     "number_of_supply_vents": 1
                 }
             },
