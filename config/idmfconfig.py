@@ -232,7 +232,7 @@ class IDMFConfig(Settings):
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
             raise ConsistencyError(f"Cannot exceed more than 5 thresholds")
         
-        point_number = self.models.eddy_diffusion.point_plots.number
+        point_number = self.models.eddy_diffusion.points_plots.number
         if isinstance(point_number, list):
             for item in point_number:
                 if item > self.time_samples:
@@ -245,7 +245,7 @@ class IDMFConfig(Settings):
             f"The number of requrested plots ({item}) cannot exceed the "
             f"number of time samples ({self.time_samples}).")
  
-        line_number = self.models.eddy_diffusion.line_plots.number
+        line_number = self.models.eddy_diffusion.lines_plots.number
         if isinstance(line_number, list):
             for item in line_number:
                 if item > self.time_samples:
@@ -258,7 +258,7 @@ class IDMFConfig(Settings):
             f"The number of requrested line plots ({line_number}) cannot exceed the "
             f"number of time samples ({self.time_samples}).")
  
-        contour_number = self.models.eddy_diffusion.contour_plots.number
+        contour_number = self.models.eddy_diffusion.planes_plots.number
         if isinstance(contour_number, list):
             for item in contour_number:
                 if item > self.time_samples:
@@ -884,7 +884,7 @@ class EddyDiffusion(Settings):
     images: :class:`~.Images`
         Path to the image configurations.
 
-    contour_plots: :class:`~.ContourPlots`
+    planes_plots: :class:`~.ContourPlots`
         Path to the contour plots configurations.
     """
     @Settings.assign
@@ -903,9 +903,9 @@ class EddyDiffusion(Settings):
         self.coefficient = Coefficient
         self.images = Images
         self.analysis = AnalysisSettings
-        self.contour_plots = ContourPlots
-        self.line_plots = LinePlots
-        self.point_plots = PointPlots
+        self.planes_plots = ContourPlots
+        self.lines_plots = LinePlots
+        self.points_plots = PointPlots
 
     def consistency_check(self):
         dims = ["x", "y", "z"]
@@ -961,6 +961,7 @@ class LinePlots(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.output = bool
+        self.scale = ScaleType
         self.number = NonNegativeInteger
 
 
@@ -977,6 +978,7 @@ class PointPlots(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.output = bool
+        self.scale = ScaleType
         self.number = NonNegativeInteger
 
 

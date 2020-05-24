@@ -1,76 +1,68 @@
-import os
+from os.path import join
+
+from numpy import ndarray
 
 from config import IDMFConfig
-from config import Line
+from config import Units
 
-from container.domain import Domain
+from container import Domain
 
 from typing import List
 
 import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.ticker import FormatStrFormatter
 
 
 class LinePlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str):
+    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
-
+        self.units = Units(settings)
         self.domain = Domain(self.settings)
+        self.quantity = quantity
+        self.config = self.settings.models.eddy_diffusion.lines_plots
 
-    def __call__(self,
-                 concentrations: np.ndarray,
-                 line: Line,
-                 line_name: str,
-                 plot_type: str,
-                 min_value: float,
-                 max_value: float):
+    def __call__(self, id: str, data: ndarray, max_val: float, t_index: int):
+        self.id = id
+        self.t_index = t_index
+        self.max_val = max_val
+        self.axis = self.get_axis()
+        self.plot(data)
+        self.save_fig()
+        plt.close()
 
-        """Future Reference: plot_type must be either concentration or exposure."""
+    def plot(self, data: ndarray):
 
-        self.line_name = line_name
-        self.dir_name = "LinePlots"
-        try:
-            os.mkdir(f"{self.output_dir}/{self.dir_name}")
-        except FileExistsError:
-            pass
+        plt.title(self.title())
+        plt.xlabel(self.xlabel())
+        plt.ylabel(self.ylabel())
 
-        self.min = min_value
-        self.max = max_value
-        self.plot_type = plot_type
-        for idx, time in enumerate(self.domain.time):
-            self.plot(concentrations[idx], line)
-            self.save_fig(round(time, 1))
-            plt.close()
+        plt.ylim(1e-34, self.max_val)
+        plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.d'))
+        if self.config.scale == "logarithmic":
+            plt.yscale("log")
+        plot = plt.plot(self.get_domain(), data)
 
-    def plot(self, concentrations: np.ndarray, line: Line):
-        title = self.make_title()
-
-        x_range = self.__get_ranges(line)
-
-        plt.ylim(self.min, self.max)
-
-        plt.title(title)
-        plt.ylabel(
-            f"{self.plot_type.capitalize()} "
-            f"({getattr(self.settings, f'{self.plot_type}_units')})")
-        plt.xlabel(f"Distance ({line.parallel_axis})")
-
-        plot = plt.plot(x_range, concentrations)
 
         return plot
 
-    def save_fig(self, time):
-        plt.savefig(f"{self.output_dir}/{self.dir_name}/{self.settings.dispersion_model.capitalize()} "
-                    f"{self.line_name.capitalize()}, "
-                    f"time = {time}.pdf")
+    def save_fig(self):
+        plt.savefig(join(self.output_dir, f"{self.id}-{self.domain.time[self.t_index]:.2f}s.png"))
 
-    def make_title(self):
-        title = f"{self.plot_type.capitalize()} vs time at " \
-                f"{self.line_name.capitalize()}"
-        return title
+    def title(self):
+        return f"{self.quantity} - {self.id} - {self.domain.time[self.t_index]:.2f}s"
+    
+    def ylabel(self):
+        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}_si')})"
 
-    def __get_ranges(self, line: Line):
-        x_range = getattr(self.domain, line.parallel_axis)
-        return x_range
+    def xlabel(self):
+        return f"{self.axis} ({self.units.space})"
+
+    def get_domain(self):
+        return getattr(self.domain, self.axis)
+
+    def get_axis(self):
+        lines = self.settings.models.eddy_diffusion.monitor_locations.lines
+        return lines[self.id].parallel_axis
+

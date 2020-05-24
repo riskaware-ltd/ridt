@@ -1,8 +1,11 @@
-import os
+from os.path import join
+
+from numpy import ndarray
 
 from config import IDMFConfig
+from config import Units
 
-from container.domain import Domain
+from container import Domain
 
 from typing import List
 
@@ -11,48 +14,37 @@ import matplotlib.pyplot as plt
 
 class PointPlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str):
+    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
-
+        self.units = Units(settings)
         self.domain = Domain(self.settings)
+        self.quantity = quantity
+        self.config = self.settings.models.eddy_diffusion.points_plots
 
-    def __call__(self,
-                 concentrations: List[float],
-                 plot_type: str,
-                 point_name: str = None):
-        self.point_name = point_name
-        self.dir_name = "PointPlots"
-        try:
-            os.mkdir(f"{self.output_dir}/{self.dir_name}")
-        except FileExistsError:
-            pass
-
-        self.plot_type = plot_type
-        self.plot(concentrations)
+    def __call__(self, id: str, data: ndarray):
+        self.id = id 
+        self.plot(data)
         self.save_fig()
         plt.clf()
 
-    def plot(self, concentrations: List[float]):
-        title = self.make_title()
-
-        plt.title(title)
-        plt.ylabel(
-            f"{self.plot_type.capitalize()} "
-            f"({getattr(self.settings, f'{self.plot_type}_units')})")
-        plt.xlabel(f"Time ({self.settings.time_units})")
-
-        plot = plt.plot(self.domain.time, concentrations)
-
+    def plot(self, data: ndarray):
+        plt.title(self.title())
+        plt.xlabel(self.xlabel())
+        plt.ylabel(self.ylabel())
+        if self.config.scale == "logarithmic":
+            plt.yscale("log")
+        plot = plt.plot(self.domain.time, data)
         return plot
 
     def save_fig(self):
-        name = f"{self.output_dir}/{self.dir_name}"
-        if self.point_name:
-            name += f" {self.point_name.capitalize()}"
-        plt.savefig(f"{name}.pdf")
+        plt.savefig(join(self.output_dir, f"{self.id}.png"))
 
-    def make_title(self):
-        title = f"{self.plot_type.capitalize()} vs time at " \
-                f"{self.point_name.capitalize()}"
-        return title
+    def title(self):
+        return f"{self.quantity} vs time - {self.id}"
+
+    def ylabel(self):
+        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}_si')})"
+
+    def xlabel(self):
+        return f"Time ({self.settings.time_units})"

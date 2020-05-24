@@ -9,25 +9,20 @@
 
     "time_units": "s",
     "time_samples": 50,
-    "total_time": 10.0,
+    "total_time": 100.0,
 
     "fresh_air_change_rate_units": "m3.s-1",
-    "fresh_air_change_rate": 1.0,
+    "fresh_air_change_rate": 1e-10,
 
     "modes": {
         "instantaneous": {
             "sources":{
                 "source_1": {
-                    "x": {
-                        "min": 0.0,
-                        "max": 1.1,
-                        "num": 4,
-                        "match": "fish"
-                    },
-                    "y": 1.0,
+                    "x": 10.0,
+                    "y": 3.0,
                     "z": 1.0,
                     "mass": 1.0,
-                    "time": 1.0
+                    "time": 0.0
                 }
             }
         },
@@ -35,11 +30,11 @@
         "infinite_duration": {
             "sources": {
                 "source_1": {
-                    "x": 1.0,
-                    "y": 1.0,
+                    "x": 10.0,
+                    "y": 3.0,
                     "z": 1.0,
                     "rate": 0.01,
-                    "time": 1.0
+                    "time": 0.0
                 }
             }
         },
@@ -47,12 +42,12 @@
         "fixed_duration": {
             "sources": {
                 "source_1": {
-                    "x": 1.0,
-                    "y": 1.0,
+                    "x": 10.0,
+                    "y": 3.0,
                     "z": 1.0,
                     "rate": 0.01,
                     "start_time": 1.0,
-                    "end_time": 5.0
+                    "end_time": 0.0
                 }
             }
         }
@@ -83,8 +78,8 @@
                 "z": 3.0
             },
             "spatial_samples": {
-                "x": 10,
-                "y": 10,
+                "x": 20,
+                "y": 20,
                 "z": 10 
             },
             "coefficient": {
@@ -159,22 +154,24 @@
                     "domain": true 
                 }
             },
-            "point_plots": {
-                "output": true,
+            "points_plots": {
+                "output": false,
+                "scale": "logarithmic",
                 "number": 10
             },
-            "line_plots": {
+            "lines_plots": {
                 "output": false,
-                "number": 30
+                "scale": "logarithmic",
+                "number": 50
             },
-            "contour_plots": {
-                "output": false,
+            "planes_plots": {
+                "output": true,
                 "concentration": true,
                 "exposure": true,
                 "number": 10,
                 "number_of_contours": 10,
                 "range": "auto",
-                "scale": "linear",
+                "scale": "logarithmic",
                 "contours": {
                     "min": 0.0,
                     "max": 1.5
@@ -182,7 +179,7 @@
             }
         },
         "well_mixed": {
-            "volume": 1.0
+            "volume": 3000.0
         }
     }
 }

@@ -32,7 +32,7 @@ class EddyDiffusion:
         self.delta_t = self.settings.total_time / self.settings.time_samples
         self.diff_coeff = self.diffusion_coefficient()
 
-    def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: ndarray):
+    def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: List[float]):
         modes = ["instantaneous", "infinite_duration", "fixed_duration"]
         self.shape = x.shape
         self.zero = zeros(self.shape)
@@ -49,6 +49,9 @@ class EddyDiffusion:
                 if time - source.time > 0:
                     temp_conc[idx] += source.mass * self.__concentration(
                         source, x, y, z, time - source.time)
+
+
+
             self.conc += array(temp_conc)
 
     def infinite_duration(self, x: ndarray, y: ndarray, z: ndarray, t: List[float]):
@@ -76,17 +79,25 @@ class EddyDiffusion:
             self.conc += temp_conc - temp_conc_decay
     
     def __concentration(self,
-                       source: InstantaneousSource,
-                       x: ndarray,
-                       y: ndarray,
-                       z: ndarray,
-                       t: float):
+                        source: InstantaneousSource,
+                        x: ndarray,
+                        y: ndarray,
+                        z: ndarray,
+                        t: float):
+
+        # print("y")
+        # print(y[:, :, 0])
+        # print("x")
+        # print(x[:, :, 0])
+
         r_x = self.__exp(x, t, self.dim.x, source.x)
         r_y = self.__exp(y, t, self.dim.y, source.y)
         r_z = self.__exp(z, t, self.dim.z, source.z)
+        
         return self.__coeff(t) * r_x * r_y * r_z
 
     def __exp(self, position: ndarray, t: float, bound: float, source_loc: float):
+
 
         i_setting = self.settings.models.eddy_diffusion.images
 
@@ -117,7 +128,7 @@ class EddyDiffusion:
                     rv += new_term
                 image_index += 1
                 
-        return sum(rv)
+        return rv
 
     def __coeff(self, t: ndarray):
         fa_rate = self.settings.fresh_air_change_rate

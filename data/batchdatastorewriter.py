@@ -36,7 +36,6 @@ class BatchDataStoreWriter:
                     f.write(self.space.cout_summary())
             except OSError as e:
                 RIDTOSError(e)
-
             for idx, setting in enumerate(self.space.space):
                 dir_agent.create_root_dir(idx)
                 store = self.data_store[setting]

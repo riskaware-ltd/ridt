@@ -26,6 +26,12 @@ class DirectoryAgent:
         self.qdir = join(self.gdir, quantity)
         self.mkdir(self.qdir)
         return self.qdir
+    
+    def create_plot_dir(self, geometry: str, quantity: str):
+        self.create_quantity_dir(geometry, quantity)
+        self.pdir = join(self.qdir, "plots")
+        self.mkdir(self.pdir)
+        return self.pdir
 
     def mkdir(self, path: str):
         try:

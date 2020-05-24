@@ -1,110 +1,117 @@
-import os
-import sys
+from os.path import join
+
+from numpy import ndarray
+from numpy import log
+from numpy import log10
+from numpy import floor
+from numpy import ceil 
+from numpy import arange
+from numpy import power
+from numpy import linspace
+from numpy import meshgrid
+from numpy.ma import masked_where
 
 from config import IDMFConfig
-from config import Plane
+from config import Units 
+
+from container import Domain
 
 from matplotlib import cm, ticker
+from matplotlib import colors
+
+from matplotlib.ticker import LogLocator
 import matplotlib.pyplot as plt
-
-import numpy as np
-
-from container.domain import Domain
+from matplotlib.pyplot import figure
 
 
 class ContourPlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str):
+    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
-
+        self.units = Units(settings)
         self.domain = Domain(self.settings)
+        self.quantity = quantity
+        self.config = self.settings.models.eddy_diffusion.planes_plots
 
-    def __call__(self,
-                 concentrations: np.ndarray,
-                 plane: Plane,
-                 plane_name: str,
-                 plot_type: str,
-                 min_value: float,
-                 max_value: float):
+    def __call__(self, id: str, data: ndarray, max_val: float, t_index: int):
+        self.id = id
+        self.t_index = t_index
+        self.max_val = max_val
+        self.xaxis, self.yaxis = self.get_axes()
+        self.figsize = self.get_figsize()
+        self.plot(data)
+        self.save_fig()
+        plt.close()
 
-        self.plane = plane
-        self.plane_name = plane_name
-        self.dir_name = "ContourPlots"
-        try:
-            os.mkdir(f"{self.output_dir}/{self.dir_name}")
-        except FileExistsError:
-            pass
+    def plot(self, data: ndarray):
 
-        self.min = min_value + 0.1
-        self.max = max_value
-        self.plot_type = plot_type
-        for idx, time in enumerate(self.domain.time):
-            self.plot(concentrations[idx], plane)
-            self.save_fig(round(time, 1))
-            plt.close()
+        figure(num=None, figsize=self.figsize, dpi=120, facecolor='w', edgecolor='k')
 
-    def plot(self, concentrations: np.ndarray, plane: Plane):
-        try:
-            title = self.make_title()
+        plt.title(self.title())
+        plt.xlabel(self.xlabel())
+        plt.ylabel(self.ylabel())
 
-            x_range, y_range = self.__get_ranges()
-
+        if self.config.scale == "logarithmic":
+            levels = self.get_log_scale()
             plot = plt.contourf(
-                x_range, y_range, concentrations,
-                levels=self.__calculate_levels(), extend="min",
-                cmap=cm.RdBu)
-
-            plt.clim(self.min, self.max)
+                self.get_xdomain(),
+                self.get_ydomain(),
+                data, 
+                levels,
+                extend="both",
+                norm=colors.LogNorm(),
+                cmap=cm.RdBu_r)
             plt.colorbar()
-
-            plt.title(title)
-            self.__set_labels(plane)
-
-            return plot
-        except ValueError:
-            print("Must have at least two contours. Try using "
-                  "linear scaling.")
-            sys.exit()
-
-    def save_fig(self, time):
-        plt.savefig(f"{self.output_dir}/{self.dir_name}/{self.settings.dispersion_model.capitalize()} "
-                    f"{self.plane_name.capitalize()}, "
-                    f"time = {time}.pdf")
-
-    def make_title(self):
-        title = f"{self.plot_type.capitalize()} at " \
-                f"{self.plane_name.capitalize()}"
-        return title
-
-    def __calculate_levels(self):
-        contour_plots = self.settings.models.eddy_diffusion.contour_plots
-        if contour_plots.range == "auto":
-            contour_range = np.linspace(
-                self.min,
-                self.max,
-                contour_plots.number_of_contours
-            )
         else:
-            contour_range = np.linspace(
-                contour_plots.contours.min,
-                contour_plots.contours.max,
-                contour_plots.number_of_contours
-            )
-        if contour_plots.scale == "logarithmic":
-            lev_exp = np.arange(np.floor(np.log10(self.min) - 1),
-                                np.ceil(np.log10(self.max) + 1))
-            contour_range = np.power(10, lev_exp)
-        return contour_range
+            levels = self.get_linear_scale()
+            plot = plt.contourf(
+                self.get_xdomain(),
+                self.get_ydomain(),
+                data, 
+                levels,
+                cmap=cm.RdBu_r)
+            plt.colorbar()
+        plt.tight_layout()
+
+        return plot
+
+    def save_fig(self):
+        plt.savefig(join(self.output_dir, f"{self.id}-{self.domain.time[self.t_index]:.2f}s.png"))
+
+    def title(self):
+        return f"{self.quantity} - {self.id} - {self.domain.time[self.t_index]:.2f}s"
+    
+    def xlabel(self):
+        return f"{self.xaxis} ({self.units.space})"
+
+    def ylabel(self):
+        return f"{self.yaxis} ({self.units.space})"
+
+    def get_xdomain(self):
+        return getattr(self.domain, self.xaxis)
+
+    def get_ydomain(self):
+        return getattr(self.domain, self.yaxis)
+    
+    def get_figsize(self):
+        dim = self.settings.models.eddy_diffusion.dimensions
+        aspect_ratio = getattr(dim, self.xaxis) / getattr(dim, self.yaxis)
+        return (8 * aspect_ratio, 6)
+
+    def get_axes(self):
+        planes = self.settings.models.eddy_diffusion.monitor_locations.planes
+        string = planes[self.id].axis
+        return string[0], string[1]
+    
+    def get_log_scale(self):
+        lev_exp = linspace(floor(log10(1e-10)-1), ceil(max(ceil(log10(self.max_val)), 1)), 10)
+        return power(10, lev_exp)
+
+    def get_linear_scale(self):
+        return linspace(0, self.max_val, 10)
 
     def __get_ranges(self):
         x_range = getattr(self.domain, list(self.plane.axis)[0])
         y_range = getattr(self.domain, list(self.plane.axis)[1])
         return x_range, y_range
-
-    def __set_labels(self, plane: Plane):
-        for idx, axis in enumerate(list(plane.axis)):
-            if idx == 0:
-                plt.xlabel(f"{axis} ({self.settings.models.eddy_diffusion.spatial_units})")
-            if idx == 1:
-                plt.ylabel(f"{axis} ({self.settings.models.eddy_diffusion.spatial_units})")
