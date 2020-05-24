@@ -212,11 +212,11 @@ class CSVToConfigFileValueError(Error):
     catches a ValueError error when parsing a csv file.
 
     """
-    def __init__(self, category: str, index: int):
+    def __init__(self, geometry: str, index: int):
         """The constructor for the :class:`CSVToConfigFileValueError` class.
 
         """
-        msg = f"While loading the {index} {category} item, one of the parsed "\
+        msg = f"While loading the {index} {geometry} item, one of the parsed "\
               f"items was of an incorrect type."
         super().__init__(msg)
 
@@ -226,10 +226,10 @@ class CSVToConfigFileIndexError(Error):
     catches an IndexError error when parsing a csv file.
 
     """
-    def __init__(self, category: str, index: str, expected: int):
+    def __init__(self, geometry: str, index: str, expected: int):
         """The constructor for the :class:`CSVToConfigFileIndexError` class.
 
         """
-        msg = f"While loading the {index} {category} item, not enough "\
+        msg = f"While loading the {index} {geometry} item, not enough "\
               f"values were found. Expecting {expected}"
         super().__init__(msg)

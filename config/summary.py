@@ -1,6 +1,5 @@
 from .idmfconfig import IDMFConfig
 
-
 def summary(settings: IDMFConfig):
     rv = str()
 

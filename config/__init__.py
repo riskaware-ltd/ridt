@@ -6,6 +6,7 @@ from .idmfconfig import InstantaneousSource
 from .idmfconfig import ConsistencyError
 
 from .configfileparser import ConfigFileParser
+from .configfileparser import ConfigFileParserJSONError
 
 from .configfilewriter import ConfigFileWriter
 
