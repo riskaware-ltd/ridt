@@ -1080,9 +1080,18 @@ class SpatialSamples(Settings):
             The values corresponding to the spatial samples
             of the container.
         """
-        self.x = NonNegativeInteger
-        self.y = NonNegativeInteger
-        self.z = NonNegativeInteger
+        self.x = SpatialDiscretisation 
+        self.y = SpatialDiscretisation
+        self.z = SpatialDiscretisation
+
+
+class SpatialDiscretisation(Number):
+    @Terminus.assign
+    def __init__(self, value: int):
+        self.type = int
+    
+    def check(self):
+        self.lower_bound(1)
 
 
 class Coefficient(Settings):
