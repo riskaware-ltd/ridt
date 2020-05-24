@@ -1145,8 +1145,31 @@ class Images(Settings):
             The values corresponding to the TKEB
             equation.
         """
+        self.mode = ImageMode
         self.quantity = NonNegativeInteger
         self.max_error = Percentage
+
+class ImageMode(StringSelection):
+    """The image mode selection
+
+    It inherits from :class:`~.Terminus`.
+
+    """
+    @Terminus.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`ImageMode` class.
+
+        value : :obj:`str`
+            The string indicating the way to choose the number of images.
+        """
+        self.options = [
+            "manual",
+            "auto"
+        ]
+
+    def check(self):
+        pass
+
 
 
 class ContourPlots(Settings):

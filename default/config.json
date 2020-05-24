@@ -93,6 +93,7 @@
                 }
             },
             "images": {
+                "mode": "auto",
                 "quantity": 3,
                 "max_error": 1.0
             },
