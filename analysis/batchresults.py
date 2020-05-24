@@ -28,14 +28,18 @@ class BatchResults:
                  outdir: str,
                  quantity: str):
         self.setting = setting
-        self.thresholds = getattr(self.setting.thresholds, quantity)
         self.domain = Domain(setting)
         self.units = Units(setting)
-        self.space = space
         self.quantity = quantity
+        self.thresholds = self.threshold_converter()
+        self.space = space
         self.analysis = analysis
         self.outdir = outdir
         self.write()
+
+    def threshold_converter(self):
+        tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
+        return getattr(self.units, f"{self.quantity}_converter")(tld)
 
     def write(self):
         try:
@@ -71,7 +75,7 @@ class BatchResults:
                     items = [
                         i for i in analysis.exceedance
                         if i.geometry == geometry
-                        and i.threshold == t.value
+                        and i.threshold == t
                         and i.valid
                     ]
                     if items:
@@ -80,7 +84,7 @@ class BatchResults:
                         over.append(item)
                 if over:
                     item = min(over)
-                    f.write(f"Minimum time to {t.value}{u} for {geometry}\n")
+                    f.write(f"Minimum time to {t}{u} for {geometry}\n")
                     f.write(f"run id: {self.space.index(item.setting)}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
@@ -93,7 +97,7 @@ class BatchResults:
                     items = [
                         i for i in analysis.percent_exceedance
                         if i.geometry == geometry
-                        and i.threshold == t.value
+                        and i.threshold == t
                         and i.valid
                     ]
                     if items:
@@ -102,7 +106,7 @@ class BatchResults:
                         over.append(item)
                 if over:
                     item = min(over)
-                    f.write(f"Minimum time to {t.value}{u} for {p}% of domain for {geometry}\n")
+                    f.write(f"Minimum time to {t}{u} for {p}% of domain for {geometry}\n")
                     f.write(f"run id: {self.space.index(item.setting)}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
@@ -114,7 +118,7 @@ class BatchResults:
                     items = [
                         i for i in analysis.max_percent_exceedance
                         if i.geometry == geometry
-                        and i.threshold == t.value
+                        and i.threshold == t
                         and i.valid
                     ]
                     if items:
@@ -124,7 +128,7 @@ class BatchResults:
 
                     if over:
                         item = max(over)
-                        f.write(f"Maximum percentage exceeding {t.value}{u} for {geometry}\n")
+                        f.write(f"Maximum percentage exceeding {t}{u} for {geometry}\n")
                         f.write(f"run id: {self.space.index(item.setting)}\n")
                         f.write(item.string(self.setting, self.domain))
                 f.write("===================================\n")

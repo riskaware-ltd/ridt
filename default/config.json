@@ -7,6 +7,7 @@
     "concentration_units": "kg.m-3",
     "exposure_units": "mg.min.m-3",
     "fresh_air_change_rate_units": "m3.h-1",
+    "mass_units": "kg",
 
     "time_samples": 50,
     "total_time": 10.0,

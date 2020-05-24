@@ -32,7 +32,7 @@ class Maximum(ResultContainer):
     
     def string(self, setting: IDMFConfig, domain: Domain):
         units = Units(setting)
-        u = getattr(units, self.quantity)
+        u = getattr(units, f"{self.quantity}_si")
         rv = str()
         if self.index:
             t, x, y, z = domain.values(self.geometry, self.id, self.index)
@@ -48,7 +48,7 @@ class Maximum(ResultContainer):
     
     def header(self, setting: IDMFConfig):
         units = Units(setting)
-        u = getattr(units, self.quantity)
+        u = getattr(units, f"{self.quantity}_si")
         rv = str()
         return [
             "id",

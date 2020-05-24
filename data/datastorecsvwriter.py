@@ -47,7 +47,7 @@ class DataStoreCSVWriter:
                 self.write_csv(geometry, id, data_store.get(geometry, id))
     
     def write_csv(self, geometry: str, id: str, data: ndarray):
-        qu = getattr(self.units, self.quantity)
+        qu = getattr(self.units, f"{self.quantity}_si")
 
         path = join(self.dir_agent.qdir, id + ".csv")
 

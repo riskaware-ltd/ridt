@@ -34,16 +34,20 @@ class ResultsWriter:
                  quantity: str):
         self.setting = setting
         self.units = Units(setting)
+        self.quantity = quantity
+        self.thresholds = self.threshold_converter()
         self.analysis = analysis
         self.dir_agent = dir_agent 
-        self.quantity = quantity
         self.domain = Domain(setting)
-        self.thresholds = getattr(self.setting.thresholds, quantity)
         self.maximum()
         self.exceedance()
         self.percent_exceedance()
         self.max_percent_exceedance()
         self.extrema()
+
+    def threshold_converter(self):
+        tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
+        return getattr(self.units, f"{self.quantity}_converter")(tld)
 
     def write(self, file_path: str, header: List[str], lines: Iterable):
         try:
@@ -80,11 +84,11 @@ class ResultsWriter:
                 items = [
                     i for i in self.analysis.exceedance
                     if i.geometry == geometry
-                    and i.threshold == t.value
+                    and i.threshold == t
                     and i.valid
                 ]
                 items.sort()
-                fname = f"{geometry}_exceeds_{t.value}{self.unit}.csv"
+                fname = f"{geometry}_exceeds_{t}{self.unit}.csv"
                 self.dir_agent.create_quantity_dir(geometry, self.quantity)
                 path = join(self.dir_agent.qdir, fname)
                 rows = [item.row(self.domain) for item in items]
@@ -98,11 +102,11 @@ class ResultsWriter:
                 items = [
                     i for i in self.analysis.percent_exceedance
                     if i.geometry == geometry
-                    and i.threshold == t.value
+                    and i.threshold == t
                     and i.valid
                 ]
                 items.sort()
-                fname = f"{geometry}_exceeds_{t.value}{self.unit}.csv"
+                fname = f"{geometry}_exceeds_{t}{self.unit}.csv"
                 self.dir_agent.create_quantity_dir(geometry, self.quantity)
                 path = join(self.dir_agent.qdir, fname)
                 rows = [item.row(self.domain) for item in items]
@@ -116,11 +120,11 @@ class ResultsWriter:
                 items = [
                     i for i in self.analysis.max_percent_exceedance
                     if i.geometry == geometry
-                    and i.threshold == t.value
+                    and i.threshold == t
                     and i.valid
                 ]
                 items.sort()
-                fname = f"{geometry}_max%_exceeds_{t.value}.csv"
+                fname = f"{geometry}_max%_exceeds_{t}{self.unit}.csv"
                 self.dir_agent.create_quantity_dir(geometry, self.quantity)
                 path = join(self.dir_agent.qdir, fname)
                 rows = [item.row(self.domain) for item in items]
@@ -149,12 +153,12 @@ class ResultsWriter:
                 items = [
                     i for i in self.analysis.exceedance
                     if i.geometry == geometry
-                    and i.threshold == t.value
+                    and i.threshold == t
                     and i.valid
                 ]
                 if items:
                     item = min(items)
-                    f.write(f"Minimum time to {t.value}{self.unit} for {geometry}\n")
+                    f.write(f"Minimum time to {t}{self.unit} for {geometry}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
             f.write("===================================\n\n")
@@ -164,12 +168,12 @@ class ResultsWriter:
                 items = [
                     i for i in self.analysis.percent_exceedance
                     if i.geometry == geometry
-                    and i.threshold == t.value
+                    and i.threshold == t
                     and i.valid
                 ]
                 if items:
                     item = min(items)
-                    f.write(f"Minimum time to {t.value}{self.unit} for {p}% of domain for {geometry}\n")
+                    f.write(f"Minimum time to {t}{self.unit} for {p}% of domain for {geometry}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
             f.write("===================================\n\n")
@@ -178,12 +182,12 @@ class ResultsWriter:
                 items = [
                     i for i in self.analysis.max_percent_exceedance
                     if i.geometry == geometry
-                    and i.threshold == t.value
+                    and i.threshold == t
                     and i.valid
                 ]
                 if items:
                     item = max(items)
-                    f.write(f"Maximum percentage exceeding {t.value}{self.unit} for {geometry}\n")
+                    f.write(f"Maximum percentage exceeding {t}{self.unit} for {geometry}\n")
                     f.write(item.string(self.setting, self.domain))
             f.write("===================================\n")
             f.write("===================================\n\n")
@@ -191,7 +195,7 @@ class ResultsWriter:
 
     @property
     def unit(self):
-        return getattr(self.units, self.quantity)
+        return getattr(self.units, f"{self.quantity}_si")
 
     def __enter__(self):
         return self

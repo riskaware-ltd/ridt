@@ -17,6 +17,7 @@ from numpy import mean
 from numpy import sqrt
 
 from config import IDMFConfig
+from config import Units
 
 from container import Domain
 
@@ -38,10 +39,11 @@ class DataStoreAnalyser:
     def __init__(self, setting: IDMFConfig, data_store: DataStore, quantity: str):
 
         self.setting = setting
+        self.units = Units(setting)
         self.domain = Domain(self.setting)
-        self.thresholds = getattr(self.setting.thresholds, quantity)
-        self.data_store = data_store
         self.quantity = quantity
+        self.thresholds = self.threshold_converter()
+        self.data_store = data_store
 
         if self.setting.models.eddy_diffusion.analysis.exclude_uncertain_values:
             self.exclude_uncertain_values()
@@ -52,6 +54,10 @@ class DataStoreAnalyser:
         self.max_percent_exceedance = list()
 
         self.evaluate()
+
+    def threshold_converter(self):
+        tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
+        return getattr(self.units, f"{self.quantity}_converter")(tld)
 
     def evaluate(self):
         p =  self.setting.models.eddy_diffusion.analysis.percentage_exceedance
@@ -64,15 +70,15 @@ class DataStoreAnalyser:
             for geometry in self.data_store.geometries:
                 for id in getattr(self.data_store, geometry):
                     D = (geometry, id)
-                    index = self.data_store.exceeds(*D, t.value)
+                    index = self.data_store.exceeds(*D, t)
                     self.exceedance.append(
-                        Exceedance(*D, self.quantity, index, t.value))
-                    index = self.data_store.percentage_exceeds(*D, t.value, p)
+                        Exceedance(*D, self.quantity, index, t))
+                    index = self.data_store.percentage_exceeds(*D, t, p)
                     self.percent_exceedance.append(
-                        PercentExceedance(*D, self.quantity, index, t.value))
-                    index, value = self.data_store.percentage_exceeds_max(geometry, id, t.value)
+                        PercentExceedance(*D, self.quantity, index, t))
+                    index, value = self.data_store.percentage_exceeds_max(geometry, id, t)
                     self.max_percent_exceedance.append(
-                        MaxPercentExceedance(*D, self.quantity, value, index, t.value))
+                        MaxPercentExceedance(*D, self.quantity, value, index, t))
     
     def exclude_uncertain_values(self):
         new_data_store = deepcopy(self.data_store)

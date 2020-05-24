@@ -6,6 +6,7 @@ from base import ComputationalSpace
 
 from config import summary
 from config import IDMFConfig
+from config import Units
 
 from data import BatchDataStore
 from data import DirectoryAgent
@@ -37,6 +38,7 @@ class BatchDataStoreAnalyser:
                  space: ComputationalSpace,
                  outdir: str):
         self.settings = settings
+        self.units = Units(settings)
         self.space = space
         self.dir_agent = DirectoryAgent(outdir, self.space.shape)
 
@@ -63,7 +65,6 @@ class BatchDataStoreAnalyser:
                       setting: IDMFConfig,
                       data_store: DataStore,
                       quantity: str):
-        thresholds = getattr(setting.thresholds, quantity)
         result = DataStoreAnalyser(setting, data_store, quantity)
         getattr(self, f"{quantity}_results")[setting] = result
         ResultsWriter(setting, result, self.dir_agent, quantity)

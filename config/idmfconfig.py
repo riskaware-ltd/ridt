@@ -98,6 +98,8 @@ class IDMFConfig(Settings):
 
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
+        self.mass_units = MassUnits
+        self.fresh_air_change_rate_units = FreshAirChangeRateUnits
 
         self.fresh_air_change_rate = NonNegativeFloat
 
@@ -406,6 +408,48 @@ class SpatialUnits(StringSelection):
         """
         self.options = [
             "m",
+        ]
+
+    def check(self):
+        pass
+
+
+class MassUnits(StringSelection):
+    """The mass units selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`MassUnits` class.
+
+        value : :obj:`str`
+            The string indicating the mass units selection.
+        """
+        self.options = [
+            "kg",
+        ]
+
+    def check(self):
+        pass
+
+
+class FreshAirChangeRateUnits(StringSelection):
+    """The fresh air change rate units selection setting class.
+
+    It inherits from :class:`~.StringSelection`.
+
+    """
+    @Terminus.assign
+    def __init__(self, valu: str):
+        """The constructor for the :class:`FreshAirChangeRateUnits` class.
+
+        value : :obj:`str`
+            The string indicating the fresh air change rate units selection.
+        """
+        self.options = [
+            "m3.h-1",
         ]
 
     def check(self):
