@@ -88,6 +88,7 @@
                 "calculation": "TKEB",
                 "value": 0.001,
                 "tkeb": {
+                    "bound": "lower",
                     "total_air_change_rate": 1.0,
                     "number_of_supply_vents": 1
                 }

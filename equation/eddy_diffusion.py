@@ -126,32 +126,24 @@ class EddyDiffusion:
         return num / den
 
     def diffusion_coefficient(self):
-        vent_number = self.settings\
-                          .models\
-                          .eddy_diffusion\
-                          .coefficient\
-                          .tkeb\
-                          .number_of_supply_vents
-        air_change_rate = self.settings\
-                              .models\
-                              .eddy_diffusion\
-                              .coefficient\
-                              .tkeb\
-                              .total_air_change_rate
-
+        tkeb_settings = self.settings.models.eddy_diffusion.coefficient.tkeb
+        vent_number = tkeb_settings.number_of_supply_vents
+        air_change_rate = tkeb_settings.total_air_change_rate
         coeff = self.settings.models.eddy_diffusion.coefficient
+        bound = tkeb_settings.bound
+
         if coeff.calculation == "EXPLICIT":
             return coeff.value
         else:
             tkeb_term = air_change_rate /\
                 power(self.volume * power(vent_number, 2), 1/3)
 
-            upper_pi = 0.827 * tkeb_term + 0.0565
-            regression = 0.824 * tkeb_term
-            lower_pi = max(0.822 * tkeb_term - 0.0565, 0.001)
-
-            # TODO ASK DSTL about which or all coeffs to evaulate.
-            return regression
+            if bound == "lower":
+                return 0.827 * tkeb_term + 0.0565
+            elif bound == "regression":
+                return 0.824 * tkeb_term
+            elif bound == "upper": 
+                return max(0.822 * tkeb_term - 0.0565, 0.001)
 
     def temp_conc(self):
         return [copy(self.zero) for i in range(self.settings.time_samples)]

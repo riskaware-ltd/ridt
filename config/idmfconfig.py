@@ -1190,8 +1190,23 @@ class TKEB(Settings):
             The values corresponding to the TKEB
             equation.
         """
-        self.total_air_change_rate = NonNegativeFloat
-        self.number_of_supply_vents = int
+        self.bound = TKEBBound
+        self.total_air_change_rate = TotalAirChangeRate 
+        self.number_of_supply_vents = NumberOfSupplyVents 
+
+
+class TKEBBound(StringSelection):
+    @Terminus.assign
+    def __init__(self, values: dict):
+        self.options = [
+            "lower",
+            "regression",
+            "upper"
+        ]
+
+    def check(self):
+        pass
+
 
 
 class TotalAirChangeRate(Number):
