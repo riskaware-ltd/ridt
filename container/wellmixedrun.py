@@ -32,7 +32,7 @@ class WellMixedRun:
         self.evaluate()
         self.write()
         self.plot()
-        self.analyse()
+        # self.analyse()
 
     def prepare(self):
         restrict = {"models": "well_mixed"}
@@ -58,8 +58,8 @@ class WellMixedRun:
             dsp.plot(self.output_dir)
         pass
 
-    def analyse(self):
-        BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir)
+    # def analyse(self):
+    #     BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir)
 
     @property
     def settings(self):

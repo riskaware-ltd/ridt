@@ -63,7 +63,9 @@ class Domain:
         return self.full
     
     def values(self, geometry: str, id: str, index: Tuple[int]):
-        if len(index) == 1:
+        if id == "well_mixed":
+            return self.wellmixed_values(index)
+        elif len(index) == 1:
             return self.point_values(id, index) 
         elif len(index) == 2:
             return self.line_values(id, index) 
@@ -74,6 +76,9 @@ class Domain:
         else:
             # TODO Custom exception.
             raise ValueError("Not a valid number of dimensions.")
+        
+    def wellmixed_values(self, index: Tuple[int]):
+        return self.time[index[0]], "N/A", "N/A", "N/A" 
 
     def point_values(self, id: str, index: Tuple[int]):
         point = self.set.models.eddy_diffusion.monitor_locations.points[id]
