@@ -12,10 +12,7 @@
     "total_time": 10.0,
 
     "fresh_air_change_rate_units": "m3.s-1",
-    "fresh_air_change_rate": {
-        "array": [1.0, 1.1, 1.2],
-        "match": "fish"
-    },
+    "fresh_air_change_rate": 1.0,
 
     "modes": {
         "instantaneous": {
@@ -29,9 +26,7 @@
                     },
                     "y": 1.0,
                     "z": 1.0,
-                    "mass": {
-                        "array": [0.01, 0.1, 1.0]
-                    },
+                    "mass": 1.0,
                     "time": 1.0
                 }
             }

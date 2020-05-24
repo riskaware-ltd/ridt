@@ -19,14 +19,12 @@ from config import IDMFConfig
 
 class DataStorePlotter:
 
-    def __init__(self, dir_agent: DirectoryAgent):
+    def __init__(self,
+                 dir_agent: DirectoryAgent,
+                 data_store: DataStore,
+                 settings: IDMFConfig,
+                 plot_type: str) -> None:
         self.dir_agent = dir_agent
-
-    def plot(self,
-             data_store: DataStore,
-             settings: IDMFConfig,
-             plot_type: str) -> None:
-
         if settings.models.eddy_diffusion.point_plots.output \
                 or settings.dispersion_model == "well_mixed":
             pp = PointPlot(settings, self.dir_agent.outdir)

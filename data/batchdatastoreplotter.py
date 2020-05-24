@@ -22,21 +22,24 @@ class BatchDataStorePlotter:
 
     def plot(self, outdir: str):
 
+        dir_agent = DirectoryAgent(outdir, self.space.shape)
+
         #### Tempory measure setting plot_type to concentration
-        plot_type = "concentration"
+        quantity = "concentration"
         #######################################################
 
         if self.space.zero:
-            with DataStorePlotter(outdir) as p:
-                p.plot(self.data_store[self.settings], self.settings)
+            DataStorePlotter(dir_agent,
+                             self.data_store[self.settings],
+                             self.settings,
+                             quantity)
         else:
-            with open(join(outdir, "run_summary.txt"), "w") as f:
-                f.write(self.space.cout_summary())
-            with DirectoryAgent(outdir, self.space.shape) as da:
-                for idx, setting in enumerate(self.space.space):
-                    da.create_root_dir(idx)
-                    with DataStorePlotter(da) as p:
-                        p.plot(self.data_store[setting], self.settings, plot_type)
+            for idx, setting in enumerate(self.space.space):
+                dir_agent.create_root_dir(idx)
+                DataStorePlotter(dir_agent,
+                                 self.data_store[setting],
+                                 setting,
+                                 quantity)
 
     def __enter__(self):
         return self
