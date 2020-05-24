@@ -27,10 +27,10 @@ def run(config_file, output_dir):
             ConfigFileParserValidationError) as e:
         sys.exit(e)
 
-    if s.dispersion_model == "well_mixed":
-        r = WellMixedRun(s, output_dir)
+    if s.well_mixed:
+        WellMixedRun(s, output_dir)
 
-    if s.dispersion_model == "eddy_diffusion":
+    if s.eddy_diffusion:
         EddyDiffusionRun(s, output_dir)
 
 
