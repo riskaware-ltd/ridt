@@ -59,7 +59,8 @@ class ResultsWriter:
             fname = f"{geometry}_maximums.csv"
             path = join(self.dir_agent.qdir, fname)
             rows = [item.row(self.domain) for item in items]
-            self.write(path, items[0].header(self.setting), rows)
+            if rows:
+                self.write(path, items[0].header(self.setting), rows)
 
 
     def exceedance(self):

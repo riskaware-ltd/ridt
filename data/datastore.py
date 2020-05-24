@@ -41,7 +41,7 @@ class DataStore:
             self.verify(data, getattr(DataStore.Dimensions, geometry))
             getattr(self, geometry)[id] = data
         except AttributeError:
-            raise DataStoregeometryError(geometry)
+            raise DataStoreGeometryError(geometry)
     
     def get(self, geometry: str, id: str):
         try:
@@ -144,13 +144,13 @@ class DataStoreTypeError(Error):
         super().__init__(msg)
 
 
-class DataStoregeometryError(Error):
+class DataStoreGeometryError(Error):
     """The exception raised when the data store is queries with an geometry string
     it does not recognise.
 
     """
     def __init__(self, geometry_str: str):
-        """The constructor for the :class:`DataStoregeometryError` class.
+        """The constructor for the :class:`DataStoreGeometryError` class.
 
         """
         msg = f"The  geometry '{geometry_str}' does not exist."

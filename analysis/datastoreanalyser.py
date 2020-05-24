@@ -4,6 +4,8 @@ from typing import List
 from typing import Dict
 from typing import Union
 
+from copy import deepcopy
+
 from numpy import ndarray
 from numpy import any
 from numpy import where
@@ -21,6 +23,7 @@ from container import Domain
 from equation import EddyDiffusion
 
 from data import DataStore
+from data import UncertaintyMask
 
 from .exposure import Exposure
 
@@ -39,6 +42,9 @@ class DataStoreAnalyser:
         self.thresholds = getattr(self.setting.thresholds, quantity)
         self.data_store = data_store
         self.quantity = quantity
+
+        if self.setting.models.eddy_diffusion.analysis.exclude_uncertain_values:
+            self.exclude_uncertain_values()
 
         self.maximum = list()
         self.exceedance = list()
@@ -59,11 +65,23 @@ class DataStoreAnalyser:
                 for id in getattr(self.data_store, geometry):
                     D = (geometry, id)
                     index = self.data_store.exceeds(*D, t.value)
-                    self.exceedance.append(Exceedance(*D, self.quantity, index, t.value))
+                    self.exceedance.append(
+                        Exceedance(*D, self.quantity, index, t.value))
                     index = self.data_store.percentage_exceeds(*D, t.value, p)
-                    self.percent_exceedance.append(PercentExceedance(*D, self.quantity, index, t.value))
+                    self.percent_exceedance.append(
+                        PercentExceedance(*D, self.quantity, index, t.value))
                     index, value = self.data_store.percentage_exceeds_max(geometry, id, t.value)
-                    self.max_percent_exceedance.append(MaxPercentExceedance(*D, self.quantity, value, index, t.value))
+                    self.max_percent_exceedance.append(
+                        MaxPercentExceedance(*D, self.quantity, value, index, t.value))
+    
+    def exclude_uncertain_values(self):
+        new_data_store = deepcopy(self.data_store)
+        um = UncertaintyMask(self.setting)
+        for geometry in new_data_store.geometries:
+            for id in getattr(new_data_store, geometry):
+                data = um.mask(geometry, id, new_data_store.get(geometry, id))
+                new_data_store.add(geometry, id, data)
+        self.data_store = new_data_store
         
     @property
     def evaluate_time_to_well_mixed(self):

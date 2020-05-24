@@ -863,6 +863,7 @@ class AnalysisSettings(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.percentage_exceedance = Percentage
+        self.exclude_uncertain_values = bool
 
 
 class DomainSelection(Settings):

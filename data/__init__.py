@@ -13,3 +13,5 @@ from .datastoreplotter import DataStorePlotter
 from .batchdatastoreplotter import BatchDataStorePlotter
 
 from .datastorereader import DataStoreReader
+
+from .uncertaintymask import UncertaintyMask

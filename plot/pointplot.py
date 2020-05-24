@@ -47,7 +47,7 @@ class PointPlot:
         return plot
 
     def save_fig(self):
-        name = f"{self.output_dir}/{self.dir_name}/{self.settings.dispersion_model.capitalize()}"
+        name = f"{self.output_dir}/{self.dir_name}"
         if self.point_name:
             name += f" {self.point_name.capitalize()}"
         plt.savefig(f"{name}.pdf")
