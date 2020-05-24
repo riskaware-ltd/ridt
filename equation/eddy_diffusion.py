@@ -28,7 +28,7 @@ class EddyDiffusion:
         self.volume = self.dim.x * self.dim.y * self.dim.z
         samples = self.settings.models.eddy_diffusion.spatial_samples
         self.delta_t = self.settings.total_time / self.settings.time_samples
-        self.diff_coeff = self.__diffusion_coefficient()
+        self.diff_coeff = self.diffusion_coefficient()
 
     def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: ndarray):
         modes = ["instantaneous", "infinite_duration", "fixed_duration"]
@@ -103,7 +103,7 @@ class EddyDiffusion:
         den  = 8 * power(pi * self.diff_coeff * t, 3 / 2)
         return num / den
 
-    def __diffusion_coefficient(self):
+    def diffusion_coefficient(self):
         vent_number = self.settings\
             .models\
             .eddy_diffusion\
