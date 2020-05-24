@@ -863,10 +863,6 @@ class AnalysisSettings(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.percentage_exceedance = Percentage
-        self.maximum_anywhere = DomainSelection
-        self.threshold_percentage = DomainSelection
-        self.threshold_anywhere = DomainSelection
-        self.maximum_percentage = DomainSelection
 
 
 class DomainSelection(Settings):
