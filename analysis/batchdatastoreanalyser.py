@@ -49,19 +49,15 @@ class BatchDataStoreAnalyser:
         for quantity in BatchDataStoreAnalyser.quantities:
             if self.space.zero:
                 q_store = getattr(self, f"{quantity}_store")[self.settings]
-                self.analyse_store(self.settings, q_store, self.dir_agent.outdir, quantity)
+                self.analyse_store(self.settings, q_store, quantity)
             else:
                 q_store = getattr(self, f"{quantity}_store")
-
                 for setting, store in q_store.items():
                     idx = self.space.linear_index(setting)
                     self.dir_agent.create_root_dir(idx)
                     self.analyse_store(setting, store, quantity)
-                BatchResults(self.settings,
-                             self.space,
-                             getattr(self, f"{quantity}_results"),
-                             outdir,
-                             quantity)
+                q_res = getattr(self, f"{quantity}_results")
+                BatchResults(self.settings, self.space, q_res, outdir, quantity)
         
     def analyse_store(self,
                       setting: IDMFConfig,
