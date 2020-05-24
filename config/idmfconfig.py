@@ -231,6 +231,47 @@ class IDMFConfig(Settings):
         thresh = self.thresholds
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
             raise ConsistencyError(f"Cannot exceed more than 5 thresholds")
+        
+        point_number = self.models.eddy_diffusion.point_plots.number
+        if isinstance(point_number, list):
+            for item in point_number:
+                if item > self.time_samples:
+                    raise ConsistencyError(
+                f"The number of requrested plots ({item}) cannot exceed the "
+                f"number of time samples ({self.time_samples}).")
+        else:
+            if point_number > self.time_samples:
+                raise ConsistencyError(
+            f"The number of requrested plots ({item}) cannot exceed the "
+            f"number of time samples ({self.time_samples}).")
+ 
+        line_number = self.models.eddy_diffusion.line_plots.number
+        if isinstance(line_number, list):
+            for item in line_number:
+                if item > self.time_samples:
+                    raise ConsistencyError(
+                f"The number of requrested line plots ({point_number}) cannot exceed the "
+                f"number of time samples ({self.time_samples}).")
+        else:
+            if line_number > self.time_samples:
+                raise ConsistencyError(
+            f"The number of requrested line plots ({line_number}) cannot exceed the "
+            f"number of time samples ({self.time_samples}).")
+ 
+        contour_number = self.models.eddy_diffusion.contour_plots.number
+        if isinstance(contour_number, list):
+            for item in contour_number:
+                if item > self.time_samples:
+                    raise ConsistencyError(
+                f"The number of requrested contour plots ({item}) cannot exceed the "
+                f"number of time samples ({self.time_samples}.)")
+        else:
+            if contour_number > self.time_samples:
+                raise ConsistencyError(
+            f"The number of requrested contour plots ({contour_number}) cannot exceed the "
+            f"number of time samples ({self.time_samples}).")
+
+
 
 
 class FreshAirChangeRate(Number):
@@ -920,7 +961,7 @@ class LinePlots(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.output = bool
-        self.spatial_resolution = NonNegativeFloat
+        self.number = NonNegativeInteger
 
 
 class PointPlots(Settings):
@@ -936,6 +977,7 @@ class PointPlots(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.output = bool
+        self.number = NonNegativeInteger
 
 
 class MonitorLocations(Settings):
@@ -1180,6 +1222,7 @@ class TotalAirChangeRate(Number):
         self.lower_bound(5e-4)
         self.upper_bound(5e2)
 
+
 class NumberOfSupplyVents(Number):
     @Terminus.assign
     def __init__(self, value: int):
@@ -1294,7 +1337,7 @@ class ContourPlots(Settings):
         self.output = bool
         self.concentration = bool
         self.exposure = bool
-        self.creation_frequency = NonNegativeFloat
+        self.number = NonNegativeInteger
         self.number_of_contours = NonNegativeInteger
         self.range = RangeMode
         self.scale = ScaleType 

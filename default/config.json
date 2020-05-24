@@ -160,17 +160,18 @@
                 }
             },
             "point_plots": {
-                "output": true 
+                "output": true,
+                "number": 10
             },
             "line_plots": {
                 "output": false,
-                "spatial_resolution": 10.0
+                "number": 30
             },
             "contour_plots": {
                 "output": false,
                 "concentration": true,
                 "exposure": true,
-                "creation_frequency": 0.01,
+                "number": 10,
                 "number_of_contours": 10,
                 "range": "auto",
                 "scale": "linear",

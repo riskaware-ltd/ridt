@@ -2,6 +2,7 @@ import sys
 from os.path import isdir
 import click
 
+from base import ConsistencyError
 from config.configfileparser import ConfigFileParser
 from config.configfileparser import ConfigFileParserJSONError
 from config.configfileparser import ConfigFileParserOSError
@@ -30,6 +31,8 @@ def run(config_file, output_dir):
     except (ConfigFileParserJSONError,
             ConfigFileParserOSError,
             ConfigFileParserValidationError) as e:
+        sys.exit(e)
+    except ConsistencyError as e:
         sys.exit(e)
 
     try:
