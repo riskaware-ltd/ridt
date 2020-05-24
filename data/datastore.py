@@ -1,58 +1,55 @@
+from typing import Tuple
+
 from numpy import ndarray
+from numpy import argmax
+from numpy import max
+from numpy import unravel_index
+from numpy import where
+from numpy import prod
 
 from base import Error
 from base import ComputationalSpace
 
 from config import IDMFConfig
 
+FIRST = 0
+
 
 class DataStore:
+
+    geometries = [
+        "points",
+        "lines",
+        "planes",
+        "domain"
+    ]
+
+    class Dimensions:
+        points = 1
+        lines = 2
+        planes = 3
+        domain = 4
 
     def __init__(self):
         self.points = dict()
         self.lines = dict()
         self.planes = dict()
-        self.domain = None
+        self.domain = dict()
     
-    def add_point_data(self, id_str: str, data: ndarray):
-        self.verify(data, 1)
-        self.points[id_str] = data
-
-    def add_line_data(self, id_str: str, data: ndarray):
-        self.verify(data, 2)
-        self.lines[id_str] = data
-
-    def add_plane_data(self, id_str: str, data: ndarray):
-        self.verify(data, 3)
-        self.planes[id_str] = data
-    
-    def add_domain_data(self, data: ndarray):
-        self.verify(data, 4)
-        self.domain = data
-    
-    def get_point_data(self, id_str: str) -> ndarray:
+    def add(self, geometry: str, id: str, data: ndarray):
         try:
-            return self.points[id_str]
-        except KeyError as e:
-            raise DataStoreIDError(id_str, "point")
+            self.verify(data, getattr(DataStore.Dimensions, geometry))
+            getattr(self, geometry)[id] = data
+        except AttributeError:
+            raise DataStoregeometryError(geometry)
     
-    def get_line_data(self, id_str: str) -> ndarray:
+    def get(self, geometry: str, id: str):
         try:
-            return self.lines[id_str]
-        except KeyError as e:
-            raise DataStoreIDError(id_str, "line")
-    
-    def get_plane_data(self, id_str: str) -> ndarray:
-        try:
-            return self.planes[id_str]
-        except KeyError as e:
-            raise DataStoreIDError(id_str, "plane")
-    
-    def get_domain_data(self) -> ndarray:
-        try:
-            return self.domain
-        except KeyError as e:
-            raise DataStoreIDError("", "domain")
+            return getattr(self, geometry)[id]
+        except AttributeError:
+            raise DataStoregeometryError(geometry)
+        except KeyError:
+            raise DataStoreIDError(id, geometry)
 
     def verify(self, data: ndarray, dimensions: int):
         if not isinstance(data, ndarray):
@@ -60,6 +57,48 @@ class DataStore:
         if len(data.shape) is not dimensions:
             raise DataStoreDimensionalityError(len(data.shape), dimensions)
     
+    def maximum(self, geometry: str, id: str) -> Tuple[Tuple[int], ndarray]:
+        data = self.get(geometry, id)
+        index = unravel_index(argmax(data), data.shape)
+        return index, data[index]
+    
+    def exceeds(self, geometry: str, id: str, value: float) -> Tuple[int]:
+        data = self.get(geometry, id)
+        exceeds = self.zip(where(data >= value))
+        return exceeds[FIRST] if exceeds else None
+
+    def percentage_exceeds(self, geometry: str, id: str, value: float, percent: float) -> int:
+        data = self.get(geometry, id)
+        shape = data.shape
+        try:
+            size = prod(shape[1:])
+        except KeyError:
+            size = 1
+        for time in range(shape[0]):
+            frac = 100 * len(self.zip(where(data[time] >= value))) / size
+            if frac >= percent:
+                return time
+        return None
+    
+    def percentage_exceeds_max(self, geometry: str, id: str, value: float) -> Tuple[int, float]:
+        data = self.get(geometry, id)
+        max_val = 0.0
+        max_time = None
+        shape = data.shape
+        try:
+            size = prod(shape[1:])
+        except KeyError:
+            size = 1
+        for time in range(shape[0]):
+            frac = len(self.zip(where(data[time] >= value))) / size
+            if frac > max_val:
+                max_val = frac
+                max_time = time
+        return max_time, max_val
+    
+    def zip(self, where_output):
+        return list(zip(*where_output))
+ 
 
 class DataStoreIDError(Error):
     """The exception raised when the data store is queries with an id string
@@ -105,4 +144,15 @@ class DataStoreTypeError(Error):
         super().__init__(msg)
 
 
+class DataStoregeometryError(Error):
+    """The exception raised when the data store is queries with an geometry string
+    it does not recognise.
+
+    """
+    def __init__(self, geometry_str: str):
+        """The constructor for the :class:`DataStoregeometryError` class.
+
+        """
+        msg = f"The  geometry '{geometry_str}' does not exist."
+        super().__init__(msg)
 

@@ -19,9 +19,10 @@ class DataStoreReader:
         instance.__init__(*args, **kwargs)
         return instance.data_store
 
-    def __init__(self, settings: IDMFConfig, directory: str):
+    def __init__(self, settings: IDMFConfig, directory: str, quantity: str):
         self.directory = directory
         self.settings = settings
+        self.quantity = quantity
         restrict = {"models": self.settings.dispersion_model}
         self.space = ComputationalSpace(self.settings, restrict)
         self.read()
@@ -33,45 +34,24 @@ class DataStoreReader:
             self.data_store = BatchDataStore()
             with DirectoryAgent(self.directory, self.space.shape) as da:
                 for idx, setting in enumerate(self.space.space):
-                    path = da.build_rundir_path(idx)
+                    da.create_root_dir(idx)
                     self.data_store.add_run(setting)
-                    self.data_store[setting] = self.load(setting, path)
+                    self.data_store[setting] = self.load(setting, da.outdir)
     
     def load(self, setting: IDMFConfig, directory: str):
         rv = DataStore()
         locations = setting.models.eddy_diffusion.monitor_locations
 
-        for point_name, point in locations.points.items():
-            fname = point_name + ".npy"
-            try:
-                with open(join(directory, fname), 'rb') as f:
-                    rv.add_point_data(point_name, load(f))
-            except OSError as e:
-                raise DataStoreParsingError(fname, directory, e)
+        for geometry in rv.geometries:
+            for name in getattr(locations, geometry).keys():
+                fname = name + ".npy"
+                folder = join(directory, geometry, self.quantity)
+                try:
+                    with open(join(folder, fname), 'rb') as f:
+                        rv.add(geometry, name, load(f))
+                except OSError as e:
+                    raise DataStoreParsingError(fname, folder, e)
 
-        for line_name, line in locations.lines.items():
-            fname = line_name + ".npy"
-            try:
-                with open(join(directory, fname), 'rb') as f:
-                    rv.add_line_data(line_name, load(f))
-            except OSError as e:
-                raise DataStoreParsingError(fname, directory, e)
-
-        for plane_name, plane in locations.planes.items():
-            fname = plane_name + ".npy"
-            try:
-                with open(join(directory, fname), 'rb') as f:
-                    rv.add_plane_data(plane_name, load(f))
-            except OSError as e:
-                raise DataStoreParsingError(fname, directory, e)
-        
-        fname = "domain" + ".npy"
-        try:
-            with open(join(directory, "domain" + ".npy"), 'rb') as f:
-                rv.add_domain_data(load(f))
-        except OSError as e:
-            raise DataStoreParsingError(fname, directory, e)
-        
         return rv
  
 

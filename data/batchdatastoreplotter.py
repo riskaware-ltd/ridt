@@ -22,8 +22,6 @@ class BatchDataStorePlotter:
 
     def plot(self, outdir: str):
         if self.space.zero:
-            with ConfigFileWriter(outdir) as cfw:
-                cfw("config.json", self.settings.__source__)
             with DataStorePlotter(outdir) as p:
                 p.plot(self.data_store[self.settings], self.settings)
         else:
@@ -31,8 +29,8 @@ class BatchDataStorePlotter:
                 f.write(self.space.cout_summary())
             with DirectoryAgent(outdir, self.space.shape) as da:
                 for idx, setting in enumerate(self.space.space):
-                    da.create_rundir(idx)
-                    with DataStorePlotter(da.build_rundir_path(idx)) as p:
+                    da.create_root_dir(idx)
+                    with DataStorePlotter(da) as p:
                         p.plot(self.data_store[setting], self.settings)
 
     def __enter__(self):

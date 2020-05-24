@@ -8,6 +8,7 @@ from config import ConfigFileWriter
 from .batchdatastore import BatchDataStore
 from .directoryagent import DirectoryAgent
 from .datastorewriter import DataStoreWriter
+from .datastorecsvwriter import DataStoreCSVWriter
 
 
 class BatchDataStoreWriter:
@@ -21,19 +22,22 @@ class BatchDataStoreWriter:
         self.space = space
 
     def write(self, outdir: str):
+        dir_agent = DirectoryAgent(outdir, self.space.shape)
         if self.space.zero:
+            store = self.data_store[self.settings]
             ConfigFileWriter(outdir, "config.json", self.settings.__source__)
-            DataStoreWriter(self.settings, self.data_store[self.settings], outdir)
+            DataStoreWriter(self.settings, store, dir_agent, "concentration")
+            DataStoreCSVWriter(self.settings, store, dir_agent, "concentration")
         else:
             ConfigFileWriter(outdir, "batch_config.json", self.settings.__source__)
             with open(join(outdir, "run_summary.txt"), "w") as f:
                 f.write(self.space.cout_summary())
-            with DirectoryAgent(outdir, self.space.shape) as da:
-                for idx, setting in enumerate(self.space.space):
-                    da.create_rundir(idx)
-                    path = da.build_rundir_path(idx)
-                    ConfigFileWriter(path, "config.json", setting.__source__)
-                    DataStoreWriter(setting, self.data_store[setting], path)
+            for idx, setting in enumerate(self.space.space):
+                dir_agent.create_root_dir(idx)
+                store = self.data_store[setting]
+                ConfigFileWriter(dir_agent.outdir, "config.json", setting.__source__)
+                DataStoreWriter(setting, store, dir_agent, "concentration")
+                DataStoreCSVWriter(setting, store, dir_agent, "concentration")
 
     def __enter__(self):
         return self
