@@ -11,6 +11,8 @@ from numpy import maximum
 from numpy import where
 from numpy import cumsum
 from numpy import clip
+from numpy import mean
+from numpy import true_divide
 
 from typing import List
 from copy import copy
@@ -86,15 +88,33 @@ class EddyDiffusion:
 
     def __exp(self, position: ndarray, t: float, bound: float, source_loc: float):
 
-        image_num = self.settings.models.eddy_diffusion.images.quantity
+        i_setting = self.settings.models.eddy_diffusion.images
 
         def image(arg):
             return exp(-power(arg, 2) / (4 * self.diff_coeff * t))
-
-        rv = list()
-        for image_index in range(-image_num, image_num + 1):
+        
+        def term(position, image_index, bound, source_loc):
             value = position + 2 * image_index * bound
-            rv.append(image(value - source_loc) + image(value + source_loc))
+            return image(value - source_loc) + image(value + source_loc)
+
+        rv = zeros(self.shape)
+        if i_setting.mode == "manual":
+            image_index = i_setting.quantity
+            for image_index in range(-image_index, image_index + 1):
+                rv += term(position, image_index, bound, source_loc)
+        else:
+            image_index = 0
+            rv += term(position, image_index, bound, source_loc)
+            while True:
+                new_term = zeros(self.shape)
+                for idx in [image_index, -image_index]:
+                    new_term += term(position, image_index, bound, source_loc)
+                if mean(100 * true_divide(new_term, rv, where=(new_term!=0) | (rv!=0))) < i_setting.max_error:
+                    break
+                else:
+                    rv += new_term
+                image_index += 1
+                
         return sum(rv)
 
     def __coeff(self, t: ndarray):
