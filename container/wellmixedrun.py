@@ -35,7 +35,7 @@ class WellMixedRun:
         self.analyse()
 
     def prepare(self):
-        restrict = {"models": self.settings.dispersion_model}
+        restrict = {"models": "well_mixed"}
         return ComputationalSpace(self.settings, restrict)
     
     def evaluate(self):
@@ -47,26 +47,19 @@ class WellMixedRun:
         domain = Domain(setting)
         solver = WellMixed(setting)
         output = solver(domain.time)
-        self.data_store[setting].add_point_data("all", output)
+        self.data_store[setting].add("points", "well_mixed", output)
 
     def write(self):
-        with BatchDataStoreWriter(self.settings,
-                                  self.data_store,
-                                  self.space) as dsw:
+        with BatchDataStoreWriter(self.settings, self.data_store, self.space) as dsw:
             dsw.write(self.output_dir)
 
     def plot(self):
-        with BatchDataStorePlotter(self.settings,
-                                   self.data_store,
-                                   self.space) as dsp:
+        with BatchDataStorePlotter(self.settings, self.data_store, self.space) as dsp:
             dsp.plot(self.output_dir)
         pass
 
     def analyse(self):
-        # BatchDataStoreAnalyser(self.settings,
-        #                        self.data_store,
-        #                        self.space)
-        pass
+        BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir)
 
     @property
     def settings(self):
