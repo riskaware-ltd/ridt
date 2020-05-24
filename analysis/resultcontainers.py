@@ -18,7 +18,12 @@ class ResultContainer:
     
 
 class Maximum(ResultContainer):
-    def __init__(self, geometry: str, id: str, quantity: str, index: Tuple[int], value: float):
+    def __init__(self,
+                 geometry: str,
+                 id: str,
+                 quantity: str,
+                 index: Tuple[int],
+                 value: float):
         super().__init__(geometry, id, quantity)
         self.index = index
         self.value = value
@@ -72,7 +77,12 @@ class Maximum(ResultContainer):
     
 
 class Exceedance(ResultContainer):
-    def __init__(self, geometry: str, id: str, quantity: str, index: Tuple[int], threshold: float):
+    def __init__(self,
+                 geometry: str,
+                 id: str,
+                 quantity: str,
+                 index: Tuple[int],
+                 threshold: float):
         super().__init__(geometry, id, quantity)
         self.threshold = threshold
         self.index = index
@@ -122,7 +132,12 @@ class Exceedance(ResultContainer):
 
 class PercentExceedance(ResultContainer):
 
-    def __init__(self, geometry: str, id: str, quantity: str, index: int, threshold: float):
+    def __init__(self,
+                 geometry: str,
+                 id: str,
+                 quantity: str,
+                 index: int,
+                 threshold: float):
         super().__init__(geometry, id, quantity)
         self.threshold = threshold
         self.index = index
@@ -165,7 +180,13 @@ class PercentExceedance(ResultContainer):
         return True if self.index else False
 
 class MaxPercentExceedance(ResultContainer):
-    def __init__(self, geometry: str, id: str, quantity: str, value: float, index: int, threshold: float):
+    def __init__(self,
+                 geometry: str,
+                 id: str,
+                 quantity:str,
+                 value: float,
+                 index: int,
+                 threshold: float):
         super().__init__(geometry, id, quantity)
         self.threshold = threshold
         self.index = index

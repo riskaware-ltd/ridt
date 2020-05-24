@@ -280,6 +280,18 @@ class IDMFConfig(Settings):
                     raise ConsistencyError(f"{key}'s {dim} value, exceeds bounds of container ")
 
 
+class FreshAirChangeRate(Number):
+
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    
+    def check(self):
+        self.lower_bound(5e-4)
+        self.upper_bound(5e2)
+
+
 class DispersionModel(StringSelection):
     """The dispersion model selection setting class.
 
@@ -449,7 +461,7 @@ class FreshAirChangeRateUnits(StringSelection):
             The string indicating the fresh air change rate units selection.
         """
         self.options = [
-            "m3.h-1",
+            "m3.s-1",
         ]
 
     def check(self):
@@ -616,6 +628,24 @@ class InstantaneousSource(Settings):
         self.mass = NonNegativeFloat
         self.time = NonNegativeFloat
 
+
+class InstantaneousReleaseMass(Number):
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    def check(self):
+        self.lower_bound(1e-6)
+        self.upper_bound(10.0)
+
+class ReleaseRate(Number):
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    def check(self):
+        self.lower_bound(1e-6)
+        self.upper_bound(10.0)
 
 class InfiniteDurationSettings(Settings):
     """The :class:`~.InfiniteDurationSettings` class. It inherits from
@@ -997,6 +1027,36 @@ class Dimensions(Settings):
         self.z = NonNegativeFloat
 
 
+class Length(Number):
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    def check(self):
+        self.lower_bound(2)
+        self.upper_bound(100)
+
+
+class Width(Number):
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    def check(self):
+        self.lower_bound(2)
+        self.upper_bound(100)
+
+
+class Height(Number):
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    def check(self):
+        self.lower_bound(2)
+        self.upper_bound(20)
+
+
 class SpatialSamples(Settings):
     """The :class:`~.SpatialSamples` class. It inherits from
     :class:`~.Settings`.
@@ -1099,6 +1159,7 @@ class ExplicitCoefficient(Number):
             If the value isn't greater than 1e-3.
         """
         self.lower_bound(1e-3)
+        self.upper_bound(1.0)
 
 
 class TKEB(Settings):
@@ -1124,6 +1185,26 @@ class TKEB(Settings):
         self.number_of_supply_vents = int
 
 
+class TotalAirChangeRate(Number):
+    @Terminus.assign
+    def __init__(self, value: float):
+        self.type = float
+
+    def check(self):
+        self.lower_bound(5e-4)
+        self.upper_bound(5e2)
+
+class NumberOfSupplyVents(Number):
+    @Terminus.assign
+    def __init__(self, value: int):
+        self.type = int 
+
+    def check(self):
+        self.lower_bound(1)
+        self.upper_bound(50)
+
+
+
 class Images(Settings):
     """The :class:`~.Images` class. It inherits from
     :class:`~.Settings`.
@@ -1146,8 +1227,18 @@ class Images(Settings):
             equation.
         """
         self.mode = ImageMode
-        self.quantity = NonNegativeInteger
+        self.quantity = ImageSourceNumber 
         self.max_error = Percentage
+
+
+class ImageSourceNumber(Number):
+    @Terminus.assign
+    def __init__(self, value: int):
+        self.type = int
+    
+    def check(self):
+        self.lower_bound(0)
+        self.upper_bound(20)
 
 class ImageMode(StringSelection):
     """The image mode selection

@@ -99,16 +99,18 @@ class EddyDiffusion:
 
         rv = zeros(self.shape)
         if i_setting.mode == "manual":
-            image_index = i_setting.quantity
-            for image_index in range(-image_index, image_index + 1):
-                rv += term(position, image_index, bound, source_loc)
-        else:
             image_index = 0
             rv += term(position, image_index, bound, source_loc)
+            if i_setting.quantity:
+                image_index = i_setting.quantity
+                for idx in range(1, image_index + 1):
+                    rv += term(position, idx, bound, source_loc)
+                    rv += term(position, idx, bound, source_loc)
+        else:
             while True:
                 new_term = zeros(self.shape)
                 for idx in [image_index, -image_index]:
-                    new_term += term(position, image_index, bound, source_loc)
+                    new_term += term(position, idx, bound, source_loc)
                 if mean(100 * true_divide(new_term, rv, where=(new_term!=0) | (rv!=0))) < i_setting.max_error:
                     break
                 else:
