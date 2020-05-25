@@ -85,11 +85,6 @@ class EddyDiffusion:
                         z: ndarray,
                         t: float):
 
-        # print("y")
-        # print(y[:, :, 0])
-        # print("x")
-        # print(x[:, :, 0])
-
         r_x = self.__exp(x, t, self.dim.x, source.x)
         r_y = self.__exp(y, t, self.dim.y, source.y)
         r_z = self.__exp(z, t, self.dim.z, source.z)
@@ -97,7 +92,6 @@ class EddyDiffusion:
         return self.__coeff(t) * r_x * r_y * r_z
 
     def __exp(self, position: ndarray, t: float, bound: float, source_loc: float):
-
 
         i_setting = self.settings.models.eddy_diffusion.images
 

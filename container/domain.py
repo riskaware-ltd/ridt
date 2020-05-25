@@ -74,7 +74,6 @@ class Domain:
         elif len(index) == 4:
             return self.domain_values(id, index) 
         else:
-            # TODO Custom exception.
             raise ValueError("Not a valid number of dimensions.")
         
     def wellmixed_values(self, index: Tuple[int]):

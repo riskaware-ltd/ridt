@@ -22,6 +22,7 @@ from matplotlib import colors
 from matplotlib.ticker import LogLocator
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
+from matplotlib import animation
 
 
 class ContourPlot:
@@ -54,24 +55,20 @@ class ContourPlot:
 
         if self.config.scale == "logarithmic":
             levels = self.get_log_scale()
-            plot = plt.contourf(
-                self.get_xdomain(),
-                self.get_ydomain(),
-                data, 
-                levels,
-                extend="both",
-                norm=colors.LogNorm(),
-                cmap=cm.RdBu_r)
-            plt.colorbar()
+            kwargs = {"extend": "both", "norm": colors.LogNorm()}
         else:
             levels = self.get_linear_scale()
-            plot = plt.contourf(
-                self.get_xdomain(),
-                self.get_ydomain(),
-                data, 
-                levels,
-                cmap=cm.RdBu_r)
-            plt.colorbar()
+            kwargs = {}
+
+        plot = plt.contourf(
+            self.get_xdomain(),
+            self.get_ydomain(),
+            data, 
+            levels,
+            cmap=cm.RdBu_r,
+            **kwargs)
+        plt.colorbar()
+
         plt.tight_layout()
 
         return plot
@@ -105,13 +102,35 @@ class ContourPlot:
         return string[0], string[1]
     
     def get_log_scale(self):
-        lev_exp = linspace(floor(log10(1e-10)-1), ceil(max(ceil(log10(self.max_val)), 1)), 10)
-        return power(10, lev_exp)
+        num_contour = self.config.number_of_contours
+        if self.config.range == "auto":
+            min_contour = floor(log10(1e-10)-1)
+            max_contour = ceil(max(ceil(log10(self.max_val)), 1))
+        else:
+            min_contour = self.config.contours.min
+            max_contour = self.config.contours.max
+        levels = linspace(min_contour, max_contour, num_contour)
+        return power(10, levels)
 
     def get_linear_scale(self):
-        return linspace(0, self.max_val, 10)
+        if self.config.range == "auto":
+            min_contour = 0.0
+            max_contour = self.max_val
+        else:
+            min_contour = self.config.contours.min
+            max_contour = self.config.contours.max
+        return linspace(0, self.max_val, self.config.number_of_contours)
 
     def __get_ranges(self):
         x_range = getattr(self.domain, list(self.plane.axis)[0])
         y_range = getattr(self.domain, list(self.plane.axis)[1])
         return x_range, y_range
+
+    def animate(self, data: ndarray):
+        plot = self.plot(data[0])
+        def frame(i):
+            return self.plot(data[i])
+        anim = animation.FuncAnimation(fig,
+                                       frame,
+                                       frames=self.settings.time_samples, blit=True)
+        anim.save("test.mp4", fps=5)

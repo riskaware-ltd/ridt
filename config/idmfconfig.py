@@ -961,6 +961,7 @@ class LinePlots(Settings):
     @Settings.assign
     def __init__(self, values: dict):
         self.output = bool
+        self.animate = bool
         self.scale = ScaleType
         self.number = NonNegativeInteger
 
@@ -1339,6 +1340,7 @@ class ContourPlots(Settings):
         self.output = bool
         self.concentration = bool
         self.exposure = bool
+        self.animate = bool
         self.number = NonNegativeInteger
         self.number_of_contours = NonNegativeInteger
         self.range = RangeMode

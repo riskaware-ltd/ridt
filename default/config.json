@@ -162,12 +162,14 @@
             "lines_plots": {
                 "output": false,
                 "scale": "logarithmic",
+                "animate": true,
                 "number": 50
             },
             "planes_plots": {
                 "output": true,
                 "concentration": true,
                 "exposure": true,
+                "animate": true,
                 "number": 10,
                 "number_of_contours": 10,
                 "range": "auto",
