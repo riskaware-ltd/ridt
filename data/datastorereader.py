@@ -27,6 +27,11 @@ class DataStoreReader:
         self.space = ComputationalSpace(self.settings, restrict)
         self.read()
 
+    @property
+    def geometries(self):
+        locations = self.settings.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
+
     def read(self):
         if self.space.zero:
             self.data_store = self.load(self.settings, self.directory)
@@ -42,7 +47,7 @@ class DataStoreReader:
         rv = DataStore()
         locations = setting.models.eddy_diffusion.monitor_locations
 
-        for geometry in rv.geometries:
+        for geometry in self.geometries:
             for name in getattr(locations, geometry).keys():
                 fname = name + ".npy"
                 folder = join(directory, geometry, self.quantity)

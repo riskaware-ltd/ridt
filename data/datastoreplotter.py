@@ -19,6 +19,7 @@ from config import IDMFConfig
 
 
 class DataStorePlotter:
+
     geometries = {
         "points": PointPlot,
         "lines": LinePlot,

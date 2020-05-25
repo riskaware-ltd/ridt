@@ -40,8 +40,13 @@ class DataStoreCSVWriter:
         self.quantity = quantity
         self.write(data_store)
     
+    @property
+    def geometries(self):
+        locations = self.setting.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
+
     def write(self, data_store: DataStore) -> None:
-        for geometry in data_store.geometries:
+        for geometry in self.geometries:
             self.dir_agent.create_data_dir(geometry, self.quantity)
             for id in getattr(data_store, geometry):
                 self.write_csv(geometry, id, data_store.get(geometry, id))

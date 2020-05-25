@@ -24,13 +24,14 @@ from analysis import Exposure
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
+geometries = []
 
 class EddyDiffusionRun:
 
     def __init__(self, settings: IDMFConfig, output_dir: str):
 
         print("Preparing Eddy Diffusion run...")
-        self._settings = settings
+        self.settings = settings
         self.output_dir = output_dir
         self.data_store = BatchDataStore()
         self.exposure_store = None
@@ -46,6 +47,11 @@ class EddyDiffusionRun:
         print("Performing data ananlysis...")
         self.analyse()
         print("\n\n")
+
+    @property
+    def geometries(self):
+        locations = self.settings.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
 
     def prepare(self) -> ComputationalSpace:
         restrict = {"models": "eddy_diffusion"}
@@ -63,7 +69,7 @@ class EddyDiffusionRun:
         solver = EddyDiffusion(setting)
         locations = setting.models.eddy_diffusion.monitor_locations
 
-        for geometry in self.data_store[setting].geometries:
+        for geometry in self.geometries:
             for name, item in getattr(locations, geometry).items():
                 output = solver(*getattr(domain, geometry)(item), domain.time)
                 self.data_store[setting].add(geometry, name, squeeze(output))
@@ -82,9 +88,3 @@ class EddyDiffusionRun:
     def analyse(self):
         BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir, "concentration")
         BatchDataStoreAnalyser(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
-
-
-    @property
-    def settings(self):
-        return self._settings
-   

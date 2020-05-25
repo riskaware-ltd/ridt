@@ -20,13 +20,18 @@ class Exposure:
         self.delta_t = self.setting.total_time / self.setting.time_samples
         self.data_store = self.evaluate(data_store)
     
+    @property
+    def geometries(self):
+        locations = self.setting.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
+
     def compute(self, data: ndarray):
         return cumsum(data, axis=0) * self.delta_t
 
     def evaluate(self, data_store: DataStore):
         if isinstance(data_store, DataStore):
             rv = DataStore()
-            for geometry in rv.geometries:
+            for geometry in self.geometries:
                 for name, data in getattr(data_store, geometry).items():
                     rv.add(geometry, name, self.compute(data))
             return rv

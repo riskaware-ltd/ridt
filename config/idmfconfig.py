@@ -1001,10 +1001,22 @@ class MonitorLocations(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        self.evaluate = EvaluateFlags
         self.points = Points
         self.lines = Lines
         self.planes = Planes
         self.domain = Domain
+    
+    def consistency_check(self):
+        for item in self.evaluate.keys():
+            if item not in self.__dict__:
+                raise ConsistencyError(f"{item} is not a type if monitor location")
+
+class EvaluateFlags(Dict):
+
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.type = bool
 
 class Dimensions(Settings):
     """The :class:`~.Dimensions` class. It inherits from

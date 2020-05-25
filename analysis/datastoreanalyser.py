@@ -55,19 +55,24 @@ class DataStoreAnalyser:
 
         self.evaluate()
 
+    @property
+    def geometries(self):
+        locations = self.setting.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
+
     def threshold_converter(self):
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
 
     def evaluate(self):
         p =  self.setting.models.eddy_diffusion.analysis.percentage_exceedance
-        for geometry in self.data_store.geometries:
+        for geometry in self.geometries:
             for id in getattr(self.data_store, geometry):
                 index, value = self.data_store.maximum(geometry, id)
                 D = (geometry, id, self.quantity)
                 self.maximum.append(Maximum(self.setting, *D, index, value))
         for t in self.thresholds:
-            for geometry in self.data_store.geometries:
+            for geometry in self.geometries:
                 for id in getattr(self.data_store, geometry):
                     D = (geometry, id)
                     index = self.data_store.exceeds(*D, t)
@@ -83,7 +88,7 @@ class DataStoreAnalyser:
     def exclude_uncertain_values(self):
         new_data_store = deepcopy(self.data_store)
         um = UncertaintyMask(self.setting)
-        for geometry in new_data_store.geometries:
+        for geometry in self.geometries:
             for id in getattr(new_data_store, geometry):
                 data = um.mask(geometry, id, new_data_store.get(geometry, id))
                 new_data_store.add(geometry, id, data)

@@ -52,12 +52,17 @@ class ResultsWriter:
         self.exceedance_analysis()
         self.extrema()
 
+    @property
+    def geometries(self):
+        locations = self.setting.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
+
     def threshold_converter(self):
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
     
     def create_dirs(self):
-        for geometry in self.analysis.data_store.geometries:
+        for geometry in self.geometries:
             self.dir_agent.create_analysis_dir(geometry, self.quantity)
 
     def write(self, file_path: str, header: List[str], lines: Iterable):
@@ -76,7 +81,7 @@ class ResultsWriter:
         return [i for i in results if i.geometry == geometry and i.valid]
     
     def maximum(self):
-        for geometry in self.analysis.data_store.geometries:
+        for geometry in self.geometries:
             items = self.get_valid(geometry, self.analysis.maximum)
             items.sort(reverse=True)
             rows = [item.row for item in items]
@@ -91,7 +96,7 @@ class ResultsWriter:
             (self.analysis.max_percent_exceedance, True)
         ]
         for r, reverse in results:
-            for geometry in self.analysis.data_store.geometries:
+            for geometry in self.geometries:
                 for t in self.thresholds:
                     valid = self.get_valid(geometry, r)
                     items = [i for i in valid if i.threshold == t]
@@ -109,7 +114,7 @@ class ResultsWriter:
             raise RIDTOSError(e)
 
         self.title(f, self.analysis.maximum[FIRST].title)
-        for geometry in self.analysis.data_store.geometries:
+        for geometry in self.geometries:
             items = self.get_valid(geometry, self.analysis.maximum)
             self.subtitle(f, items[FIRST].extreme_title)
             if items:
@@ -125,7 +130,7 @@ class ResultsWriter:
         for r, reverse in results:
             self.title(f, r[FIRST].title)
             for t in self.thresholds:
-                for geometry in self.analysis.data_store.geometries:
+                for geometry in self.geometries:
                     valid = self.get_valid(geometry, r)
                     items = [i for i in valid if i.threshold == t]
                     if items:

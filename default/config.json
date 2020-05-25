@@ -22,7 +22,9 @@
                     "y": 3.0,
                     "z": 1.0,
                     "mass": {
-                        "array": [1.1, 1.2]
+                        "min": 0.0,
+                        "max": 5.0,
+                        "num": 30 
                     },
                     "time": 0.0
                 }
@@ -103,6 +105,12 @@
                 "exclude_uncertain_values": true
             },
             "monitor_locations": {
+                "evaluate": {
+                    "points": true,
+                    "lines": true,
+                    "planes": true,
+                    "domain": false 
+                },
                 "points": {
                     "point_1": {
                         "x": 10.0,

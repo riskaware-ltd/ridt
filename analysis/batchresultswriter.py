@@ -22,13 +22,6 @@ FIRST = 0
 
 class BatchResultsWriter:
 
-    geometries = [
-        "points",
-        "lines",
-        "planes",
-        "domain"
-    ]
-
     def __init__(self,
                  setting: IDMFConfig,
                  space: ComputationalSpace,
@@ -46,6 +39,11 @@ class BatchResultsWriter:
         self.summary()
         self.write()
 
+    @property
+    def geometries(self):
+        locations = self.setting.models.eddy_diffusion.monitor_locations
+        return [g for g, e in locations.evaluate.items() if e]
+
     def threshold_converter(self):
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
@@ -60,7 +58,7 @@ class BatchResultsWriter:
         except OSError as e:
             raise RIDTOSError(e)
 
-        for geometry in BatchResultsWriter.geometries:
+        for geometry in self.geometries:
             over = list()
             for setting, analysis in self.analysis.items():
                 items = self.get_valid(geometry, analysis.maximum)
@@ -81,7 +79,7 @@ class BatchResultsWriter:
 
         for r, reverse in results:
             for t in self.thresholds:
-                for geometry in BatchResultsWriter.geometries:
+                for geometry in self.geometries:
                     over = list()
                     for setting, analysis in self.analysis.items():
                         valid = self.get_valid(geometry, getattr(analysis, r))

@@ -17,13 +17,6 @@ FIRST = 0
 
 class DataStore:
 
-    geometries = [
-        "points",
-        "lines",
-        "planes",
-        "domain"
-    ]
-
     class Dimensions:
         points = 1
         lines = 2
@@ -47,7 +40,7 @@ class DataStore:
         try:
             return getattr(self, geometry)[id]
         except AttributeError:
-            raise DataStoregeometryError(geometry)
+            raise DataStoreGeometryError(geometry)
         except KeyError:
             raise DataStoreIDError(id, geometry)
 
