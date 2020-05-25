@@ -70,9 +70,9 @@ class ResultsWriter:
                 and i.valid
             ]
             items.sort(reverse=True)
-            self.dir_agent.create_quantity_dir(geometry, self.quantity)
+            self.dir_agent.create_analysis_dir(geometry, self.quantity)
             fname = f"{geometry}_maximums.csv"
-            path = join(self.dir_agent.qdir, fname)
+            path = join(self.dir_agent.adir, fname)
             rows = [item.row(self.domain) for item in items]
             if rows:
                 self.write(path, items[0].header(self.setting), rows)
@@ -89,8 +89,8 @@ class ResultsWriter:
                 ]
                 items.sort()
                 fname = f"{geometry}_exceeds_{t}{self.unit}.csv"
-                self.dir_agent.create_quantity_dir(geometry, self.quantity)
-                path = join(self.dir_agent.qdir, fname)
+                self.dir_agent.create_analysis_dir(geometry, self.quantity)
+                path = join(self.dir_agent.adir, fname)
                 rows = [item.row(self.domain) for item in items]
                 if rows:
                     self.write(path, items[0].header(self.setting), rows)
@@ -107,8 +107,8 @@ class ResultsWriter:
                 ]
                 items.sort()
                 fname = f"{geometry}_exceeds_{t}{self.unit}.csv"
-                self.dir_agent.create_quantity_dir(geometry, self.quantity)
-                path = join(self.dir_agent.qdir, fname)
+                self.dir_agent.create_analysis_dir(geometry, self.quantity)
+                path = join(self.dir_agent.adir, fname)
                 rows = [item.row(self.domain) for item in items]
                 if rows:
                     self.write(path, items[0].header(self.setting), rows)
@@ -125,8 +125,8 @@ class ResultsWriter:
                 ]
                 items.sort()
                 fname = f"{geometry}_max%_exceeds_{t}{self.unit}.csv"
-                self.dir_agent.create_quantity_dir(geometry, self.quantity)
-                path = join(self.dir_agent.qdir, fname)
+                self.dir_agent.create_analysis_dir(geometry, self.quantity)
+                path = join(self.dir_agent.adir, fname)
                 rows = [item.row(self.domain) for item in items]
                 if rows:
                     self.write(path, items[0].header(self.setting), rows)
