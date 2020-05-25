@@ -90,7 +90,7 @@ class DataStore:
         except KeyError:
             size = 1
         for time in range(shape[0]):
-            frac = len(self.zip(where(data[time] >= value))) / size
+            frac = 100 * len(self.zip(where(data[time] >= value))) / size
             if frac > max_val:
                 max_val = frac
                 max_time = time

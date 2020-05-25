@@ -1,5 +1,7 @@
 import csv
 
+from io import TextIOWrapper
+
 from os import mkdir
 
 from os.path import join
@@ -7,11 +9,13 @@ from os.path import join
 from typing import Union
 from typing import List
 from typing import Iterable
+from typing import Type
 
 from base import RIDTOSError
 
 from config import IDMFConfig
 from config import Units
+from config import summary
 
 from container import Domain
 
@@ -23,6 +27,9 @@ from .resultcontainers import Maximum
 from .resultcontainers import Exceedance
 from .resultcontainers import PercentExceedance
 from .resultcontainers import MaxPercentExceedance
+from .resultcontainers import ResultContainer
+
+FIRST = 0
 
 class ResultsWriter:
 
@@ -38,16 +45,20 @@ class ResultsWriter:
         self.thresholds = self.threshold_converter()
         self.analysis = analysis
         self.dir_agent = dir_agent 
+        self.create_dirs()
         self.domain = Domain(setting)
+        self.summary()
         self.maximum()
-        self.exceedance()
-        self.percent_exceedance()
-        self.max_percent_exceedance()
+        self.exceedance_analysis()
         self.extrema()
 
     def threshold_converter(self):
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
+    
+    def create_dirs(self):
+        for geometry in self.analysis.data_store.geometries:
+            self.dir_agent.create_analysis_dir(geometry, self.quantity)
 
     def write(self, file_path: str, header: List[str], lines: Iterable):
         try:
@@ -60,142 +71,89 @@ class ResultsWriter:
         for line in lines:
             writer.writerow(line)
         f.close()
-    
 
+    def get_valid(self, geometry: str, results: List[Type[ResultContainer]]):
+        return [i for i in results if i.geometry == geometry and i.valid]
+    
     def maximum(self):
         for geometry in self.analysis.data_store.geometries:
-            items = [
-                i for i in self.analysis.maximum
-                if i.geometry == geometry
-                and i.valid
-            ]
+            items = self.get_valid(geometry, self.analysis.maximum)
             items.sort(reverse=True)
-            self.dir_agent.create_analysis_dir(geometry, self.quantity)
-            fname = f"{geometry}_maximums.csv"
-            path = join(self.dir_agent.adir, fname)
-            rows = [item.row(self.domain) for item in items]
+            rows = [item.row for item in items]
             if rows:
-                self.write(path, items[0].header(self.setting), rows)
+                path = join(self.dir_agent.adir, items[FIRST].fname)
+                self.write(path, items[FIRST].header, rows)
 
-
-    def exceedance(self):
-        for geometry in self.analysis.data_store.geometries:
-            for t in self.thresholds:
-                items = [
-                    i for i in self.analysis.exceedance
-                    if i.geometry == geometry
-                    and i.threshold == t
-                    and i.valid
-                ]
-                items.sort()
-                fname = f"{geometry}_exceeds_{t}{self.unit}.csv"
-                self.dir_agent.create_analysis_dir(geometry, self.quantity)
-                path = join(self.dir_agent.adir, fname)
-                rows = [item.row(self.domain) for item in items]
-                if rows:
-                    self.write(path, items[0].header(self.setting), rows)
-            
-    def percent_exceedance(self):
-
-        for geometry in self.analysis.data_store.geometries:
-            for t in self.thresholds:
-                items = [
-                    i for i in self.analysis.percent_exceedance
-                    if i.geometry == geometry
-                    and i.threshold == t
-                    and i.valid
-                ]
-                items.sort()
-                fname = f"{geometry}_exceeds_{t}{self.unit}.csv"
-                self.dir_agent.create_analysis_dir(geometry, self.quantity)
-                path = join(self.dir_agent.adir, fname)
-                rows = [item.row(self.domain) for item in items]
-                if rows:
-                    self.write(path, items[0].header(self.setting), rows)
-            
-    def max_percent_exceedance(self):
-
-        for geometry in self.analysis.data_store.geometries:
-            for t in self.thresholds:
-                items = [
-                    i for i in self.analysis.max_percent_exceedance
-                    if i.geometry == geometry
-                    and i.threshold == t
-                    and i.valid
-                ]
-                items.sort()
-                fname = f"{geometry}_max%_exceeds_{t}{self.unit}.csv"
-                self.dir_agent.create_analysis_dir(geometry, self.quantity)
-                path = join(self.dir_agent.adir, fname)
-                rows = [item.row(self.domain) for item in items]
-                if rows:
-                    self.write(path, items[0].header(self.setting), rows)
+    def exceedance_analysis(self):
+        results = [
+            (self.analysis.exceedance, False),
+            (self.analysis.percent_exceedance, False),
+            (self.analysis.max_percent_exceedance, True)
+        ]
+        for r, reverse in results:
+            for geometry in self.analysis.data_store.geometries:
+                for t in self.thresholds:
+                    valid = self.get_valid(geometry, r)
+                    items = [i for i in valid if i.threshold == t]
+                    items.sort(reverse=reverse)
+                    rows = [item.row for item in items]
+                    if rows:
+                        path = join(self.dir_agent.adir, items[FIRST].fname)
+                        self.write(path, items[0].header, rows)
     
     def extrema(self):
         try:
-            f = open(join(self.dir_agent.outdir, f"{self.quantity}_extrema.txt"), 'w')
+            fname = f"{self.quantity}_extrema.txt"
+            f = open(join(self.dir_agent.outdir, fname), 'w')
         except OSError as e:
             raise RIDTOSError(e)
+
+        self.title(f, self.analysis.maximum[FIRST].title)
         for geometry in self.analysis.data_store.geometries:
-            items = [
-                i for i in self.analysis.maximum 
-                if i.geometry == geometry
-                and i.valid
-            ]
+            items = self.get_valid(geometry, self.analysis.maximum)
+            self.subtitle(f, items[FIRST].extreme_title)
             if items:
                 item = max(items)
-                f.write(f"Maxium value for {geometry}:\n")
-                f.write(item.string(self.setting, self.domain))
-        f.write("===================================\n")
-        f.write("===================================\n\n")
-        for t in self.thresholds:
-            for geometry in self.analysis.data_store.geometries:
-                items = [
-                    i for i in self.analysis.exceedance
-                    if i.geometry == geometry
-                    and i.threshold == t
-                    and i.valid
-                ]
-                if items:
-                    item = min(items)
-                    f.write(f"Minimum time to {t}{self.unit} for {geometry}\n")
-                    f.write(item.string(self.setting, self.domain))
-            f.write("===================================\n")
-            f.write("===================================\n\n")
-        p = self.setting.models.eddy_diffusion.analysis.percentage_exceedance
-        for t in self.thresholds:
-            for geometry in self.analysis.data_store.geometries:
-                items = [
-                    i for i in self.analysis.percent_exceedance
-                    if i.geometry == geometry
-                    and i.threshold == t
-                    and i.valid
-                ]
-                if items:
-                    item = min(items)
-                    f.write(f"Minimum time to {t}{self.unit} for {p}% of domain for {geometry}\n")
-                    f.write(item.string(self.setting, self.domain))
-            f.write("===================================\n")
-            f.write("===================================\n\n")
-        for t in self.thresholds:
-            for geometry in self.analysis.data_store.geometries:
-                items = [
-                    i for i in self.analysis.max_percent_exceedance
-                    if i.geometry == geometry
-                    and i.threshold == t
-                    and i.valid
-                ]
-                if items:
-                    item = max(items)
-                    f.write(f"Maximum percentage exceeding {t}{self.unit} for {geometry}\n")
-                    f.write(item.string(self.setting, self.domain))
-            f.write("===================================\n")
-            f.write("===================================\n\n")
+                f.write(item.string)
+
+        results = [
+            (self.analysis.exceedance, False),
+            (self.analysis.percent_exceedance, False),
+            (self.analysis.max_percent_exceedance, True)
+        ]
+
+        for r, reverse in results:
+            self.title(f, r[FIRST].title)
+            for t in self.thresholds:
+                for geometry in self.analysis.data_store.geometries:
+                    valid = self.get_valid(geometry, r)
+                    items = [i for i in valid if i.threshold == t]
+                    if items:
+                        self.subtitle(f, items[FIRST].extreme_title)
+                        item = min(items) if not reverse else max(items)
+                        f.write(item.string)
         f.close()
 
-    @property
-    def unit(self):
-        return getattr(self.units, f"{self.quantity}_si")
+    def title(self, file: TextIOWrapper, title: str):
+        file.write("".join("=" for i in range(len(title))) + "\n")
+        file.write(title + "\n")
+        file.write("".join("=" for i in range(len(title))) + "\n")
+
+    def subtitle(self, file: TextIOWrapper, subtitle: str):
+        file.write("".join("-" for i in range(len(subtitle))) + "\n")
+        file.write(subtitle + "\n")
+        file.write("".join("-" for i in range(len(subtitle))) + "\n")
+
+    def summary(self):
+        try:
+             f = open(join(self.dir_agent.outdir, "run_summary.txt"), 'w')
+        except OSError as e:
+            raise RIDTOSError(e)
+
+        f.write(summary(self.setting))
+        f.close()
+
+
 
     def __enter__(self):
         return self

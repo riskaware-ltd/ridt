@@ -31,11 +31,6 @@ class BatchDataStoreWriter:
             DataStoreCSVWriter(self.settings, store, dir_agent, "concentration")
         else:
             ConfigFileWriter(outdir, "batch_config.json", self.settings.__source__)
-            try:
-                with open(join(outdir, "run_summary.txt"), "w") as f:
-                    f.write(self.space.cout_summary())
-            except OSError as e:
-                RIDTOSError(e)
             for idx, setting in enumerate(self.space.space):
                 dir_agent.create_root_dir(idx)
                 store = self.data_store[setting]

@@ -15,7 +15,7 @@ from data import DataStore
 from .datastoreanalyser import DataStoreAnalyser
 from .resultswriter import ResultsWriter
 from .exposure import Exposure
-from .batchresults import BatchResults
+from .batchresultswriter import BatchResultsWriter
 
 from pprint import pprint
 
@@ -59,7 +59,7 @@ class BatchDataStoreAnalyser:
                     self.dir_agent.create_root_dir(idx)
                     self.analyse_store(setting, store, quantity)
                 q_res = getattr(self, f"{quantity}_results")
-                BatchResults(self.settings, self.space, q_res, outdir, quantity)
+                BatchResultsWriter(self.settings, self.space, q_res, outdir, quantity)
         
     def analyse_store(self,
                       setting: IDMFConfig,

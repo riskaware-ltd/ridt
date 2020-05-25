@@ -65,20 +65,20 @@ class DataStoreAnalyser:
             for id in getattr(self.data_store, geometry):
                 index, value = self.data_store.maximum(geometry, id)
                 D = (geometry, id, self.quantity)
-                self.maximum.append(Maximum(*D, index, value))
+                self.maximum.append(Maximum(self.setting, *D, index, value))
         for t in self.thresholds:
             for geometry in self.data_store.geometries:
                 for id in getattr(self.data_store, geometry):
                     D = (geometry, id)
                     index = self.data_store.exceeds(*D, t)
                     self.exceedance.append(
-                        Exceedance(*D, self.quantity, index, t))
+                        Exceedance(self.setting, *D, self.quantity, index, t))
                     index = self.data_store.percentage_exceeds(*D, t, p)
                     self.percent_exceedance.append(
-                        PercentExceedance(*D, self.quantity, index, t))
+                        PercentExceedance(self.setting, *D, self.quantity, index, t, p))
                     index, value = self.data_store.percentage_exceeds_max(geometry, id, t)
                     self.max_percent_exceedance.append(
-                        MaxPercentExceedance(*D, self.quantity, value, index, t))
+                        MaxPercentExceedance(self.setting, *D, self.quantity, value, index, t))
     
     def exclude_uncertain_values(self):
         new_data_store = deepcopy(self.data_store)
