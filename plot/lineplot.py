@@ -43,8 +43,6 @@ class LinePlot:
         if self.config.scale == "logarithmic":
             plt.yscale("log")
         plot = plt.plot(self.get_domain(), data)
-
-
         return plot
 
     def save_fig(self):

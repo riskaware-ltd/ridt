@@ -33,6 +33,6 @@ class DataStoreWriter:
     
     def write(self, data_store: DataStore) -> None:
         for geometry in data_store.geometries:
-            self.dir_agent.create_quantity_dir(geometry, self.quantity)
+            self.dir_agent.create_data_dir(geometry, self.quantity)
             for id in getattr(data_store, geometry):
-                save(join(self.dir_agent.qdir, id), data_store.get(geometry, id))
+                save(join(self.dir_agent.ddir, id), data_store.get(geometry, id))

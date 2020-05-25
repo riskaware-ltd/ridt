@@ -20,6 +20,7 @@ class DirectoryAgent:
     def create_geometry_dir(self, geometry: str):
         self.gdir = join(self.outdir, geometry)
         self.mkdir(self.gdir)
+        return self.gdir
 
     def create_quantity_dir(self, geometry: str, quantity: str):
         self.create_geometry_dir(geometry)
@@ -27,11 +28,23 @@ class DirectoryAgent:
         self.mkdir(self.qdir)
         return self.qdir
     
+    def create_data_dir(self, geometry: str, quantity: str):
+        self.create_quantity_dir(geometry, quantity)
+        self.ddir = join(self.qdir, "data")
+        self.mkdir(self.ddir)
+        return self.ddir
+    
     def create_plot_dir(self, geometry: str, quantity: str):
         self.create_quantity_dir(geometry, quantity)
         self.pdir = join(self.qdir, "plots")
         self.mkdir(self.pdir)
         return self.pdir
+    
+    def create_analysis_dir(self, geometry: str, quantity: str):
+        self.create_quantity_dir(geometry, quantity)
+        self.adir = join(self.qdir, "analysis")
+        self.mkdir(self.adir)
+        return self.adir
 
     def mkdir(self, path: str):
         try:

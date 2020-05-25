@@ -34,9 +34,9 @@ class DataStoreReader:
             self.data_store = BatchDataStore()
             with DirectoryAgent(self.directory, self.space.shape) as da:
                 for idx, setting in enumerate(self.space.space):
-                    da.create_root_dir(idx)
+                    da.create_data_dir(idx)
                     self.data_store.add_run(setting)
-                    self.data_store[setting] = self.load(setting, da.outdir)
+                    self.data_store[setting] = self.load(setting, da.ddir)
     
     def load(self, setting: IDMFConfig, directory: str):
         rv = DataStore()
