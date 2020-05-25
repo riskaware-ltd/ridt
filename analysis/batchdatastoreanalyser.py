@@ -40,37 +40,33 @@ class BatchDataStoreAnalyser:
                  settings: IDMFConfig,
                  data_store: BatchDataStore,
                  space: ComputationalSpace,
-                 outdir: str):
+                 outdir: str,
+                 quantity: str):
         self.settings = settings
         self.units = Units(settings)
         self.space = space
+        self.quantity = quantity
         self.dir_agent = DirectoryAgent(outdir, self.space.shape)
 
-        self.concentration_store = data_store
-        self.exposure_store = Exposure(self.settings, data_store)
-
-        self.concentration_results = dict()
-        self.exposure_results = dict()
-        
-        for quantity in BatchDataStoreAnalyser.quantities:
-            print(f"Analysing {quantity}...")
-            if self.space.zero:
-                q_store = getattr(self, f"{quantity}_store")[self.settings]
-                self.analyse_store(self.settings, q_store, quantity)
-            else:
-                q_store = getattr(self, f"{quantity}_store")
-                for setting, store in tqdm(q_store.items(), bar_format=BF):
-                    idx = self.space.linear_index(setting)
-                    self.dir_agent.create_root_dir(idx)
-                    self.analyse_store(setting, store, quantity)
-                q_res = getattr(self, f"{quantity}_results")
-                BatchResultsWriter(self.settings, self.space, q_res, outdir, quantity)
+        self.data_store = data_store
+        self.results = dict()
+    
+        print(f"Analysing {self.quantity}...")
+        if self.space.zero:
+            store = self.data_store[self.settings]
+            self.analyse_store(self.settings, store, quantity)
+        else:
+            for setting, store in tqdm(self.data_store.items(), bar_format=BF):
+                idx = self.space.linear_index(setting)
+                self.dir_agent.create_root_dir(idx)
+                self.analyse_store(setting, store, quantity)
+            BatchResultsWriter(self.settings, self.space, self.results, outdir, quantity)
         
     def analyse_store(self,
                       setting: IDMFConfig,
                       data_store: DataStore,
                       quantity: str):
         result = DataStoreAnalyser(setting, data_store, quantity)
-        getattr(self, f"{quantity}_results")[setting] = result
+        self.results[setting] = result
         ResultsWriter(setting, result, self.dir_agent, quantity)
 

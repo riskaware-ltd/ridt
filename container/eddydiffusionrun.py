@@ -19,6 +19,7 @@ from data import BatchDataStorePlotter
 from container import Domain
 
 from analysis import BatchDataStoreAnalyser
+from analysis import Exposure
 
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
@@ -28,21 +29,23 @@ class EddyDiffusionRun:
 
     def __init__(self, settings: IDMFConfig, output_dir: str):
 
-
-        print("Preparing Eddy Diffusion run... ")
+        print("Preparing Eddy Diffusion run...")
         self._settings = settings
-        self._output_dir = output_dir
+        self.output_dir = output_dir
         self.data_store = BatchDataStore()
+        self.exposure_store = None
         self.space = self.prepare()
-        print("Evaluating Eddy Diffusion model over domain... ")
+        print("Evaluating model over domain...")
         self.evaluate()
-        print("Writing Eddy Diffusion data to disk... ")
+        print("Computing exposure...")
+        self.compute_exposure()
+        print("Writing data to disk... ")
         self.write()
-        print("Producing Eddy Diffusion plots... ")
+        print("Producing plots... ")
         self.plot()
-        print("Performing Eddy Diffusion data ananlysis...")
+        print("Performing data ananlysis...")
         self.analyse()
-        print("\n")
+        print("\n\n")
 
     def prepare(self) -> ComputationalSpace:
         restrict = {"models": "eddy_diffusion"}
@@ -64,23 +67,24 @@ class EddyDiffusionRun:
             for name, item in getattr(locations, geometry).items():
                 output = solver(*getattr(domain, geometry)(item), domain.time)
                 self.data_store[setting].add(geometry, name, squeeze(output))
+    
+    def compute_exposure(self):
+        self.exposure_store = Exposure(self.settings, self.data_store)
 
     def write(self):
-        with BatchDataStoreWriter(self.settings, self.data_store, self.space) as dsw:
-            dsw.write(self.output_dir)
+        BatchDataStoreWriter(self.settings, self.data_store, self.space, self.output_dir, "concentration")
+        BatchDataStoreWriter(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
 
     def plot(self):
-        with BatchDataStorePlotter(self.settings, self.data_store, self.space) as dsp:
-            dsp.plot(self.output_dir)
+        BatchDataStorePlotter(self.settings, self.data_store, self.space, self.output_dir, "concentration",)
+        BatchDataStorePlotter(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
 
     def analyse(self):
-        BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir)
+        BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir, "concentration")
+        BatchDataStoreAnalyser(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
 
 
     @property
     def settings(self):
         return self._settings
    
-    @property
-    def output_dir(self):
-        return self._output_dir

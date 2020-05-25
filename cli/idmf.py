@@ -42,6 +42,8 @@ def run(config_file, output_dir):
             EddyDiffusionRun(s, output_dir)
     except RIDTOSError as e:
         sys.exit(f"\n{e}\n\nAborted.")
+    
+    print("\nComplete.")
 
 
 @idmf.command()

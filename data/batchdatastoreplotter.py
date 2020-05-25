@@ -19,34 +19,30 @@ class BatchDataStorePlotter:
     def __init__(self,
                  settings: IDMFConfig,
                  data_store: BatchDataStore,
-                 space: ComputationalSpace):
+                 space: ComputationalSpace,
+                 outdir: str,
+                 quantity: str):
         self.settings = settings
         self.data_store = data_store
+        self.outdir = outdir
         self.space = space
+        self.quantity = quantity
+        print(f"Plotting {self.quantity} data...")
+        self.plot()
 
-    def plot(self, outdir: str):
+    def plot(self):
 
-        dir_agent = DirectoryAgent(outdir, self.space.shape)
-
-        #### Tempory measure setting plot_type to concentration
-        quantity = "concentration"
-        #######################################################
+        dir_agent = DirectoryAgent(self.outdir, self.space.shape)
 
         if self.space.zero:
             DataStorePlotter(dir_agent,
                              self.data_store[self.settings],
                              self.settings,
-                             quantity)
+                             self.quantity)
         else:
             for idx, setting in tqdm(enumerate(self.space.space), total=len(self.space.space), bar_format=BF):
                 dir_agent.create_root_dir(idx)
                 DataStorePlotter(dir_agent,
                                  self.data_store[setting],
                                  setting,
-                                 quantity)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+                                 self.quantity)
