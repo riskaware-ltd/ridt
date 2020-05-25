@@ -43,30 +43,26 @@ class BatchDataStoreAnalyser:
                  outdir: str,
                  quantity: str):
         self.settings = settings
-        self.units = Units(settings)
         self.space = space
+        self.outdir = outdir
         self.quantity = quantity
         self.dir_agent = DirectoryAgent(outdir, self.space.shape)
-
         self.data_store = data_store
         self.results = dict()
-    
         print(f"Analysing {self.quantity}...")
+        self.analyse()
+    
+    def analyse(self):
         if self.space.zero:
             store = self.data_store[self.settings]
-            self.analyse_store(self.settings, store, quantity)
+            result = DataStoreAnalyser(self.settings, store, self.quantity)
+            self.results[self.settings] = result
+            ResultsWriter(self.settings, result, self.dir_agent, self.quantity)
         else:
             for setting, store in tqdm(self.data_store.items(), bar_format=BF):
                 idx = self.space.linear_index(setting)
                 self.dir_agent.create_root_dir(idx)
-                self.analyse_store(setting, store, quantity)
-            BatchResultsWriter(self.settings, self.space, self.results, outdir, quantity)
-        
-    def analyse_store(self,
-                      setting: IDMFConfig,
-                      data_store: DataStore,
-                      quantity: str):
-        result = DataStoreAnalyser(setting, data_store, quantity)
-        self.results[setting] = result
-        ResultsWriter(setting, result, self.dir_agent, quantity)
-
+                result = DataStoreAnalyser(setting, store, self.quantity)
+                self.results[setting] = result
+                ResultsWriter(setting, result, self.dir_agent, self.quantity)
+            BatchResultsWriter(self.settings, self.space, self.results, self.outdir, self.quantity)
