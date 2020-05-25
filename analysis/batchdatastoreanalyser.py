@@ -1,5 +1,7 @@
 import sys
 
+from tqdm import tqdm
+
 from os.path import join
 
 from base import ComputationalSpace
@@ -18,6 +20,8 @@ from .exposure import Exposure
 from .batchresultswriter import BatchResultsWriter
 
 from pprint import pprint
+
+BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
 
 class BatchDataStoreAnalyser:
@@ -49,12 +53,13 @@ class BatchDataStoreAnalyser:
         self.exposure_results = dict()
         
         for quantity in BatchDataStoreAnalyser.quantities:
+            print(f"Analysing {quantity}...")
             if self.space.zero:
                 q_store = getattr(self, f"{quantity}_store")[self.settings]
                 self.analyse_store(self.settings, q_store, quantity)
             else:
                 q_store = getattr(self, f"{quantity}_store")
-                for setting, store in q_store.items():
+                for setting, store in tqdm(q_store.items(), bar_format=BF):
                     idx = self.space.linear_index(setting)
                     self.dir_agent.create_root_dir(idx)
                     self.analyse_store(setting, store, quantity)

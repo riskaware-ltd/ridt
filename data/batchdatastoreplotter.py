@@ -1,5 +1,7 @@
 from os.path import join
 
+from tqdm import tqdm
+
 from base import ComputationalSpace
 
 from config import IDMFConfig
@@ -8,6 +10,8 @@ from config import ConfigFileWriter
 from .batchdatastore import BatchDataStore
 from .directoryagent import DirectoryAgent
 from .datastoreplotter import DataStorePlotter
+
+BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
 
 class BatchDataStorePlotter:
@@ -34,7 +38,7 @@ class BatchDataStorePlotter:
                              self.settings,
                              quantity)
         else:
-            for idx, setting in enumerate(self.space.space):
+            for idx, setting in tqdm(enumerate(self.space.space), total=len(self.space.space), bar_format=BF):
                 dir_agent.create_root_dir(idx)
                 DataStorePlotter(dir_agent,
                                  self.data_store[setting],

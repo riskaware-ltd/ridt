@@ -25,14 +25,18 @@ BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 class WellMixedRun:
 
     def __init__(self, settings: IDMFConfig, output_dir: str):
+        print("Preparing Well Mixed run... ")
         self._settings = settings
         self._output_dir = output_dir
         self.data_store = BatchDataStore()
         self.space = self.prepare()
+        print("Evaluating Well Mixed model over domain... ")
         self.evaluate()
+        print("Writing Well Mixed data to disk... ")
         self.write()
+        print("Producing Well Mixed plots... ")
         self.plot()
-        # self.analyse()
+        print("\n")
 
     def prepare(self):
         restrict = {"models": "well_mixed"}

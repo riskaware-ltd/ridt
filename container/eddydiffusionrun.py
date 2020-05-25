@@ -28,14 +28,21 @@ class EddyDiffusionRun:
 
     def __init__(self, settings: IDMFConfig, output_dir: str):
 
+
+        print("Preparing Eddy Diffusion run... ")
         self._settings = settings
         self._output_dir = output_dir
         self.data_store = BatchDataStore()
         self.space = self.prepare()
+        print("Evaluating Eddy Diffusion model over domain... ")
         self.evaluate()
+        print("Writing Eddy Diffusion data to disk... ")
         self.write()
+        print("Producing Eddy Diffusion plots... ")
         self.plot()
+        print("Performing Eddy Diffusion data ananlysis...")
         self.analyse()
+        print("\n")
 
     def prepare(self) -> ComputationalSpace:
         restrict = {"models": "eddy_diffusion"}

@@ -1,5 +1,7 @@
 from os.path import join
 
+from tqdm import tqdm
+
 from base import ComputationalSpace
 from base import RIDTOSError
 
@@ -11,6 +13,7 @@ from .directoryagent import DirectoryAgent
 from .datastorewriter import DataStoreWriter
 from .datastorecsvwriter import DataStoreCSVWriter
 
+BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
 class BatchDataStoreWriter:
 
@@ -31,7 +34,7 @@ class BatchDataStoreWriter:
             DataStoreCSVWriter(self.settings, store, dir_agent, "concentration")
         else:
             ConfigFileWriter(outdir, "batch_config.json", self.settings.__source__)
-            for idx, setting in enumerate(self.space.space):
+            for idx, setting in tqdm(enumerate(self.space.space), total=len(self.space.space), bar_format=BF):
                 dir_agent.create_root_dir(idx)
                 store = self.data_store[setting]
                 ConfigFileWriter(dir_agent.outdir, "config.json", setting.__source__)
