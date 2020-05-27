@@ -88,3 +88,4 @@ class EddyDiffusionRun:
     def analyse(self):
         BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir, "concentration")
         BatchDataStoreAnalyser(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
+
