@@ -7,8 +7,13 @@ from base import ComputationalSpace
 from config import ConfigFileParser
 
 from data.batchdatastore import BatchDataStoreIDError
+from data import DataStore
 from data import BatchDataStore
 from data import BatchDataStoreWriter
+
+from analysis import DataStoreAnalyser
+from analysis import BatchDataStoreAnalyser
+from analysis.batchresultswriter import BatchResultsWriter
 
 
 class ST14(unittest.TestCase):
@@ -23,11 +28,22 @@ class ST14(unittest.TestCase):
            :class:`~.IDMFConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
+        self.out_dir = "tests/systemtests/st14/run"
+
         with ConfigFileParser("tests/systemtests/st14/config.json") as cfp:
             self.c = cfp
 
-        restrict = {"models": self.c.dispersion_model}
+        restrict = {"models": "well_mixed"}
         self.space = ComputationalSpace(self.c, restrict)
+
+    def tearDown(self) -> None:
+        for element in os.listdir(self.out_dir):
+            if not element.endswith(".gitkeep"):
+                path = os.path.join(self.out_dir, element)
+                try:
+                    shutil.rmtree(path)
+                except WindowsError:
+                    os.remove(path)
 
     def test_verify(self):
 
@@ -35,47 +51,31 @@ class ST14(unittest.TestCase):
         in the correct directory, then removes the created
         files."""
 
-        directory = "tests/systemtests/st14/run"
+        da = DataStore()
+        dsa = DataStoreAnalyser(self.c, da, "concentration")
 
         bds = BatchDataStore()
-        bdsw = BatchDataStoreWriter(
-            self.c, bds, self.space
+        bds.add_run(self.c)
+
+        bdsw = BatchResultsWriter(
+            self.c, self.space, {self.c: dsa}, self.out_dir, "concentration"
         )
 
         try:
-            bdsw.write(directory)
+            bdsw.write()
         except BatchDataStoreIDError as e:
             pass
         self.assertIn(
-            "run_summary.txt", os.listdir(f"{directory}")
+            "batch_run_summary.txt", os.listdir(f"{self.out_dir}")
         )
 
-        with open("tests/systemtests/st14/run/run_summary.txt") as f:
+        with open("tests/systemtests/st14/run/batch_run_summary.txt") as f:
             txt = f.read()
 
         self.assertIn(
-            "Computational space dimensions: 3 x 3",
+            "Computational space dimensions: 1 x",
             txt
         )
-        self.assertIn(
-            "values:  [0.01, 0.001, 0.0001]",
-            txt
-        )
-        self.assertIn(
-            "models -> eddy_diffusion -> monitor_locations -> planes -> plane_1 -> distance",
-            txt
-        )
-        self.assertIn(
-            "values:  [1.0, 2.0, 3.0]",
-            txt
-        )
-
-        for element in os.listdir(directory):
-            path = os.path.join(directory, element)
-            try:
-                shutil.rmtree(path)
-            except WindowsError:
-                os.remove(path)
 
 
 if __name__ == "__main__":
