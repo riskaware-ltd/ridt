@@ -1,10 +1,15 @@
 import unittest
-
-import numpy as np
+from os import listdir
+from os.path import join
+from os import remove
+import shutil
 
 from config import ConfigFileParser
 
-from plot import LinePlot
+from container import Domain
+from container.eddydiffusionrun import EddyDiffusionRun
+
+from data import BatchDataStore
 
 
 class ST19(unittest.TestCase):
@@ -14,21 +19,29 @@ class ST19(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        with ConfigFileParser("tests/systemtests/st16/explicit.json") as cfp:
+        with ConfigFileParser("tests/systemtests/st19/config.json") as cfp:
             self.c = cfp
 
-        self.lp = LinePlot(self.c, "tests/systemtests/st19")
+        self.bds = BatchDataStore()
+        self.domain = Domain(self.c)
+        self.output_dir = "tests/systemtests/st19/plots"
+        self.edr = EddyDiffusionRun(self.c, self.output_dir)
 
-        self.time_array = self.lp.time_array
+    def tearDown(self) -> None:
+        for element in listdir(self.output_dir):
+            if not element.endswith(".gitkeep"):
+                path = join(self.output_dir, element)
+                try:
+                    shutil.rmtree(path)
+                except WindowsError:
+                    remove(path)
 
     def test_verify(self):
-        concentrations = []
-        for time in self.time_array:
-            concentrations.append(self.time_array * np.power(time, 10))
-        for line in self.c.models.eddy_diffusion.monitor_locations.lines.values():
-            print(concentrations)
-            for concentration in concentrations:
-                self.lp(concentration, line)
+        output_types = ["concentration", "exposure"]
+        for output in output_types:
+            _path = join(self.output_dir, "points", output, "plots")
+            for idx, img in enumerate(listdir(_path)):
+                self.assertEqual(img, f"point_{idx + 1}.png")
 
 
 if __name__ == "__main__":
