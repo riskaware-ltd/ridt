@@ -1,7 +1,7 @@
 import unittest
 
 from config import ConfigFileParser
-from config import ConsistencyError
+from config.idmfconfig import ConsistencyError
 
 
 class ST03(unittest.TestCase):
