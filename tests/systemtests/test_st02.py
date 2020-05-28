@@ -1,7 +1,10 @@
 import unittest
 
+import json
+
 from config import ConfigFileParser
-from config import ConsistencyError
+from config.idmfconfig import ConsistencyError
+from config.configfileparser import ConfigFileParserValidationError
 
 
 class ST02(unittest.TestCase):
@@ -12,11 +15,20 @@ class ST02(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        """setUp method which instantiates an
-        :class:`~.IDMFConfig` class."""
+        """setUp method that instantiates the
+           :class:`~.IDMFConfig` class."""
+
+        self.config_path = "tests/systemtests/st06/config.json"
+        with open(self.config_path) as f:
+            self.default = json.load(f)
 
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp
+
+    def tearDown(self) -> None:
+
+        with open(self.config_path, "w") as w:
+            json.dump(self.default, w)
 
     def test_verify(self):
 
@@ -67,54 +79,78 @@ class ST02(unittest.TestCase):
             self.assertEqual(hasattr(plane, "axis"), True)
             self.assertEqual(hasattr(plane, "distance"), True)
 
-    def test_lines(self):
+    def test_line_dims(self):
 
         """Checks to see if the :class:`.ConsistencyError` error
         triggers if the line does not lie in the bounds of the container
         or is not parallel to one of the principle axes."""
 
-        ed = self.c.models.eddy_diffusion
-        lines = ed.monitor_locations.lines
-        for line in lines.values():
-            axis = getattr(line, "parallel_axis")
-            with self.assertRaises(ConsistencyError):
-                setattr(line.point, axis, getattr(ed.dimensions, axis) + 1)
-                self.c.consistency_check()
-            setattr(line.point, axis, getattr(ed.dimensions, axis) - 1)
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            for lines in config["models"]["eddy_diffusion"]["monitor_locations"]["lines"].values():
+                lines["point"]["x"] = config["models"]["eddy_diffusion"]["dimensions"]["x"] + 1
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
+
+    def test_line_axis(self):
+
+        """Checks to see if the :class:`.ConsistencyError` error
+        triggers if the line does not lie in the bounds of the container
+        or is not parallel to one of the principle axes."""
+
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            for lines in config["models"]["eddy_diffusion"]["monitor_locations"]["lines"].values():
+                lines["parallel_axis"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
     def test_points(self):
 
         """Checks to see if the :class:`.ConsistencyError` error
         triggers if the point does not lie in the bounds of the container."""
 
-        ed = self.c.models.eddy_diffusion
-        points = ed.monitor_locations.points
-        dims = ["x", "y", "z"]
-        for point in points.values():
-            for dim in dims:
-                setattr(point, dim, getattr(ed.dimensions, dim) + 1)
-                with self.assertRaises(ConsistencyError):
-                    self.c.consistency_check()
-                setattr(point, dim, getattr(ed.dimensions, dim) - 1)
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            for points in config["models"]["eddy_diffusion"]["monitor_locations"]["points"].values():
+                points["x"] = config["models"]["eddy_diffusion"]["dimensions"]["x"] + 1
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
-    def test_planes(self):
+    def test_planes_axis(self):
 
         """Checks to see if the :class:`.ConsistencyError` error
         triggers if a plane lies outside of the bounds of the container."""
 
-        ed = self.c.models.eddy_diffusion
-        for key, val in ed.monitor_locations.planes.items():
-            if val.axis == "xy":
-                val.distance = ed.dimensions.z + 1
-                self.assertRaises(ConsistencyError, self.c.consistency_check)
-            if val.axis == "xz":
-                val.distance = ed.dimensions.y + 1
-                self.assertRaises(ConsistencyError, self.c.consistency_check)
-            if val.axis == "zy":
-                val.distance = ed.dimensions.x + 1
-                self.assertRaises(ConsistencyError, self.c.consistency_check)
-            val.axis = "RANDOM VALUE"
-            self.assertRaises(ConsistencyError, self.c.consistency_check)
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            for planes in config["models"]["eddy_diffusion"]["monitor_locations"]["planes"].values():
+                planes["axis"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
+
+    def test_planes_distance(self):
+
+        """Checks to see if the :class:`.ConsistencyError` error
+        triggers if a plane lies outside of the bounds of the container."""
+
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            for planes in config["models"]["eddy_diffusion"]["monitor_locations"]["planes"].values():
+                axis = [x for x in ["x", "y", "z"] if x not in list(planes["axis"])]
+                planes["distance"] = config["models"]["eddy_diffusion"]["dimensions"][axis[0]] + 1
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
 
 if __name__ == "__main__":
