@@ -22,11 +22,23 @@ class ST12(unittest.TestCase):
            :class:`~.IDMFConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
+        self.directory = "tests/systemtests/st12"
+
         with ConfigFileParser("tests/systemtests/st11/config.json") as cfp:
             self.c = cfp
 
-        restrict = {"models": self.c.dispersion_model}
+        restrict = {"models": "well_mixed"}
         self.space = ComputationalSpace(self.c, restrict)
+
+    def tearDown(self) -> None:
+
+        for element in os.listdir(self.directory):
+            if not element.endswith(".gitkeep"):
+                path = os.path.join(self.directory, element)
+                try:
+                    shutil.rmtree(path)
+                except WindowsError:
+                    os.remove(path)
 
     def test_verify(self):
 
@@ -34,27 +46,18 @@ class ST12(unittest.TestCase):
         in the correct directory, then removes the created
         files."""
 
-        directory = "tests/systemtests/st12"
-
         bds = BatchDataStore()
-        bdsw = BatchDataStoreWriter(
-            self.c, bds, self.space
-        )
+        for space in self.space.space:
+            bds.add_run(space)
 
         try:
-            bdsw.write(directory)
+            BatchDataStoreWriter(
+                self.c, bds, self.space, self.directory, "concentration")
         except BatchDataStoreIDError as e:
             pass
         self.assertIn(
-            "config.json", os.listdir(f"{directory}/[0, 0]")
+            "batch_config.json", os.listdir(f"{self.directory}")
         )
-
-        for element in os.listdir(directory):
-            path = os.path.join(directory, element)
-            try:
-                shutil.rmtree(path)
-            except WindowsError:
-                os.remove(path)
 
 
 if __name__ == "__main__":
