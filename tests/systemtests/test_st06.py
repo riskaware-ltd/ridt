@@ -1,7 +1,9 @@
 import unittest
+import json
 
 from config import ConfigFileParser
-from config import ConsistencyError
+from config.idmfconfig import ConsistencyError
+from config.configfileparser import ConfigFileParserValidationError
 
 
 class ST06(unittest.TestCase):
@@ -14,8 +16,17 @@ class ST06(unittest.TestCase):
         """setUp method that instantiates the
         :class:`~.IDMFConfig` class."""
 
+        self.config_path = "tests/systemtests/st06/config.json"
+        with open(self.config_path) as f:
+            self.default = json.load(f)
+
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp
+
+    def tearDown(self) -> None:
+
+        with open(self.config_path, "w") as w:
+            json.dump(self.default, w)
 
     def test_verify(self):
 
@@ -28,44 +39,54 @@ class ST06(unittest.TestCase):
             hasattr(self.c, "concentration_units"), True)
         self.assertEqual(
             hasattr(self.c, "exposure_units"), True)
-        self.assertEqual(
-            hasattr(self.c.models.eddy_diffusion, "spatial_units"), True
-        )
-
-    def test_time_units(self):
-
-        """Checks to see if the :class:`.ConsistencyError` error
-        triggers if the time units are not s, m, h."""
-
-        self.c.time_units = "RANDOM VALUE"
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
-
-    def test_spatial_units(self):
-
-        """Checks to see if the :class:`.ConsistencyError` error
-        triggers if the spatial units are not one of the pre defined
-        units."""
-
-        self.c.models.eddy_diffusion.spatial_units = "RANDOM VALUE"
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
 
     def test_concentration_units(self):
 
-        """Checks to see if the :class:`.ConsistencyError` error
-        triggers if the concentration units are not one of the pre defined
-        units."""
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["concentration_units"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
-        self.c.concentration_units = "RANDOM VALUE"
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
+    def test_spatial_units(self):
+
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["spatial_units"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
     def test_exposure_units(self):
 
-        """Checks to see if the :class:`.ConsistencyError` error
-        triggers if the exposure units are not one of the pre defined
-        units."""
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["exposure_units"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
-        self.c.exposure_units = "RANDOM VALUE"
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
+    def test_mass_units(self):
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["mass_units"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
+
+    def test_time_units(self):
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["time_units"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
 
 if __name__ == "__main__":
