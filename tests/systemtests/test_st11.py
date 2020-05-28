@@ -20,7 +20,7 @@ class ST11(unittest.TestCase):
         with ConfigFileParser("tests/systemtests/st11/config.json") as cfp:
             self.c = cfp
 
-            restrict = {"models": self.c.dispersion_model}
+            restrict = {"models": "well_mixed"}
             self.space = ComputationalSpace(self.c, restrict)
 
     def test_verify(self):
