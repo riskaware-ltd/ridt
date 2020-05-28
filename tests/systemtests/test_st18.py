@@ -1,19 +1,17 @@
 import unittest
-import os
+from os import listdir
+from os.path import join
+from os import remove
 
-from numpy import squeeze
-from numpy import load
+import shutil
 
 from config import ConfigFileParser
 
-from equation import EddyDiffusion
-
 from container import Domain
+from container.eddydiffusionrun import EddyDiffusionRun
 
 from data import BatchDataStore
 from data import BatchDataStoreWriter
-
-from base import ComputationalSpace
 
 
 class ST18(unittest.TestCase):
@@ -29,53 +27,32 @@ class ST18(unittest.TestCase):
 
         self.bds = BatchDataStore()
         self.domain = Domain(self.c)
-        self.ed = EddyDiffusion(self.c)
-
-        restrict = {"models": self.c.dispersion_model}
-        self.space = ComputationalSpace(self.c, restrict)
         self.output_dir = "tests/systemtests/st18"
-
-        self.bds.add_run(self.c)
-        self.points = self.c.models.eddy_diffusion.monitor_locations.points
-        self.lines = self.c.models.eddy_diffusion.monitor_locations.lines
-        self.planes = self.c.models.eddy_diffusion.monitor_locations.planes
-
-        for point_name, point in self.points.items():
-            output = self.ed(*self.domain.point(point), self.domain.time)
-            self.bds[self.c].add_point_data(point_name, squeeze(output))
-
-        for line_name, line in self.lines.items():
-            output = self.ed(*self.domain.line(line), self.domain.time)
-            self.bds[self.c].add_line_data(line_name, squeeze(output))
-
-        for plane_name, plane in self.planes.items():
-            output = self.ed(*self.domain.plane(plane), self.domain.time)
-            self.bds[self.c].add_plane_data(plane_name, squeeze(output))
-
-        output = self.ed(*self.domain.full, self.domain.time)
-        self.bds[self.c].add_domain_data(output)
+        self.edr = EddyDiffusionRun(self.c, self.output_dir)
+        self.list_dir = listdir(self.output_dir)
 
     def tearDown(self) -> None:
-        for item in self.list_dir:
-            path = os.path.join(self.output_dir, item)
-            os.remove(path)
+        for element in listdir(self.output_dir):
+            if not element.endswith(".gitkeep"):
+                path = join(self.output_dir, element)
+                try:
+                    shutil.rmtree(path)
+                except WindowsError:
+                    remove(path)
 
     def test_write(self):
 
-        with BatchDataStoreWriter(self.c,
-                                  self.bds,
-                                  self.space) as dsw:
-            dsw.write(self.output_dir)
+        geometries = ["points", "lines", "planes"]
+        output_types = ["concentration", "exposure"]
 
-        self.list_dir = os.listdir(self.output_dir)
-
-        for point_name, point in self.points.items():
-            self.assertIn(f"{point_name}.npy", self.list_dir)
-        for line_name, line in self.lines.items():
-            self.assertIn(f"{line_name}.npy", self.list_dir)
-        for plane_name, plane in self.planes.items():
-            self.assertIn(f"{plane_name}.npy", self.list_dir)
-        self.assertIn(f"domain.npy", self.list_dir)
+        for geometry in geometries:
+            for output in output_types:
+                _dir = f"{geometry}/{output}/data"
+                _path = join(self.output_dir, _dir)
+                for val in self.edr.data_store.store.values():
+                    for name, monitor in getattr(val, geometry).items():
+                        self.assertIn(f"{name}.npy", listdir(_path))
+                        self.assertIn(f"{name}.csv", listdir(_path))
 
 
 if __name__ == "__main__":
