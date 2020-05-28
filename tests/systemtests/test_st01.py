@@ -2,7 +2,7 @@ import unittest
 
 from config import IDMFConfig
 from config import ConfigFileParser
-from config.idmfconfig import ConsistencyError
+from config.configfileparser import ConfigFileParserValidationError
 
 
 class ST01(unittest.TestCase):
@@ -19,8 +19,6 @@ class ST01(unittest.TestCase):
 
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp
-        with ConfigFileParser("tests/systemtests/st01/error_config.json") as cfp:
-            self.ec = cfp
 
     def test_parse(self):
 
@@ -28,10 +26,8 @@ class ST01(unittest.TestCase):
         an error in a certain circumstance."""
 
         self.c.consistency_check()
-        print("Correct config successfully parsed.")
-        with self.assertRaises(ConsistencyError):
-            self.ec.consistency_check()
-        print("Error correctly captured.")
+        with self.assertRaises(ConfigFileParserValidationError):
+            ConfigFileParser("tests/systemtests/st01/error_config.json")
 
     def test_verify(self):
 
