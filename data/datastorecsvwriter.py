@@ -52,9 +52,8 @@ class DataStoreCSVWriter:
                 self.write_csv(geometry, id, data_store.get(geometry, id))
     
     def write_csv(self, geometry: str, id: str, data: ndarray):
-        qu = getattr(self.units, f"{self.quantity}_si")
-
         path = join(self.dir_agent.ddir, id + ".csv")
+        factor = getattr(self.units, f"{self.quantity}_factor")
 
         try:
             f = open(path, 'w', newline="")
@@ -67,9 +66,9 @@ class DataStoreCSVWriter:
             f"x ({self.units.space})",
             f"y ({self.units.space})",
             f"z ({self.units.space})",
-            f"value ({qu})"
+            f"value ({getattr(self.units, f'{self.quantity}')})"
         ])
         for index in product(*[range(i) for i in data.shape]):
             values = self.domain.values(geometry, id, index)
-            writer.writerow(list(values) + [data[index]])
+            writer.writerow(list(values) + [data[index] / factor])
         f.close()

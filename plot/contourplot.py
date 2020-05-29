@@ -77,7 +77,8 @@ class ContourPlot:
         plt.savefig(join(self.output_dir, f"{self.id}-{self.domain.time[self.t_index]:.2f}s.png"))
 
     def title(self):
-        return f"{self.quantity} - {self.id} - {self.domain.time[self.t_index]:.2f}s"
+        u = getattr(self.units, f'{self.quantity}')
+        return f"{self.quantity} ({u}) - {self.id} - {self.domain.time[self.t_index]:.2f}s"
     
     def xlabel(self):
         return f"{self.xaxis} ({self.units.space})"
@@ -126,11 +127,11 @@ class ContourPlot:
         y_range = getattr(self.domain, list(self.plane.axis)[1])
         return x_range, y_range
 
-    def animate(self, data: ndarray):
-        plot = self.plot(data[0])
-        def frame(i):
-            return self.plot(data[i])
-        anim = animation.FuncAnimation(fig,
-                                       frame,
-                                       frames=self.settings.time_samples, blit=True)
-        anim.save("test.mp4", fps=5)
+    # def animate(self, data: ndarray):
+    #     plot = self.plot(data[0])
+    #     def frame(i):
+    #         return self.plot(data[i])
+    #     anim = animation.FuncAnimation(fig,
+    #                                    frame,
+    #                                    frames=self.settings.time_samples, blit=True)
+    #     anim.save("test.mp4", fps=5)

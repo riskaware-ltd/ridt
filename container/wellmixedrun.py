@@ -41,7 +41,7 @@ class WellMixedRun:
         self.write()
         print("Producing plots... ")
         self.plot()
-        print("\n\n")
+        print("\n")
 
     def prepare(self):
         restrict = {"models": "well_mixed"}

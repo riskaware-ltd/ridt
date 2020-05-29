@@ -111,6 +111,7 @@ class IDMFConfig(Settings):
         self.spatial_samples = SpatialSamples
 
         self.spatial_units = SpatialUnits
+        self.physical_properties = PhysicalProperties
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
         self.mass_units = MassUnits
@@ -278,6 +279,49 @@ class IDMFConfig(Settings):
             f"The number of requrested contour plots ({contour_number}) cannot exceed the "
             f"number of time samples ({self.time_samples}).")
 
+
+class PhysicalProperties(Settings):
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.agent_molecular_weight_units = AgentMolecularWeightUnits
+        self.agent_molecular_weight = float
+        self.pressure_units = PressureUnits
+        self.pressure = float
+        self.temperature_units = TemperatureUnits
+        self.temperature = float
+
+
+class AgentMolecularWeightUnits(StringSelection):
+    @Terminus.assign
+    def __init__(self, value: str):
+        self.options = [
+            "mol.m-3"
+        ]
+    
+    def check(self):
+        pass
+    
+
+class PressureUnits(StringSelection):
+    @Terminus.assign
+    def __init__(self, value: str):
+        self.options = [
+            "Pa"
+        ]
+    
+    def check(self):
+        pass
+
+
+class TemperatureUnits(StringSelection):
+    @Terminus.assign
+    def __init__(self, value: str):
+        self.options = [
+            "K"
+        ]
+    
+    def check(self):
+        pass
 
 
 

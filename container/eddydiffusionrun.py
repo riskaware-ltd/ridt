@@ -46,7 +46,6 @@ class EddyDiffusionRun:
         self.plot()
         print("Performing data ananlysis...")
         self.analyse()
-        print("\n\n")
 
     @property
     def geometries(self):

@@ -21,7 +21,7 @@ class ResultContainer:
     
     @property
     def unit(self):
-        return getattr(self.units, f"{self.quantity}_si")
+        return getattr(self.units, f"{self.quantity}")
     
 
 class Maximum(ResultContainer):
@@ -46,7 +46,8 @@ class Maximum(ResultContainer):
     
     @property
     def string(self):
-        u = getattr(self.units, f"{self.quantity}_si")
+        u = getattr(self.units, f"{self.quantity}")
+        factor = getattr(self.units, f"{self.quantity}_factor")
         rv = str()
         if self.index:
             t, x, y, z = self.domain.values(self.geometry, self.id, self.index)
@@ -55,7 +56,7 @@ class Maximum(ResultContainer):
             rv += f"x: {x:.2f}{self.units.space}\n"
             rv += f"y: {y:.2f}{self.units.space}\n"
             rv += f"z: {z:.2f}{self.units.space}\n"
-            rv += f"value: {self.value:.2e}{u}\n\n"
+            rv += f"value: {self.value / factor:.2e}{u}\n\n"
         else:
             rv += "None\n\n"
         return rv
@@ -74,9 +75,10 @@ class Maximum(ResultContainer):
     
     @property
     def row(self):
+        factor = getattr(self.units, f"{self.quantity}_factor")
         if self.index:
             t, x, y, z = self.domain.values(self.geometry, self.id, self.index)
-            return [self.id, t, x, y, z, self.value]
+            return [self.id, t, x, y, z, self.value / factor]
         else:
             return [self.id, "None", "None", "None", "None"]
     

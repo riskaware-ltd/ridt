@@ -29,6 +29,7 @@ class LinePlot:
         self.max_val = max_val
         self.axis = self.get_axis()
         self.plot(data)
+        plt.tight_layout()
         self.save_fig()
         plt.close()
 
@@ -41,7 +42,7 @@ class LinePlot:
         plt.ylim(1e-34, self.max_val)
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.d'))
         if self.config.scale == "logarithmic":
-            plt.yscale("log")
+            plt.yscale("symlog")
         plot = plt.plot(self.get_domain(), data)
         return plot
 
@@ -52,7 +53,7 @@ class LinePlot:
         return f"{self.quantity} - {self.id} - {self.domain.time[self.t_index]:.2f}s"
     
     def ylabel(self):
-        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}_si')})"
+        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}')})"
 
     def xlabel(self):
         return f"{self.axis} ({self.units.space})"

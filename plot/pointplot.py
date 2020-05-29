@@ -25,6 +25,7 @@ class PointPlot:
     def __call__(self, id: str, data: ndarray):
         self.id = id 
         self.plot(data)
+        plt.tight_layout()
         self.save_fig()
         plt.clf()
 
@@ -33,7 +34,7 @@ class PointPlot:
         plt.xlabel(self.xlabel())
         plt.ylabel(self.ylabel())
         if self.config.scale == "logarithmic":
-            plt.yscale("log")
+            plt.yscale("symlog")
         plot = plt.plot(self.domain.time, data)
         return plot
 
@@ -44,7 +45,7 @@ class PointPlot:
         return f"{self.quantity} vs time - {self.id}"
 
     def ylabel(self):
-        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}_si')})"
+        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}')})"
 
     def xlabel(self):
         return f"Time ({self.settings.time_units})"
