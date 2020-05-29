@@ -1,3 +1,7 @@
+import sys
+
+import math
+
 from base import Settings
 from base import Terminus
 from base import List
@@ -112,7 +116,7 @@ class IDMFConfig(Settings):
         self.mass_units = MassUnits
 
         self.fresh_air_change_rate_units = FreshAirChangeRateUnits
-        self.fresh_air_change_rate = NonNegativeFloat
+        self.fresh_air_change_rate = PositiveFloat
 
         self.modes = ModeSettings
         self.thresholds = Thresholds
@@ -1041,9 +1045,9 @@ class Dimensions(Settings):
             The values corresponding to the dimensions
             of the container.
         """
-        self.x = NonNegativeFloat
-        self.y = NonNegativeFloat
-        self.z = NonNegativeFloat
+        self.x = PositiveFloat 
+        self.y = PositiveFloat 
+        self.z = PositiveFloat
 
 
 class Length(Number):
@@ -1704,6 +1708,33 @@ class NonNegativeFloat(Number):
             If the value isn't greater than 0.
         """
         self.lower_bound(0.0)
+
+
+class PositiveFloat(Number):
+    """The :class:`~.PositiveFloat` class. It inherits from
+    :class:`~.Number`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: float):
+        """The constructor for the :class:`~.PositiveFloat` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
+        self.type = float
+
+    def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 0.
+        """
+        self.lower_bound(0.0)
+
 
 
 class NonNegativeInteger(Number):
