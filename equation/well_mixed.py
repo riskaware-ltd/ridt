@@ -11,7 +11,8 @@ class WellMixed:
 
     def __init__(self, settings: IDMFConfig):
         self.settings = settings
-        self.volume = settings.models.well_mixed.volume
+        self.dim = self.settings.dimensions
+        self.volume = self.dim.x * self.dim.y * self.dim.z
         self.fa_rate = settings.fresh_air_change_rate
         self.shape = (self.settings.time_samples,)
         self.conc = zeros(self.shape)

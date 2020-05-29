@@ -92,7 +92,7 @@ class ContourPlot:
         return getattr(self.domain, self.yaxis)
     
     def get_figsize(self):
-        dim = self.settings.models.eddy_diffusion.dimensions
+        dim = self.settings.dimensions
         aspect_ratio = getattr(dim, self.xaxis) / getattr(dim, self.yaxis)
         return (8 * aspect_ratio, 6)
 

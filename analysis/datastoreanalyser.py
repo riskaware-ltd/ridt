@@ -110,7 +110,7 @@ class DataStoreAnalyser:
     @property
     def characteristic_diffusion_time(self):
         solver = EddyDiffusion(self.setting)
-        dim = self.setting.models.eddy_diffusion.dimensions
+        dim = self.setting.dimensions
         l = sqrt(dim.x * dim.y * dim.z)
         return {
             "x": dim.x / solver.diff_coeff,

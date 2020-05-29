@@ -11,6 +11,17 @@
     "time_samples": 50,
     "total_time": 100.0,
 
+    "dimensions": {
+        "x": 50.0,
+        "y": 20.0,
+        "z": 3.0
+    },
+    "spatial_samples": {
+        "x": 20,
+        "y": 20,
+        "z": 10 
+    },
+
     "fresh_air_change_rate_units": "m3.s-1",
     "fresh_air_change_rate": 1e-10,
 
@@ -72,16 +83,8 @@
 
     "models":{
         "eddy_diffusion": {
-            "dimensions": {
-                "x": 50.0,
-                "y": 20.0,
-                "z": 3.0
-            },
-            "spatial_samples": {
-                "x": 20,
-                "y": 20,
-                "z": 10 
-            },
+
+
             "coefficient": {
                 "calculation": "TKEB",
                 "value": 0.001,
@@ -184,9 +187,6 @@
                     "max": 1.5
                 }
             }
-        },
-        "well_mixed": {
-            "volume": 3000.0
         }
     }
 }

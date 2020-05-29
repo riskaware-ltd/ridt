@@ -29,9 +29,8 @@ class EddyDiffusion:
 
     def __init__(self, settings: IDMFConfig):
         self.settings = settings
-        self.dim = self.settings.models.eddy_diffusion.dimensions
+        self.dim = self.settings.dimensions
         self.volume = self.dim.x * self.dim.y * self.dim.z
-        samples = self.settings.models.eddy_diffusion.spatial_samples
         self.cumtrapz_kwargs = {
             "axis": 0,
             "initial": 0,

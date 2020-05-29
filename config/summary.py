@@ -8,15 +8,17 @@ def summary(settings: IDMFConfig):
     rv += f"\tWell Mixed: {settings.well_mixed}\n"
     rv += f"\n"
 
+
+
     rv += f"total time: {settings.total_time}{settings.time_units}\n"
+    rv += f"spatial_dimensions:\n"
+    rv += f"\tx: {settings.dimensions.x}\n"
+    rv += f"\ty: {settings.dimensions.y}\n"
+    rv += f"\tz: {settings.dimensions.z}\n"
     rv += f"fresh air change rate: {settings.fresh_air_change_rate}{settings.fresh_air_change_rate_units}\n"
     rv += f"\n"
 
     if settings.eddy_diffusion:
-        rv += f"spatial_dimensions:\n"
-        rv += f"\tx: {settings.models.eddy_diffusion.dimensions.x}\n"
-        rv += f"\ty: {settings.models.eddy_diffusion.dimensions.y}\n"
-        rv += f"\tz: {settings.models.eddy_diffusion.dimensions.z}\n"
         coeff = settings.models.eddy_diffusion.coefficient
         rv += f"\n"
         if coeff.calculation == "TKEB":
@@ -27,7 +29,7 @@ def summary(settings: IDMFConfig):
             rv += f"diffusion coefficient: {coeff.value}\n"
         rv += f"\n"
     if settings.well_mixed:
-        rv += f"well mixed volume: {settings.models.well_mixed.volume} m3\n"
+        rv += f"well mixed volume: {settings.dimensions.x * settings.dimensions.y *  settings.dimensions.z} m3\n"
         rv += f"\n"
 
     rv += "sources\n"

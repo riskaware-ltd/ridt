@@ -103,6 +103,9 @@ class IDMFConfig(Settings):
         self.time_samples = NonNegativeInteger
         self.total_time = NonNegativeFloat
 
+        self.dimensions = Dimensions
+        self.spatial_samples = SpatialSamples
+
         self.spatial_units = SpatialUnits
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
@@ -488,7 +491,6 @@ class ModelSettings(Settings):
             settings configurations.
         """
         self.eddy_diffusion = EddyDiffusion
-        self.well_mixed = WellMixed
 
 
 class ModeSettings(Settings):
@@ -897,8 +899,6 @@ class EddyDiffusion(Settings):
             The values corresponding to the eddy diffusion
             model type.
         """
-        self.dimensions = Dimensions
-        self.spatial_samples = SpatialSamples
         self.monitor_locations = MonitorLocations
         self.coefficient = Coefficient
         self.images = Images
