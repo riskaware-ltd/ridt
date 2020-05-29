@@ -21,11 +21,7 @@
                     "x": 10.0,
                     "y": 3.0,
                     "z": 1.0,
-                    "mass": {
-                        "min": 0.0,
-                        "max": 5.0,
-                        "num": 30 
-                    },
+                    "mass": 1.0,
                     "time": 0.0
                 }
             }
@@ -96,9 +92,8 @@
                 }
             },
             "images": {
-                "mode": "manual",
-                "quantity": 3,
-                "max_error": 1.0
+                "mode": "auto",
+                "quantity": 3
             },
             "analysis": {
                 "percentage_exceedance": 10.0,

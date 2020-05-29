@@ -1271,7 +1271,6 @@ class Images(Settings):
         """
         self.mode = ImageMode
         self.quantity = ImageSourceNumber 
-        self.max_error = Percentage
 
 
 class ImageSourceNumber(Number):

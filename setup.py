@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'click',
         'numpy',
+        'scipy',
         'matplotlib',
         'tqdm'
     ],
