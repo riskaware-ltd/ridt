@@ -1,3 +1,10 @@
+import warnings
+
+import numpy
+
+from typing import List
+from copy import copy
+
 from numpy import ndarray
 from numpy import array
 from numpy import zeros
@@ -13,17 +20,17 @@ from numpy import where
 from numpy import cumsum
 from numpy import clip
 from numpy import square
-from numpy import mean
+from numpy import nanmean
 from numpy import true_divide
 from scipy.integrate import cumtrapz
 
-from typing import List
-from copy import copy
 
 from config import ConfigFileParser
 from config import IDMFConfig
 from config import InstantaneousSource
 
+numpy.seterr(divide='ignore')
+numpy.seterr(invalid='ignore')
 
 class EddyDiffusion:
 
@@ -128,7 +135,7 @@ class EddyDiffusion:
         return rv
     
     def geometric_variance(self, old: ndarray, new: ndarray):
-        return exp(mean(square(log(old)-log(new))))
+        return exp(nanmean(square(log(old)-log(new))))
 
     def coefficient(self, t: ndarray):
         fa_rate = self.settings.fresh_air_change_rate
@@ -148,7 +155,6 @@ class EddyDiffusion:
         else:
             tkeb_term = air_change_rate /\
                 power(self.volume * power(vent_number, 2), 1/3)
-
             if bound == "lower":
                 return 0.827 * tkeb_term + 0.0565
             elif bound == "regression":
