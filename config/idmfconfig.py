@@ -418,7 +418,7 @@ class ConcentrationUnits(StringSelection):
         """
         self.options = [
             "kg.m-3",
-            "g.m-3",
+            "kg.kg-1",
             "mg.m-3",
             "ppm",
             "ppb",

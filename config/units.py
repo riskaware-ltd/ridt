@@ -3,6 +3,7 @@ from typing import Iterable
 from .idmfconfig import IDMFConfig
 
 R = 8.3145 # Universal Gas Constant
+D = 1.292 # Density of air at room temperature kg.m-3
 
 
 class Units:
@@ -23,8 +24,8 @@ class Units:
     def concentration_factor(self):
         if self.concentration == "kg.m-3":
             return 1.0
-        elif self.concentration == "g.m-3":
-            return 1e-3
+        elif self.concentration == "kg.kg-1":
+            return 1 / D
         elif self.concentration == "mg.m-3":
             return 1e-6
         elif self.concentration == "ppm":
@@ -50,4 +51,3 @@ class Units:
 
     def exposure_converter(self, values: Iterable):
         return [v * self.exposure_factor for v in values]
-    
