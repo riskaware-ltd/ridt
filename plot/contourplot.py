@@ -11,7 +11,7 @@ from numpy import linspace
 from numpy import meshgrid
 from numpy.ma import masked_where
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units 
 
 from container import Domain
@@ -27,7 +27,7 @@ from matplotlib import animation
 
 class ContourPlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
+    def __init__(self, settings: RIDTConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
         self.units = Units(settings)

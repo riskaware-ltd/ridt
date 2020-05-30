@@ -3,15 +3,15 @@ from typing import Tuple
 from numpy import linspace
 from numpy import meshgrid
 
-from config.idmfconfig import IDMFConfig
-from config.idmfconfig import Point
-from config.idmfconfig import Line 
-from config.idmfconfig import Plane 
+from config.ridtconfig import RIDTConfig
+from config.ridtconfig import Point
+from config.ridtconfig import Line 
+from config.ridtconfig import Plane 
 
 
 class Domain:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: RIDTConfig):
         self.set = settings
         self.dimensions = self.set.dimensions
         self.space_samples = self.set.spatial_samples

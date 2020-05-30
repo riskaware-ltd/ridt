@@ -3,7 +3,7 @@ import unittest
 import json
 
 from config import ConfigFileParser
-from config.idmfconfig import ConsistencyError
+from config.ridtconfig import ConsistencyError
 from config.configfileparser import ConfigFileParserValidationError
 
 
@@ -16,7 +16,7 @@ class ST02(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class."""
+           :class:`~.RIDTConfig` class."""
 
         self.config_path = "tests/systemtests/st06/config.json"
         with open(self.config_path) as f:
@@ -32,7 +32,7 @@ class ST02(unittest.TestCase):
 
     def test_verify(self):
 
-        """"Verifies that the :class:`~.IDMFConfig` class contains the
+        """"Verifies that the :class:`~.RIDTConfig` class contains the
         monitor locations attributes."""
 
         self.assertEqual(

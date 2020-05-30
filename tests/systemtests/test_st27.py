@@ -8,9 +8,9 @@ import json
 
 from config import ConfigFileParser
 
-from config.idmfconfig import FixedDurationSource
-from config.idmfconfig import InstantaneousSource
-from config.idmfconfig import InfiniteDurationSource
+from config.ridtconfig import FixedDurationSource
+from config.ridtconfig import InstantaneousSource
+from config.ridtconfig import InfiniteDurationSource
 
 
 class ST27(unittest.TestCase):
@@ -45,7 +45,7 @@ class ST27(unittest.TestCase):
     def test_run(self):
         try:
             system(f"{self.virtualenv_path}\Scripts\\activate")
-            system(f"idmf run {self.config_path} {self.output_dir}")
+            system(f"ridt run {self.config_path} {self.output_dir}")
 
             output = False
             if listdir(self.output_dir):
@@ -54,7 +54,7 @@ class ST27(unittest.TestCase):
             self.assertEqual(True, output)
 
         except Exception:
-            print("idmf failure")
+            print("ridt failure")
             self.assertEqual(True, False)
 
     def test_csv_to_config(self):
@@ -66,7 +66,7 @@ class ST27(unittest.TestCase):
             fix = {"x": 1.0, "y": 1.0, "z": 1.0, "rate": 1.0, "start_time": 1.0, "end_time": 2.0}
 
             system(f"{self.virtualenv_path}\Scripts\\activate")
-            system(f"idmf csv-to-config {self.config_path} {self.csv_path}")
+            system(f"ridt csv-to-config {self.config_path} {self.csv_path}")
 
             config = ConfigFileParser("tests/systemtests/st27/new_config.json")
             for mode in modes:

@@ -4,7 +4,7 @@ import json
 from data import BatchDataStore
 from data import DataStore
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 
 class TestBatchDataStore(unittest.TestCase):
@@ -13,13 +13,13 @@ class TestBatchDataStore(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        """setUp method which instantiates the :class:`~.RIDTConfig` class,
         and the :class:`~.BatchDataStore` class."""
 
         with open("default/config.json") as f:
             loaded_json = json.load(f)
 
-        self.config = IDMFConfig(loaded_json)
+        self.config = RIDTConfig(loaded_json)
 
         self.bds = BatchDataStore()
 
@@ -32,5 +32,5 @@ class TestBatchDataStore(unittest.TestCase):
         self.bds.add_run(self.config)
         self.assertEqual(type(self.bds.store), dict)
         for key, val in self.bds.store.items():
-            self.assertEqual(type(key), IDMFConfig)
+            self.assertEqual(type(key), RIDTConfig)
             self.assertEqual(type(val), DataStore)

@@ -5,14 +5,14 @@ from typing import Type
 from base import Error
 from base import SettingErrorMessage
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 
 class ConfigFileParser:
     """The class which handles the configuration file parsing.
 
     This class handles the parsing of configuration files from disk, as well as
-    the instantiation of the :class:`~.IDMFConfig` instances using the parsed
+    the instantiation of the :class:`~.RIDTConfig` instances using the parsed
     data.
 
     Attributes
@@ -60,23 +60,23 @@ class ConfigFileParser:
             raise ConfigFileParserOSError(self.path, e)
 
     def __instantiate_settings(self):
-        """The method which instantiates the :class:`~.IDMFConfig` instances
+        """The method which instantiates the :class:`~.RIDTConfig` instances
         using the parsed data.
 
         Returns
         -------
-        :class:`~.IDMFConfig`
-            The :class:`~.IDMFConfig` instance created using the parsed data.
+        :class:`~.RIDTConfig`
+            The :class:`~.RIDTConfig` instance created using the parsed data.
         
         Raises
         ------
         :class:`~.ConfigFileParserValidationError`
             If any :class:`~.SettingErrorMessage` errors are raised when
-            instantiating the :class:`~.IDMFConfig` class.
+            instantiating the :class:`~.RIDTConfig` class.
 
         """
         try:
-            return IDMFConfig(self.data)
+            return RIDTConfig(self.data)
         except SettingErrorMessage as e:
             raise ConfigFileParserValidationError(self.path, e)
 

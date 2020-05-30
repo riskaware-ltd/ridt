@@ -8,7 +8,7 @@ from numpy import ndarray
 from numpy import savetxt
 from numpy import save
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 from .directoryagent import DirectoryAgent
 
@@ -22,7 +22,7 @@ class DataStoreWriter:
         return instance
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  data_store: DataStore,
                  dir_agent: DirectoryAgent,
                  quantity: str):

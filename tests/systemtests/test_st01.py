@@ -1,7 +1,7 @@
 import unittest
 
 from base import ConsistencyError
-from config import IDMFConfig
+from config import RIDTConfig
 from config import ConfigFileParser
 from config.configfileparser import ConfigFileParserValidationError
 
@@ -33,10 +33,10 @@ class ST01(unittest.TestCase):
     def test_verify(self):
 
         """Verifies that the config file parser outputs a
-        :class:`~.IDMFConfig` class."""
+        :class:`~.RIDTConfig` class."""
 
         self.assertEqual(
-            type(self.c), IDMFConfig
+            type(self.c), RIDTConfig
         )
 
 

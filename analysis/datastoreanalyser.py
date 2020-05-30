@@ -16,7 +16,7 @@ from numpy import nanstd
 from numpy import nanmean
 from numpy import sqrt
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 from container import Domain
@@ -36,7 +36,7 @@ from .resultcontainers import MaxPercentExceedance
 
 class DataStoreAnalyser:
 
-    def __init__(self, setting: IDMFConfig, data_store: DataStore, quantity: str):
+    def __init__(self, setting: RIDTConfig, data_store: DataStore, quantity: str):
 
         self.setting = setting
         self.units = Units(setting)

@@ -19,7 +19,7 @@ class ST12(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class and the
+           :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
         self.directory = "tests/systemtests/st12"

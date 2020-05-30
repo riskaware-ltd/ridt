@@ -13,7 +13,7 @@ class ST08(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-          :class:`~.IDMFConfig` class."""
+          :class:`~.RIDTConfig` class."""
 
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp

@@ -5,7 +5,7 @@ from os.path import join
 from numpy import ndarray
 from numpy import max
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 from container import Domain
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 class PointPlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
+    def __init__(self, settings: RIDTConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
         self.units = Units(settings)

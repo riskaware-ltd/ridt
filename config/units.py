@@ -1,13 +1,13 @@
 from typing import Iterable
 
-from .idmfconfig import IDMFConfig
+from .ridtconfig import RIDTConfig
 
 R = 8.3145 # Universal Gas Constant
 D = 1.292 # Density of air at room temperature kg.m-3
 
 
 class Units:
-    def __init__(self, setting: IDMFConfig):
+    def __init__(self, setting: RIDTConfig):
         self.time = setting.time_units
         self.mass = setting.mass_units
         self.concentration = setting.concentration_units

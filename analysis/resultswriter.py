@@ -15,7 +15,7 @@ from numpy import sqrt
 
 from base import RIDTOSError
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 from config import summary
 
@@ -40,7 +40,7 @@ class ResultsWriter:
 
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  analysis: DataStoreAnalyser,
                  dir_agent: DirectoryAgent,
                  quantity: str):

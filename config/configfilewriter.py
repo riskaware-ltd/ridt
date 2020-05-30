@@ -7,14 +7,14 @@ from typing import Type
 from base import Error
 from base import SettingErrorMessage
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 
 class ConfigFileWriter:
     """The class which handles the configuration file writing.
 
     This class handles the writing of configuration files from disk, as well as
-    the instantiation of the :class:`~.IDMFConfig` instances using the written
+    the instantiation of the :class:`~.RIDTConfig` instances using the written
     data.
 
     Attributes

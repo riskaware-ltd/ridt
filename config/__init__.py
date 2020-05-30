@@ -1,8 +1,8 @@
-from .idmfconfig import IDMFConfig
-from .idmfconfig import Point
-from .idmfconfig import Line
-from .idmfconfig import Plane
-from .idmfconfig import InstantaneousSource
+from .ridtconfig import RIDTConfig
+from .ridtconfig import Point
+from .ridtconfig import Line
+from .ridtconfig import Plane
+from .ridtconfig import InstantaneousSource
 
 from .configfileparser import ConfigFileParser
 from .configfileparser import ConfigFileParserJSONError

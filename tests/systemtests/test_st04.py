@@ -13,13 +13,13 @@ class ST04(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method which instantiates an
-        :class:`~.IDMFConfig` class."""
+        :class:`~.RIDTConfig` class."""
 
         self.c = ConfigFileParser("default/config.json")
 
     def test_verify(self):
 
-        """Verify that the :class:`~.IDMFConfig` class contains
+        """Verify that the :class:`~.RIDTConfig` class contains
         the correct attribute."""
 
         self.assertEqual(

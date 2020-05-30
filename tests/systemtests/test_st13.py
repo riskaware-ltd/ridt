@@ -14,7 +14,7 @@ class ST13(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class and the
+           :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
         self.config_file = "tests/systemtests/st13/config.json"

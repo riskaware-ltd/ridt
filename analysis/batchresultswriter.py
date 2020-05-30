@@ -9,7 +9,7 @@ from typing import Type
 from base import RIDTOSError
 from base import ComputationalSpace
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 from config import summary
 
@@ -23,9 +23,9 @@ FIRST = 0
 class BatchResultsWriter:
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  space: ComputationalSpace,
-                 analysis: Dict[IDMFConfig, DataStoreAnalyser],
+                 analysis: Dict[RIDTConfig, DataStoreAnalyser],
                  outdir: str,
                  quantity: str):
         self.setting = setting

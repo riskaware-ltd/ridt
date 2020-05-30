@@ -15,7 +15,7 @@ from data import DirectoryAgent
 
 from .datastore import DataStore
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 
@@ -30,7 +30,7 @@ class DataStorePlotter:
     def __init__(self,
                  dir_agent: DirectoryAgent,
                  data_store: DataStore,
-                 settings: IDMFConfig,
+                 settings: RIDTConfig,
                  quantity: str) -> None:
 
         units = Units(settings)

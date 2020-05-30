@@ -3,7 +3,7 @@ import json
 
 import numpy as np
 
-from config import IDMFConfig
+from config import RIDTConfig
 from equation import WellMixed
 
 
@@ -13,14 +13,14 @@ class TestWellMixed(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        """setUp method which instantiates the :class:`~.RIDTConfig` class,
         the :class:`~.WellMixed` class, and creates some initial
         variables."""
 
         with open("tests/unittests/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
 
-        self.config = IDMFConfig(loaded_json)
+        self.config = RIDTConfig(loaded_json)
 
         self.wm = WellMixed(self.config)
 

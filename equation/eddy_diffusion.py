@@ -26,7 +26,7 @@ from scipy.integrate import cumtrapz
 
 
 from config import ConfigFileParser
-from config import IDMFConfig
+from config import RIDTConfig
 from config import InstantaneousSource
 
 numpy.seterr(divide='ignore')
@@ -34,7 +34,7 @@ numpy.seterr(invalid='ignore')
 
 class EddyDiffusion:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: RIDTConfig):
         self.settings = settings
         self.dim = self.settings.dimensions
         self.volume = self.dim.x * self.dim.y * self.dim.z

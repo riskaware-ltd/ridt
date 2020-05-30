@@ -18,9 +18,9 @@ def custom_formatwarning(msg, *args, **kwargs):
 
 warnings.formatwarning = custom_formatwarning
 
-class IDMFConfig(Settings):
+class RIDTConfig(Settings):
 
-    """The :class:`~.IDMFConfig` class. It inherits from
+    """The :class:`~.RIDTConfig` class. It inherits from
     :class:`~.Settings`. For information about the behaviour of
     :class:`~..Settings` derived classes, please refer to the :class:`~..Settings`
     documentation.
@@ -86,7 +86,7 @@ class IDMFConfig(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.IDMFConfig` class.
+        """The constructor for the :class:`~.RIDTConfig` class.
 
         Parameters
         ----------
@@ -125,7 +125,7 @@ class IDMFConfig(Settings):
         self.models = ModelSettings
 
     def consistency_check(self):
-        """Checker to be called after instantiating the :class:`~.IDMFConfig` class.
+        """Checker to be called after instantiating the :class:`~.RIDTConfig` class.
         Maintains that certain requirements are met and caught before initializing the run.
         Raises
         ------

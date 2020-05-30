@@ -12,7 +12,7 @@ from numpy import save
 
 from base import RIDTOSError
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 from .directoryagent import DirectoryAgent
@@ -29,7 +29,7 @@ class DataStoreCSVWriter:
         return instance
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  data_store: DataStore,
                  dir_agent: DirectoryAgent,
                  quantity: str):

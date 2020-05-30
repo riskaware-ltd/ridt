@@ -7,7 +7,7 @@ import numpy as np
 from data import DataStoreWriter
 from data import DataStore
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 
 class TestDataStoreWriter(unittest.TestCase):
@@ -28,7 +28,7 @@ class TestDataStoreWriter(unittest.TestCase):
         with open("default/config.json") as f:
             loaded_json = json.load(f)
 
-        self.config = IDMFConfig(loaded_json)
+        self.config = RIDTConfig(loaded_json)
 
         self.ds = DataStore()
         self.space = np.linspace(0, 10, 10)

@@ -16,7 +16,7 @@ class ST16(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class and the
+           :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
         with ConfigFileParser("tests/systemtests/st16/explicit.json") as cfp:

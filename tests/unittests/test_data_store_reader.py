@@ -8,7 +8,7 @@ from data import DataStoreReader
 from data import DataStoreWriter
 from data import DataStore
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 
 class TestDataStoreReader(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestDataStoreReader(unittest.TestCase):
         with open("tests/unittests/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
 
-        self.config = IDMFConfig(loaded_json)
+        self.config = RIDTConfig(loaded_json)
 
         self.ds = DataStore()
         self.space = np.linspace(0, 10, 10)

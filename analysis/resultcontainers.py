@@ -2,12 +2,12 @@ from typing import Tuple
 
 from container import Domain
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 
 class ResultContainer:
-    def __init__(self, setting: IDMFConfig, geometry: str, id: str, quantity: str):
+    def __init__(self, setting: RIDTConfig, geometry: str, id: str, quantity: str):
         self.setting = setting
         self.geometry = geometry
         self.id = id
@@ -27,7 +27,7 @@ class ResultContainer:
 class Maximum(ResultContainer):
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  geometry: str,
                  id: str,
                  quantity: str,
@@ -103,7 +103,7 @@ class Exceedance(ResultContainer):
 
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  geometry: str,
                  id: str,
                  quantity: str,
@@ -173,7 +173,7 @@ class PercentExceedance(ResultContainer):
 
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  geometry: str,
                  id: str,
                  quantity: str,
@@ -239,7 +239,7 @@ class PercentExceedance(ResultContainer):
 class MaxPercentExceedance(ResultContainer):
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  geometry: str,
                  id: str,
                  quantity:str,

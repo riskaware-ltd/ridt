@@ -1,10 +1,10 @@
 from typing import Iterable
 
-from .idmfconfig import IDMFConfig
+from .ridtconfig import RIDTConfig
 from .units import Units
 
 
-def summary(settings: IDMFConfig):
+def summary(settings: RIDTConfig):
     units = Units(settings)
     rv = str()
 

@@ -2,7 +2,7 @@ import unittest
 
 from base import ComputationalSpace
 from config import ConfigFileParser
-from config import IDMFConfig
+from config import RIDTConfig
 
 
 class ST11(unittest.TestCase):
@@ -14,7 +14,7 @@ class ST11(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class and the
+           :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
         with ConfigFileParser("tests/systemtests/st11/config.json") as cfp:
@@ -27,7 +27,7 @@ class ST11(unittest.TestCase):
 
         settings_list = list()
         for setting in self.space.space:
-            if isinstance(setting, IDMFConfig):
+            if isinstance(setting, RIDTConfig):
                 settings_list.append(setting)
         self.assertEqual(len(settings_list) == 9, True)
 
