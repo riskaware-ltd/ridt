@@ -27,6 +27,9 @@ BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 class BatchDataStoreAnalyser:
     """Batch data store analyser class.
 
+    Iterates through a :class:`~.BatchDataStore` instance and runs  the
+    :class:`~.DataStoreAnalyser` and :class:`~.ResultsWriter` classes on them.
+
     Attributes
     ----------
     settings : :class:`~.RIDTConfig`
@@ -66,19 +69,23 @@ class BatchDataStoreAnalyser:
                  space: ComputationalSpace,
                  outdir: str,
                  quantity: str):
-        """The :class:`~.BatchDataStoreAnalyser` class.
+        """The :class:`~.BatchDataStoreAnalyser` class initialiser.
 
         Parameters
         ----------
         settings : :class:`~.RIDTConfig`
             The settings for the run in question.
+
         data_store : :class:`~.BatchDataStore`
             The batch data store to be analysed.
+
         space : :class:`~.ComputationalSpace`
             The :class:`~.ComputationalSpace` instance corresponding to the
             :attr:`settings` attribute.
+
         outdir : :obj:`str`
             The path to the output directory for the run.
+
         quantity : :obj:`str`
             The string id for the quantity stored in the data  store.
 
@@ -97,7 +104,8 @@ class BatchDataStoreAnalyser:
         """The method that loops through the :class:`~.DataStore` instances
 
         and calls the :class:`~.DataStoreAnalyser` and :class:`~.ResultsWriter`
-        classes on them.
+        classes on them. This method will create the relevant subdirectories
+        for output if they do not already exist.
 
         Returns
         -------

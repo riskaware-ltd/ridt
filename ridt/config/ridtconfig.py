@@ -1047,7 +1047,7 @@ class MonitorLocations(Settings):
         self.points = Points
         self.lines = Lines
         self.planes = Planes
-        self.domain = Domain
+        self.domain = FullDomain
     
     def consistency_check(self):
         for item in self.evaluate.keys():
@@ -1573,8 +1573,8 @@ class Planes(Dict):
         self.type = Plane
 
 
-class Domain(Dict):
-    """The :class:`~.Domain` class. It inherits from
+class FullDomain(Dict):
+    """The :class:`~.FullDomain` class. It inherits from
     :class:`~.Dict`.
 
     Attributes
@@ -1584,7 +1584,7 @@ class Domain(Dict):
     """
     @Dict.assign
     def __init__(self, value: bool):
-        """The constructor for the :class:`~.Domain` class.
+        """The constructor for the :class:`~.FullDomain` class.
 
         Parameters
         ----------
