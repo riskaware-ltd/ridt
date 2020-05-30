@@ -12,6 +12,48 @@ from ridt.config import ConfigFileWriter
 
 class CSVToConfigFile:
 
+    """Class which parsed a csv file and adds the entries to a config file.
+
+    The CSV file must be of the following format:
+
+    INS,float,float,float,float,float,
+    INF,float,float,float,float,float,
+    FIX,float,float,float,float,float,float
+    POI,float,float,float,,,
+    LIN,float,float,float,x,,
+    PLA,xy,float,,,,
+
+    Where many of each type of entry can exist.
+
+    INS - instantaneous source.
+    INF - infinite duration source.
+    FIX - fixed duration
+    POI - monitor point
+    LIN - monitor line
+    PLA - monitor plane.
+
+    Attributes
+    ----------
+    csv_file_path : :obj:`str`
+        The path to the csv file to be parsed.
+
+    config_file_path : :obj:`str`
+        The path to the config file to be parsed.
+    
+    output_file_path : :obj:`str`
+        The path to save the new config file.
+    
+    parsed_items : :obj:`dict` [:obj:`str`, :obj:`list`]
+        The items parsed from the CSV file.
+    
+    config : :class:`~.RIDTConfig`
+        The instantiated settings object.
+    
+    new : :obj:`dict`
+        The source dictionary for the old and new settings object.
+
+    """
+
     def __init__(self):
         pass
 
@@ -19,6 +61,20 @@ class CSVToConfigFile:
                  config_file_path: str,
                  csv_file_path: str,
                  output_file_path: str):
+        """The CSVToConfigFile initialiser
+
+        Parameters
+        ----------
+        csv_file_path : :obj:`str`
+            The path to the csv file to be parsed.
+
+        config_file_path : :obj:`str`
+            The path to the config file to be parsed.
+        
+        output_file_path : :obj:`str`
+            The path to save the new config file.
+        
+        """
         self.csv_file_path = csv_file_path
         self.config_file_path = config_file_path
         self.output_file_path = output_file_path
@@ -36,6 +92,16 @@ class CSVToConfigFile:
         self.write_new_config_file()
 
     def parse_csv(self):
+        """Open and parse the entries in the CSV file.
+
+        It adds the items to :attr:`parsed_items`
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileOSError`
+            If the csv file cannot be opened.
+
+        """
         try:
             with open(self.csv_file_path, 'r') as f:
                 c = csv.reader(f, delimiter=",")
@@ -61,6 +127,22 @@ class CSVToConfigFile:
             sys.exit(e)
 
     def add_INS(self):
+        """Add the parsed INS items to the source dictionary :attr:`new`
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileValueError`
+            If the parsed data is of the incorrect type.
+
+        :class:`~.CSVToConfigFileIndexError`    
+            If an incorrect number of items were in a given row parsed from the
+            CSV file.
+
+        """
         for idx, item in enumerate(self.parsed_items["INS"]):
             try:
                 self.new["modes"]\
@@ -79,6 +161,22 @@ class CSVToConfigFile:
                 raise CSVToConfigFileIndexError("INS", self.ord(idx), 5)
 
     def add_INF(self):
+        """Add the parsed INF items to the source dictionary :attr:`new`
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileValueError`
+            If the parsed data is of the incorrect type.
+
+        :class:`~.CSVToConfigFileIndexError`    
+            If an incorrect number of items were in a given row parsed from the
+            CSV file.
+
+        """
         for idx, item in enumerate(self.parsed_items["INF"]):
             try:
                 self.new["modes"]\
@@ -97,6 +195,22 @@ class CSVToConfigFile:
                 raise CSVToConfigFileIndexError("INF", self.ord(idx), 5)
 
     def add_FIX(self):
+        """Add the parsed FIX items to the source dictionary :attr:`new`
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileValueError`
+            If the parsed data is of the incorrect type.
+
+        :class:`~.CSVToConfigFileIndexError`    
+            If an incorrect number of items were in a given row parsed from the
+            CSV file.
+
+        """
         for idx, item in enumerate(self.parsed_items["FIX"]):
             try:
                 self.new["modes"]\
@@ -116,6 +230,22 @@ class CSVToConfigFile:
                 raise CSVToConfigFileIndexError("FIX", self.ord(idx), 6)
     
     def add_POI(self):
+        """Add the parsed POI items to the source dictionary :attr:`new`
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileValueError`
+            If the parsed data is of the incorrect type.
+
+        :class:`~.CSVToConfigFileIndexError`    
+            If an incorrect number of items were in a given row parsed from the
+            CSV file.
+
+        """
         for idx, item in enumerate(self.parsed_items["POI"]):
             try:
                 self.new["models"]\
@@ -134,6 +264,22 @@ class CSVToConfigFile:
  
     
     def add_LIN(self):
+        """Add the parsed LIN items to the source dictionary :attr:`new`
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileValueError`
+            If the parsed data is of the incorrect type.
+            
+        :class:`~.CSVToConfigFileIndexError`    
+            If an incorrect number of items were in a given row parsed from the
+            CSV file.
+
+        """
         for idx, item in enumerate(self.parsed_items["LIN"]):
             try:
                 self.new["models"]\
@@ -155,6 +301,22 @@ class CSVToConfigFile:
 
     
     def add_PLA(self):
+        """Add the parsed PLA items to the source dictionary :attr:`new`
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        :class:`~.CSVToConfigFileValueError`
+            If the parsed data is of the incorrect type.
+
+        :class:`~.CSVToConfigFileIndexError`    
+            If an incorrect number of items were in a given row parsed from the
+            CSV file.
+
+        """
         for idx, item in enumerate(self.parsed_items["PLA"]):
             try:
                 self.new["models"]\
@@ -178,11 +340,37 @@ class CSVToConfigFile:
         
         ConfigFileWriter(dirname(path), basename(path), self.new)
 
-    def ord(self, n):
+    def ord(self, n: int):
+        """Returns the correct order suffix for a given integer.
+
+        Parameters
+        ----------
+        n : :obj:`int`
+            The integer in question.
+
+        Returns
+        -------
+        :obj:`str`
+            The order suffix.
+            
+        """
         return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}\
             .get(n%10, "th"))
 
-    def append_id(self, filename):
+    def append_id(self, filename: str):
+        """Add a 'new' suffix to the file name before the file extension.
+
+        Parameters
+        ----------
+        filename : :obj:`str`
+            The file name to be extended.
+
+        Returns
+        -------
+        :obj:`str`
+            The new file name.
+
+        """
         return "{0}_{2}.{1}".format(*filename.rsplit('.', 1) + ["new"]) 
 
     def __enter__(self):
