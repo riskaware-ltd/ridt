@@ -1,6 +1,9 @@
+import math
+
 from os.path import join
 
 from numpy import ndarray
+from numpy import max
 
 from config import IDMFConfig
 from config import Units
@@ -33,9 +36,13 @@ class PointPlot:
         plt.title(self.title())
         plt.xlabel(self.xlabel())
         plt.ylabel(self.ylabel())
+        if min(data) > 0.0:
+            pass
+        else:
+            plt.ylim(1e-34, 1**(int(math.log10(max(data))) + 1))
         if self.config.scale == "logarithmic":
-            plt.yscale("symlog")
-        plot = plt.plot(self.domain.time, data)
+            plt.yscale("log")
+        plot = plt.plot(self.domain.time, data, marker='.')
         return plot
 
     def save_fig(self):

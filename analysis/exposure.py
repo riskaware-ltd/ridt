@@ -1,6 +1,7 @@
 from typing import Union
 
 from numpy import cumsum
+from scipy.integrate import cumtrapz
 from numpy import ndarray
 
 from config import IDMFConfig
@@ -26,7 +27,7 @@ class Exposure:
         return [g for g, e in locations.evaluate.items() if e]
 
     def compute(self, data: ndarray):
-        return cumsum(data, axis=0) * self.delta_t
+        return cumtrapz(data, dx=self.delta_t, axis=0, initial=0)
 
     def evaluate(self, data_store: DataStore):
         if isinstance(data_store, DataStore):

@@ -30,7 +30,7 @@ class TestDomain(unittest.TestCase):
 
         points = self.config.models.eddy_diffusion.monitor_locations.points
         for point in points.values():
-            for array in self.domain.point(point):
+            for array in self.domain.points(point):
                 self.assertEqual(type(array), np.ndarray)
 
     def test_line(self):
@@ -40,7 +40,7 @@ class TestDomain(unittest.TestCase):
 
         lines = self.config.models.eddy_diffusion.monitor_locations.lines
         for line in lines.values():
-            for array in self.domain.line(line):
+            for array in self.domain.lines(line):
                 self.assertEqual(type(array), np.ndarray)
 
     def test_plane(self):
@@ -50,5 +50,5 @@ class TestDomain(unittest.TestCase):
 
         planes = self.config.models.eddy_diffusion.monitor_locations.planes
         for plane in planes.values():
-            for array in self.domain.plane(plane):
+            for array in self.domain.planes(plane):
                 self.assertEqual(type(array), np.ndarray)

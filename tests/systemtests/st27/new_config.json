@@ -118,16 +118,6 @@
     },
     "models": {
         "eddy_diffusion": {
-            "dimensions": {
-                "x": 50.0,
-                "y": 20.0,
-                "z": 3.0
-            },
-            "spatial_samples": {
-                "x": 20,
-                "y": 20,
-                "z": 20
-            },
             "coefficient": {
                 "calculation": "EXPLICIT",
                 "value": 0.001,
@@ -139,8 +129,7 @@
             },
             "images": {
                 "mode": "manual",
-                "quantity": 3,
-                "max_error": 1.0
+                "quantity": 3
             },
             "analysis": {
                 "percentage_exceedance": 10.0,
@@ -243,9 +232,24 @@
                     "max": 1.5
                 }
             }
-        },
-        "well_mixed": {
-            "volume": 3000.0
         }
+    },
+    "spatial_samples": {
+        "x": 20,
+        "y": 20,
+        "z": 20
+    },
+    "dimensions": {
+        "x": 50.0,
+        "y": 20.0,
+        "z": 3.0
+    },
+    "physical_properties": {
+        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight": 1.0,
+        "pressure_units": "Pa",
+        "pressure": 1.0,
+        "temperature_units": "K",
+        "temperature": 273.0
     }
 }

@@ -1,5 +1,6 @@
 import unittest
 
+from base import ConsistencyError
 from config import IDMFConfig
 from config import ConfigFileParser
 from config.configfileparser import ConfigFileParserValidationError
@@ -26,7 +27,7 @@ class ST01(unittest.TestCase):
         an error in a certain circumstance."""
 
         self.c.consistency_check()
-        with self.assertRaises(ConfigFileParserValidationError):
+        with self.assertRaises(ConsistencyError):
             ConfigFileParser("tests/systemtests/st01/error_config.json")
 
     def test_verify(self):

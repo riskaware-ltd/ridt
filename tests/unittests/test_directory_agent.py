@@ -20,17 +20,3 @@ class TestDirectoryAgent(unittest.TestCase):
         self.run_index = 3
         self.shape = (5, 5)
         self.da = DirectoryAgent(self.outdir, self.shape)
-
-    def test_build_rundir_path(self):
-        self.assertEqual(
-            self.da.build_rundir_path(self.run_index),
-            "tests/unittests/test_resources/directoryagent\[0, 3]"
-        )
-
-    def test_create_run_dir(self):
-        self.da.create_rundir(self.run_index)
-        dir_list = os.listdir(self.outdir)
-        self.assertIn("[0, 3]", dir_list)
-        for item in dir_list:
-            path = os.path.join(self.outdir, item)
-            os.rmdir(path)

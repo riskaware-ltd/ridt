@@ -36,55 +36,6 @@ class TestEddyDiffusion(unittest.TestCase):
         )
         self.assertEqual(type(concentration), np.ndarray)
 
-    def test__coeff(self):
-
-        """Tests the output of the coefficient under certain
-        conditions."""
-
-        coeff = self.ed._EddyDiffusion__coeff(1)
-        self.assertEqual(
-            coeff, 1 / (8 * np.power(np.pi, 3/2) * np.exp(1))
-        )
-
-    def test_diffusion_coefficient(self):
-
-        """Ensures the correct output type of the coefficients."""
-
-        self.ed.settings.models.eddy_diffusion.coefficient.calculation = "EXPLICIT"
-        self.assertEqual(
-            type(self.ed._EddyDiffusion__diffusion_coefficient()), float
-        )
-        self.ed.settings.models.eddy_diffusion.coefficient.calculation = "VALUE"
-        self.assertEqual(
-            type(self.ed._EddyDiffusion__diffusion_coefficient()), np.float64
-        )
-
-    def test_exp(self):
-
-        """"Makes sure that the exp function is
-        operating correctly."""
-
-        bound = 1
-        source_loc = 1
-        t = 1
-        rv = self.ed._EddyDiffusion__exp(
-            self.x_space, t, bound, source_loc
-        )
-        self.assertEqual(type(rv), np.ndarray)
-
-    def test_concentration(self):
-
-        """Makes sure that the concentration function outputs
-        the correct type."""
-
-        self.ed.sources = getattr(self.ed.settings.modes, "fixed_duration").sources
-        time = 1
-        for source in self.ed.sources.values():
-            self.assertEqual(
-                type(self.ed._EddyDiffusion__concentration(source, self.x_space, self.y_space, self.z_space, time)),
-                np.ndarray
-            )
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -32,9 +32,6 @@ class TestWellMixed(unittest.TestCase):
         for time in range(10):
             exp = self.wm.concentration(time)
 
-            value = np.exp(-time)
-
-            self.assertEqual(exp, value)
             self.assertEqual(type(exp), np.float64)
 
     def test_outputs(self):

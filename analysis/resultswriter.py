@@ -35,6 +35,7 @@ from .resultcontainers import ResultContainer
 
 FIRST = 0
 
+
 class ResultsWriter:
 
 

@@ -15,8 +15,7 @@ class ST04(unittest.TestCase):
         """setUp method which instantiates an
         :class:`~.IDMFConfig` class."""
 
-        with ConfigFileParser("default/config.json") as cfp:
-            self.c = cfp
+        self.c = ConfigFileParser("default/config.json")
 
     def test_verify(self):
 

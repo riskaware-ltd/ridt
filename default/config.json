@@ -2,7 +2,7 @@
     "eddy_diffusion": true,
     "well_mixed": true,
 
-    "concentration_units": "ppm",
+    "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
 
@@ -170,18 +170,18 @@
                 }
             },
             "points_plots": {
-                "output": false,
+                "output": true,
                 "scale": "logarithmic",
-                "number": 10
+                "number": 3
             },
             "lines_plots": {
-                "output": false,
+                "output": true,
                 "scale": "logarithmic",
                 "animate": true,
-                "number": 50
+                "number": 3 
             },
             "planes_plots": {
-                "output": false,
+                "output": true,
                 "concentration": true,
                 "exposure": true,
                 "animate": true,

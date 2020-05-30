@@ -1,6 +1,9 @@
+import math
+
 from os.path import join
 
 from numpy import ndarray
+from numpy import power
 
 from config import IDMFConfig
 from config import Units
@@ -39,11 +42,12 @@ class LinePlot:
         plt.xlabel(self.xlabel())
         plt.ylabel(self.ylabel())
 
-        plt.ylim(1e-34, self.max_val)
+        plt.ylim(1e-34, 1**(int(math.log10(self.max_val)) + 1))
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.d'))
         if self.config.scale == "logarithmic":
-            plt.yscale("symlog")
-        plot = plt.plot(self.get_domain(), data)
+            plt.yscale("log")
+
+        plot = plt.plot(self.get_domain(), data, marker='.')
         return plot
 
     def save_fig(self):

@@ -29,9 +29,6 @@ class ST08(unittest.TestCase):
         self.assertEqual(
             hasattr(self.c.models.eddy_diffusion.images, "quantity"), True
         )
-        self.assertEqual(
-            hasattr(self.c.models.eddy_diffusion.images, "max_error"), True
-        )
 
 
 if __name__ == "__main__":

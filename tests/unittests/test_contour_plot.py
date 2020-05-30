@@ -24,7 +24,7 @@ class TestContourPlot(unittest.TestCase):
 
         self.config = IDMFConfig(loaded_json)
 
-        self.cp = ContourPlot(self.config, "tests/unittests/test_resources")
+        self.cp = ContourPlot(self.config, "tests/unittests/test_resources", "concentration")
 
         self.time_array = np.linspace(0, 10, 10)
         self.x_array = np.linspace(0, 10, 10)
@@ -40,25 +40,6 @@ class TestContourPlot(unittest.TestCase):
         for file in resource_list:
             if file.endswith(".pdf"):
                 os.remove(f"tests/unittests/test_resources/{file}")
-
-    def test_plot(self):
-
-        """tests the plots to make sure that is plot is
-        of type :class:`~.QuadContourSet.`"""
-
-        for plane in self.planes.values():
-            plot = self.cp.plot(self.conc, plane)
-            self.assertEqual(type(plot), QuadContourSet)
-
-    def test_make_title(self):
-
-        """tests to make sure that the title
-        is of type :obj:`str`."""
-
-        for plane in self.planes.values():
-            title = self.cp.make_title(plane)
-            self.assertEqual(type(title), str)
-
 
 if __name__ == "__main__":
     unittest.main()

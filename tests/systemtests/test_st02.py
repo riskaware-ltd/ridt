@@ -85,11 +85,11 @@ class ST02(unittest.TestCase):
         triggers if the line does not lie in the bounds of the container
         or is not parallel to one of the principle axes."""
 
-        with self.assertRaises(ConfigFileParserValidationError):
+        with self.assertRaises(ConsistencyError):
             with open(self.config_path) as f:
                 config = json.load(f)
             for lines in config["models"]["eddy_diffusion"]["monitor_locations"]["lines"].values():
-                lines["point"]["x"] = config["models"]["eddy_diffusion"]["dimensions"]["x"] + 1
+                lines["point"]["x"] = config["dimensions"]["x"] + 1
             with open(self.config_path, "w") as f:
                 json.dump(config, f)
             ConfigFileParser(self.config_path)
@@ -114,11 +114,11 @@ class ST02(unittest.TestCase):
         """Checks to see if the :class:`.ConsistencyError` error
         triggers if the point does not lie in the bounds of the container."""
 
-        with self.assertRaises(ConfigFileParserValidationError):
+        with self.assertRaises(ConsistencyError):
             with open(self.config_path) as f:
                 config = json.load(f)
             for points in config["models"]["eddy_diffusion"]["monitor_locations"]["points"].values():
-                points["x"] = config["models"]["eddy_diffusion"]["dimensions"]["x"] + 1
+                points["x"] = config["dimensions"]["x"] + 1
             with open(self.config_path, "w") as f:
                 json.dump(config, f)
             ConfigFileParser(self.config_path)
@@ -142,12 +142,12 @@ class ST02(unittest.TestCase):
         """Checks to see if the :class:`.ConsistencyError` error
         triggers if a plane lies outside of the bounds of the container."""
 
-        with self.assertRaises(ConfigFileParserValidationError):
+        with self.assertRaises(ConsistencyError):
             with open(self.config_path) as f:
                 config = json.load(f)
             for planes in config["models"]["eddy_diffusion"]["monitor_locations"]["planes"].values():
                 axis = [x for x in ["x", "y", "z"] if x not in list(planes["axis"])]
-                planes["distance"] = config["models"]["eddy_diffusion"]["dimensions"][axis[0]] + 1
+                planes["distance"] = config["dimensions"][axis[0]] + 1
             with open(self.config_path, "w") as f:
                 json.dump(config, f)
             ConfigFileParser(self.config_path)

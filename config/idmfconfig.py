@@ -172,16 +172,10 @@ class IDMFConfig(Settings):
         ValueError
             If the spatial units are not mm, cm, m.
         """
-        
-        dim = self.models.eddy_diffusion.dimensions
-        if dim.x * dim.y * dim.z != self.models.well_mixed.volume:
-            warnings.warn(
-                "The calculated volume for the eddy diffusion model is "
-                "different from the volume specified in the well mixed model.")
 
         for mode in ["instantaneous", "infinite_duration", "fixed_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
-                dim = self.models.eddy_diffusion.dimensions
+                dim = self.dimensions
                 for axis in ["x", "y", "z"]:
                     par = getattr(value, axis)
                     bound = getattr(dim, axis)
@@ -235,6 +229,30 @@ class IDMFConfig(Settings):
                     raise ConsistencyError(
                 f"{mode} source {key} end time is "
                 f"outside time domain [0, {self.total_time}).")
+        
+        dims = ["x", "y", "z"]
+        for plane in self.models.eddy_diffusion.monitor_locations.planes.values():
+            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
+            if isinstance(plane.distance, list):
+                if max(plane.distance) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(f"{plane} is outside the space domain")
+            else:
+                if plane.distance > getattr(self.dimensions, dim):
+                    raise ConsistencyError(f"{plane} is outside the space domain")
+
+        for key, point in self.models.eddy_diffusion.monitor_locations.points.items():
+            for dim in dims:
+                if getattr(point, dim) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(
+                f"{key}'s {dim} value, is outside space domain "
+                f"(0, {getattr(self.dimensions, dim)})")
+
+        for key, line in self.models.eddy_diffusion.monitor_locations.lines.items():
+            for dim in dims:
+                if getattr(line.point, dim) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(
+                f"{key}'s {dim} value, is outside space domain "
+                f"(0, {getattr(self.dimensions, dim)})")
 
         thresh = self.thresholds
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
@@ -955,30 +973,6 @@ class EddyDiffusion(Settings):
         self.lines_plots = LinePlots
         self.points_plots = PointPlots
 
-    def consistency_check(self):
-        dims = ["x", "y", "z"]
-        for plane in self.monitor_locations.planes.values():
-            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
-            if isinstance(plane.distance, list):
-                if max(plane.distance) > getattr(self.dimensions, dim):
-                    raise ConsistencyError(f"{plane} is outside the space domain")
-            else:
-                if plane.distance > getattr(self.dimensions, dim):
-                    raise ConsistencyError(f"{plane} is outside the space domain")
-
-        for key, point in self.monitor_locations.points.items():
-            for dim in dims:
-                if getattr(point, dim) > getattr(self.dimensions, dim):
-                    raise ConsistencyError(
-                f"{key}'s {dim} value, is outside space domain "
-                f"(0, {getattr(self.dimensions, dim)})")
-
-        for key, line in self.monitor_locations.lines.items():
-            for dim in dims:
-                if getattr(line.point, dim) > getattr(self.dimensions, dim):
-                    raise ConsistencyError(
-                f"{key}'s {dim} value, is outside space domain "
-                f"(0, {getattr(self.dimensions, dim)})")
 
 class AnalysisSettings(Settings):
     @Settings.assign

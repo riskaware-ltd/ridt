@@ -1,22 +1,18 @@
 {
     "eddy_diffusion": true,
     "well_mixed": true,
-
     "spatial_units": "m",
     "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
-
     "time_units": "s",
     "time_samples": 50,
     "total_time": 100.0,
-
     "fresh_air_change_rate_units": "m3.s-1",
     "fresh_air_change_rate": 1e-10,
-
     "modes": {
         "instantaneous": {
-            "sources":{
+            "sources": {
                 "source_1": {
                     "x": 10.0,
                     "y": 3.0,
@@ -30,7 +26,6 @@
                 }
             }
         },
-
         "infinite_duration": {
             "sources": {
                 "source_1": {
@@ -42,7 +37,6 @@
                 }
             }
         },
-
         "fixed_duration": {
             "sources": {
                 "source_1": {
@@ -56,36 +50,24 @@
             }
         }
     },
-
     "thresholds": {
         "concentration": [
             1e-10,
-            1e-5,
-            1e-2,
-            1e-1,
+            1e-05,
+            0.01,
+            0.1,
             1.0
         ],
         "exposure": [
             1e-10,
-            1e-5,
-            1e-2,
-            1e-1,
+            1e-05,
+            0.01,
+            0.1,
             1.0
         ]
     },
-
-    "models":{
+    "models": {
         "eddy_diffusion": {
-            "dimensions": {
-                "x": 50.0,
-                "y": 20.0,
-                "z": 3.0
-            },
-            "spatial_samples": {
-                "x": 20,
-                "y": 20,
-                "z": 10 
-            },
             "coefficient": {
                 "calculation": "TKEB",
                 "value": 0.001,
@@ -97,8 +79,7 @@
             },
             "images": {
                 "mode": "manual",
-                "quantity": 3,
-                "max_error": 1.0
+                "quantity": 3
             },
             "analysis": {
                 "percentage_exceedance": 10.0,
@@ -109,7 +90,7 @@
                     "points": true,
                     "lines": true,
                     "planes": true,
-                    "domain": false 
+                    "domain": false
                 },
                 "points": {
                     "point_1": {
@@ -133,7 +114,7 @@
                         "point": {
                             "x": 10.0,
                             "y": 5.0,
-                            "z": 1.0 
+                            "z": 1.0
                         },
                         "parallel_axis": "x"
                     },
@@ -141,7 +122,7 @@
                         "point": {
                             "x": 10.0,
                             "y": 10.0,
-                            "z": 1.0 
+                            "z": 1.0
                         },
                         "parallel_axis": "x"
                     },
@@ -149,7 +130,7 @@
                         "point": {
                             "x": 10.0,
                             "y": 15.0,
-                            "z": 1.0 
+                            "z": 1.0
                         },
                         "parallel_axis": "x"
                     }
@@ -161,7 +142,7 @@
                     }
                 },
                 "domain": {
-                    "domain": true 
+                    "domain": true
                 }
             },
             "points_plots": {
@@ -189,9 +170,24 @@
                     "max": 1.5
                 }
             }
-        },
-        "well_mixed": {
-            "volume": 3000.0
         }
+    },
+    "spatial_samples": {
+        "x": 20,
+        "y": 20,
+        "z": 10
+    },
+    "dimensions": {
+        "x": 50.0,
+        "y": 20.0,
+        "z": 3.0
+    },
+    "physical_properties": {
+        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight": 1.0,
+        "pressure_units": "Pa",
+        "pressure": 1.0,
+        "temperature_units": "K",
+        "temperature": 273.0
     }
 }

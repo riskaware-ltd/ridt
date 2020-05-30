@@ -14,6 +14,15 @@
     "fresh_air_change_rate_units": "m3.s-1",
     "fresh_air_change_rate": 1e-10,
 
+    "physical_properties": {
+        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight": 1.0,
+        "pressure_units": "Pa",
+        "pressure": 1.0,
+        "temperature_units": "K",
+        "temperature": 273.0
+    },
+
     "modes": {
         "instantaneous": {
             "sources":{
@@ -74,18 +83,19 @@
         ]
     },
 
+    "dimensions": {
+        "x": 50.0,
+        "y": 20.0,
+        "z": 3.0
+    },
+    "spatial_samples": {
+        "x": 20,
+        "y": 20,
+        "z": 10
+    },
+
     "models":{
         "eddy_diffusion": {
-            "dimensions": {
-                "x": 50.0,
-                "y": 20.0,
-                "z": 3.0
-            },
-            "spatial_samples": {
-                "x": 20,
-                "y": 20,
-                "z": 10
-            },
             "coefficient": {
                 "calculation": "EXPLICIT",
                 "value": 0.001,

@@ -51,14 +51,14 @@ class ST17(unittest.TestCase):
             for line_name, line in val.lines.items():
                 monitor = self.c.models.eddy_diffusion.monitor_locations.lines[line_name]
                 axis = getattr(monitor, "parallel_axis")
-                shape = (self.c.time_samples, getattr(self.c.models.eddy_diffusion.spatial_samples, axis))
+                shape = (self.c.time_samples, getattr(self.c.spatial_samples, axis))
                 self.assertEqual(line.shape, shape)
             for plane_name, plane in val.planes.items():
                 monitor = self.c.models.eddy_diffusion.monitor_locations.planes[plane_name]
                 axis = getattr(monitor, "axis")
                 shape = [self.c.time_samples, 0, 0]
                 for i, dim in enumerate(list(axis)):
-                    shape[i + 1] = getattr(self.c.models.eddy_diffusion.spatial_samples, dim)
+                    shape[i + 1] = getattr(self.c.spatial_samples, dim)
                 shape = tuple(shape)
                 self.assertEqual(plane.shape, shape)
 
