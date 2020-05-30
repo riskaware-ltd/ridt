@@ -1,6 +1,6 @@
 from base import Error
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 from .datastore import DataStore
 
@@ -10,7 +10,7 @@ class BatchDataStore:
     def __init__(self):
         self.store = dict()
 
-    def add_run(self, setting: IDMFConfig):
+    def add_run(self, setting: RIDTConfig):
         if setting not in self.store:
             self.store[setting] = DataStore()
         else:
@@ -26,13 +26,13 @@ class BatchDataStore:
     def items(self):
         return self.store.items()
 
-    def __getitem__(self, setting: IDMFConfig) -> DataStore:
+    def __getitem__(self, setting: RIDTConfig) -> DataStore:
         try:
             return self.store[setting]
         except KeyError as e:
             raise BatchDataStoreIDError(setting)
 
-    def __setitem__(self, setting: IDMFConfig, value: DataStore):
+    def __setitem__(self, setting: RIDTConfig, value: DataStore):
         if not isinstance(value, DataStore):
             raise BatchDataStoreValueError()
         try:
@@ -46,7 +46,7 @@ class BatchDataStoreIDError(Error):
     it does not recognise.
 
     """
-    def __init__(self, setting: IDMFConfig):
+    def __init__(self, setting: RIDTConfig):
         """The constructor for the :class:`BatchDataStoreIDError` class.
 
         """

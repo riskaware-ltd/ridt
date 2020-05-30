@@ -12,11 +12,11 @@ from numpy import where
 from numpy import max
 from numpy import argmax
 from numpy import unravel_index
-from numpy import std
-from numpy import mean
+from numpy import nanstd
+from numpy import nanmean
 from numpy import sqrt
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 from container import Domain
@@ -36,7 +36,7 @@ from .resultcontainers import MaxPercentExceedance
 
 class DataStoreAnalyser:
 
-    def __init__(self, setting: IDMFConfig, data_store: DataStore, quantity: str):
+    def __init__(self, setting: RIDTConfig, data_store: DataStore, quantity: str):
 
         self.setting = setting
         self.units = Units(setting)
@@ -93,28 +93,12 @@ class DataStoreAnalyser:
                 data = um.mask(geometry, id, new_data_store.get(geometry, id))
                 new_data_store.add(geometry, id, data)
         self.data_store = new_data_store
-        
+
     @property
-    def evaluate_time_to_well_mixed(self):
+    def time_to_well_mixed(self):
         for i in range(self.setting.time_samples):
-            d = self.conc_data.domain[i, :, :, :]
-            value = std(d) / mean(d)
+            d = self.data_store.domain["domain"][i, :, :, :]
+            value = nanstd(d) / nanmean(d)
             if value <= 0.1:
                 return self.domain.time[i]
         return None
-
-    @property
-    def steady_state_well_mixed_concentration(self):
-        pass
-
-    @property
-    def characteristic_diffusion_time(self):
-        solver = EddyDiffusion(self.setting)
-        dim = self.setting.models.eddy_diffusion.dimensions
-        l = sqrt(dim.x * dim.y * dim.z)
-        return {
-            "x": dim.x / solver.diff_coeff,
-            "y": dim.y / solver.diff_coeff,
-            "z": dim.z / solver.diff_coeff,
-            "v": l / solver.diff_coeff
-        }

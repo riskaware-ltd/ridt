@@ -1,8 +1,11 @@
+import math
+
 from os.path import join
 
 from numpy import ndarray
+from numpy import power
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 from container import Domain
@@ -15,7 +18,7 @@ from matplotlib import animation
 
 class LinePlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
+    def __init__(self, settings: RIDTConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
         self.units = Units(settings)
@@ -29,6 +32,7 @@ class LinePlot:
         self.max_val = max_val
         self.axis = self.get_axis()
         self.plot(data)
+        plt.tight_layout()
         self.save_fig()
         plt.close()
 
@@ -38,11 +42,12 @@ class LinePlot:
         plt.xlabel(self.xlabel())
         plt.ylabel(self.ylabel())
 
-        plt.ylim(1e-34, self.max_val)
+        plt.ylim(1e-34, 1**(int(math.log10(self.max_val)) + 1))
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.d'))
         if self.config.scale == "logarithmic":
             plt.yscale("log")
-        plot = plt.plot(self.get_domain(), data)
+
+        plot = plt.plot(self.get_domain(), data, marker='.')
         return plot
 
     def save_fig(self):
@@ -52,7 +57,7 @@ class LinePlot:
         return f"{self.quantity} - {self.id} - {self.domain.time[self.t_index]:.2f}s"
     
     def ylabel(self):
-        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}_si')})"
+        return f"{self.quantity} ({getattr(self.units, f'{self.quantity}')})"
 
     def xlabel(self):
         return f"{self.axis} ({self.units.space})"

@@ -670,6 +670,35 @@ class Number(Terminus):
                 raise ValueError(f"must be <= {value}")
             if self.value["max"] > value:
                 raise ValueError(f"must be <= {value}")
+    
+    def lower_bound_exclusive(self, value):
+        if isinstance(self.value, self.type):
+            if self.value <= value:
+                raise ValueError(f"must be > {value}")
+        elif isinstance(self.value, list):
+            for item in self.value:
+                if item <= value:
+                    raise ValueError(f"must be > {value}")
+        elif isinstance(self.value, dict):
+            if self.value["min"] <= value:
+                raise ValueError(f"must be > {value}")
+            if self.value["max"] <= value:
+                raise ValueError(f"must be > {value}")
+    
+    def upper_bound_exclusive(self, value):
+        if isinstance(self.value, self.type):
+            if self.value >= value:
+                raise ValueError(f"must be < {value}")
+        elif isinstance(self.value, list):
+            for item in self.value:
+                if item >= value:
+                    raise ValueError(f"must be < {value}")
+        elif isinstance(self.value, dict):
+            if self.value["min"] >= value:
+                raise ValueError(f"must be < {value}")
+            if self.value["max"] >= value:
+                raise ValueError(f"must be < {value}")
+ 
 
 
 class ComputationalSpace:

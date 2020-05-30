@@ -3,7 +3,7 @@ import json
 
 import numpy as np
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 from container import Domain
 
@@ -14,13 +14,13 @@ class TestDomain(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        """setUp method which instantiates the :class:`~.RIDTConfig` class,
         and the :class:`~.Domain` class."""
 
         with open("default/config.json") as f:
             loaded_json = json.load(f)
 
-        self.config = IDMFConfig(loaded_json)
+        self.config = RIDTConfig(loaded_json)
         self.domain = Domain(self.config)
 
     def test_point(self):
@@ -30,7 +30,7 @@ class TestDomain(unittest.TestCase):
 
         points = self.config.models.eddy_diffusion.monitor_locations.points
         for point in points.values():
-            for array in self.domain.point(point):
+            for array in self.domain.points(point):
                 self.assertEqual(type(array), np.ndarray)
 
     def test_line(self):
@@ -40,7 +40,7 @@ class TestDomain(unittest.TestCase):
 
         lines = self.config.models.eddy_diffusion.monitor_locations.lines
         for line in lines.values():
-            for array in self.domain.line(line):
+            for array in self.domain.lines(line):
                 self.assertEqual(type(array), np.ndarray)
 
     def test_plane(self):
@@ -50,5 +50,5 @@ class TestDomain(unittest.TestCase):
 
         planes = self.config.models.eddy_diffusion.monitor_locations.planes
         for plane in planes.values():
-            for array in self.domain.plane(plane):
+            for array in self.domain.planes(plane):
                 self.assertEqual(type(array), np.ndarray)

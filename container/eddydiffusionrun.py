@@ -8,7 +8,7 @@ from numpy import squeeze
 
 from base import ComputationalSpace
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 from equation import EddyDiffusion
 
@@ -28,7 +28,7 @@ geometries = []
 
 class EddyDiffusionRun:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str):
+    def __init__(self, settings: RIDTConfig, output_dir: str):
 
         print("Preparing Eddy Diffusion run...")
         self.settings = settings
@@ -46,7 +46,6 @@ class EddyDiffusionRun:
         self.plot()
         print("Performing data ananlysis...")
         self.analyse()
-        print("\n\n")
 
     @property
     def geometries(self):
@@ -61,7 +60,7 @@ class EddyDiffusionRun:
         for setting in tqdm(self.space.space, bar_format=BF):
             self.run(setting)
 
-    def run(self, setting: IDMFConfig):
+    def run(self, setting: RIDTConfig):
 
         self.data_store.add_run(setting)
 

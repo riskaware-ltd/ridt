@@ -11,13 +11,17 @@ from typing import List
 from typing import Iterable
 from typing import Type
 
+from numpy import sqrt
+
 from base import RIDTOSError
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 from config import summary
 
 from container import Domain
+
+from equation import EddyDiffusion
 
 from data import DirectoryAgent
 
@@ -31,11 +35,12 @@ from .resultcontainers import ResultContainer
 
 FIRST = 0
 
+
 class ResultsWriter:
 
 
     def __init__(self,
-                 setting: IDMFConfig,
+                 setting: RIDTConfig,
                  analysis: DataStoreAnalyser,
                  dir_agent: DirectoryAgent,
                  quantity: str):
@@ -154,10 +159,38 @@ class ResultsWriter:
              f = open(join(self.dir_agent.outdir, "run_summary.txt"), 'w')
         except OSError as e:
             raise RIDTOSError(e)
-
+    
+        char_diff = self.characteristic_diffusion_time
+        f.write("Characteristic diffusion times:\n")
+        f.write(f"\tx: {char_diff['x']:.2f}{self.setting.time_units}\n")
+        f.write(f"\ty: {char_diff['y']:.2f}{self.setting.time_units}\n")
+        f.write(f"\tz: {char_diff['z']:.2f}{self.setting.time_units}\n")
+        f.write(f"\tsqrt(V): {char_diff['v']:.2f}{self.setting.time_units}\n")
+        f.write("\n")
+        if self.setting.models.eddy_diffusion.monitor_locations.evaluate["domain"]:
+            ttwm = self.analysis.time_to_well_mixed
+            if ttwm:
+                value =  f"{ttwm:.2f}{self.setting.time_units}\n"
+            else:
+                value = "not within lifetime of simulation\n"
+        else:
+            value = "domain data not available\n"
+        f.write(f"Time to well mixed: {value}")
+        f.write("\n")
         f.write(summary(self.setting))
         f.close()
 
+    @property
+    def characteristic_diffusion_time(self):
+        solver = EddyDiffusion(self.setting)
+        dim = self.setting.dimensions
+        l = sqrt(dim.x * dim.y * dim.z)
+        return {
+            "x": dim.x * dim.x / solver.diff_coeff,
+            "y": dim.y * dim.y / solver.diff_coeff,
+            "z": dim.z * dim.z / solver.diff_coeff,
+            "v": l * l / solver.diff_coeff
+        }
 
 
     def __enter__(self):

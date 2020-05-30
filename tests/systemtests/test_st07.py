@@ -1,7 +1,7 @@
 import unittest
 
 from config import ConfigFileParser
-from config.idmfconfig import ConsistencyError
+from config.ridtconfig import ConsistencyError
 
 
 class ST07(unittest.TestCase):
@@ -13,7 +13,7 @@ class ST07(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-        :class:`~.IDMFConfig` class."""
+        :class:`~.RIDTConfig` class."""
 
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp

@@ -5,13 +5,13 @@ from numpy import array
 from numpy import ndarray
 from numpy.linalg import norm  
 
-from config import IDMFConfig
+from config import RIDTConfig
 from container import Domain
 
 
 class UncertaintyMask:
 
-    def __init__(self, setting: IDMFConfig):
+    def __init__(self, setting: RIDTConfig):
         self.setting = setting
         self.sources = self.get_source_locations()
         self.domain = Domain(setting)

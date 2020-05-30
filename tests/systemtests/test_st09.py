@@ -1,7 +1,11 @@
 import unittest
 
+import json
+
 from config import ConfigFileParser
-from config import ConsistencyError
+from config.ridtconfig import ConsistencyError
+
+from config.configfileparser import ConfigFileParserValidationError
 
 
 class ST11(unittest.TestCase):
@@ -13,10 +17,19 @@ class ST11(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class."""
+           :class:`~.RIDTConfig` class."""
+
+        self.config_path = "tests/systemtests/st06/config.json"
+        with open(self.config_path) as f:
+            self.default = json.load(f)
 
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp
+
+    def tearDown(self) -> None:
+
+        with open(self.config_path, "w") as w:
+            json.dump(self.default, w)
 
     def test_verify(self):
 
@@ -24,33 +37,42 @@ class ST11(unittest.TestCase):
         has the correct scale and range attributes."""
 
         self.assertEqual(
-            hasattr(self.c.models.eddy_diffusion.contour_plots, "range"), True
+            hasattr(self.c.models.eddy_diffusion.planes_plots, "range"), True
         )
         self.assertEqual(
-            hasattr(self.c.models.eddy_diffusion.contour_plots, "scale"), True
+            hasattr(self.c.models.eddy_diffusion.planes_plots, "scale"), True
         )
 
     def test_contours(self):
 
-        """Checks to see if the :class:`.ConsistencyError` error
-        triggers if the min value of the contour is greater than
-        max value. Or if the string passed as the scale or range
-        doesn't match the pre defined values."""
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["models"]["eddy_diffusion"]["planes_plots"]["contours"]["min"] = \
+                config["models"]["eddy_diffusion"]["planes_plots"]["contours"]["max"] + 1
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
-        c_plots = self.c.models.eddy_diffusion.contour_plots
+    def test_range(self):
 
-        c_plots.contours.min = c_plots.contours.max + 1
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["models"]["eddy_diffusion"]["planes_plots"]["range"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
-        c_plots.contours.min = c_plots.contours.max - 1
+    def test_scale(self):
 
-        c_plots.range = "RANDOM VALUE"
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
-
-        c_plots.range = "auto"
-
-        c_plots.scale = "RANDOM VALUE"
-        self.assertRaises(ConsistencyError, self.c.consistency_check)
+        with self.assertRaises(ConfigFileParserValidationError):
+            with open(self.config_path) as f:
+                config = json.load(f)
+            config["models"]["eddy_diffusion"]["planes_plots"]["scale"] = "test"
+            with open(self.config_path, "w") as f:
+                json.dump(config, f)
+            ConfigFileParser(self.config_path)
 
 
 if __name__ == "__main__":

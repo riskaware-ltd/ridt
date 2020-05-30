@@ -2,7 +2,6 @@
     "eddy_diffusion": true,
     "well_mixed": true,
 
-    "spatial_units": "m",
     "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
@@ -11,8 +10,29 @@
     "time_samples": 50,
     "total_time": 100.0,
 
+    "spatial_units": "m",
+    "dimensions": {
+        "x": 50.0,
+        "y": 20.0,
+        "z": 3.0
+    },
+    "spatial_samples": {
+        "x": 20,
+        "y": 20,
+        "z": 10 
+    },
+
     "fresh_air_change_rate_units": "m3.s-1",
-    "fresh_air_change_rate": 1e-10,
+    "fresh_air_change_rate": 5.0,
+
+    "physical_properties": {
+        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight": 1.0,
+        "pressure_units": "Pa",
+        "pressure": 1.0,
+        "temperature_units": "K",
+        "temperature": 273.0
+    },
 
     "modes": {
         "instantaneous": {
@@ -21,11 +41,7 @@
                     "x": 10.0,
                     "y": 3.0,
                     "z": 1.0,
-                    "mass": {
-                        "min": 0.0,
-                        "max": 5.0,
-                        "num": 30 
-                    },
+                    "mass": 1.0,
                     "time": 0.0
                 }
             }
@@ -76,16 +92,6 @@
 
     "models":{
         "eddy_diffusion": {
-            "dimensions": {
-                "x": 50.0,
-                "y": 20.0,
-                "z": 3.0
-            },
-            "spatial_samples": {
-                "x": 20,
-                "y": 20,
-                "z": 10 
-            },
             "coefficient": {
                 "calculation": "TKEB",
                 "value": 0.001,
@@ -96,9 +102,8 @@
                 }
             },
             "images": {
-                "mode": "manual",
-                "quantity": 3,
-                "max_error": 1.0
+                "mode": "auto",
+                "quantity": 3
             },
             "analysis": {
                 "percentage_exceedance": 10.0,
@@ -109,7 +114,7 @@
                     "points": true,
                     "lines": true,
                     "planes": true,
-                    "domain": false 
+                    "domain": true 
                 },
                 "points": {
                     "point_1": {
@@ -165,18 +170,18 @@
                 }
             },
             "points_plots": {
-                "output": false,
+                "output": true,
                 "scale": "logarithmic",
-                "number": 10
+                "number": 3
             },
             "lines_plots": {
-                "output": false,
+                "output": true,
                 "scale": "logarithmic",
                 "animate": true,
-                "number": 50
+                "number": 3 
             },
             "planes_plots": {
-                "output": false,
+                "output": true,
                 "concentration": true,
                 "exposure": true,
                 "animate": true,
@@ -189,9 +194,6 @@
                     "max": 1.5
                 }
             }
-        },
-        "well_mixed": {
-            "volume": 3000.0
         }
     }
 }

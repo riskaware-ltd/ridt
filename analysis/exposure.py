@@ -1,9 +1,10 @@
 from typing import Union
 
 from numpy import cumsum
+from scipy.integrate import cumtrapz
 from numpy import ndarray
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 from data import DataStore
 from data import BatchDataStore
@@ -15,7 +16,7 @@ class Exposure:
         instance.__init__(*args, **kwargs)
         return instance.data_store
     
-    def __init__(self, setting: IDMFConfig, data_store: Union[DataStore, BatchDataStore]):
+    def __init__(self, setting: RIDTConfig, data_store: Union[DataStore, BatchDataStore]):
         self.setting = setting
         self.delta_t = self.setting.total_time / self.setting.time_samples
         self.data_store = self.evaluate(data_store)
@@ -26,7 +27,7 @@ class Exposure:
         return [g for g, e in locations.evaluate.items() if e]
 
     def compute(self, data: ndarray):
-        return cumsum(data, axis=0) * self.delta_t
+        return cumtrapz(data, dx=self.delta_t, axis=0, initial=0)
 
     def evaluate(self, data_store: DataStore):
         if isinstance(data_store, DataStore):

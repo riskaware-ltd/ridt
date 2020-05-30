@@ -15,7 +15,8 @@ from data import DirectoryAgent
 
 from .datastore import DataStore
 
-from config import IDMFConfig
+from config import RIDTConfig
+from config import Units
 
 
 class DataStorePlotter:
@@ -29,8 +30,11 @@ class DataStorePlotter:
     def __init__(self,
                  dir_agent: DirectoryAgent,
                  data_store: DataStore,
-                 settings: IDMFConfig,
+                 settings: RIDTConfig,
                  quantity: str) -> None:
+
+        units = Units(settings)
+        factor = getattr(units, f"{quantity}_factor")
 
         for geometry, plotter in DataStorePlotter.geometries.items():
             config = getattr(settings.models.eddy_diffusion, f"{geometry}_plots")
@@ -39,12 +43,13 @@ class DataStorePlotter:
             dir_agent.create_plot_dir(geometry, quantity)
             plotter = plotter(settings, dir_agent.pdir, quantity)
             for id, data in getattr(data_store, geometry).items():
-                max_val = max(data)
+                rescaled_data = data / factor
+                max_val = max(rescaled_data)
                 if geometry == "points":
-                    plotter(id, data)
+                    plotter(id, rescaled_data)
                 else:
                     for idx in indices:
-                        plotter(id, data[idx], max_val, idx)
+                        plotter(id, rescaled_data[idx], max_val, idx)
 
     def spread(self, time_samples: int, number_of_plots: int):
         return [int(i) for i in linspace(0, time_samples - 1, number_of_plots)]

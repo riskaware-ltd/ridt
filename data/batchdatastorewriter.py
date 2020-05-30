@@ -5,7 +5,7 @@ from tqdm import tqdm
 from base import ComputationalSpace
 from base import RIDTOSError
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import ConfigFileWriter
 
 from .batchdatastore import BatchDataStore
@@ -18,7 +18,7 @@ BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 class BatchDataStoreWriter:
 
     def __init__(self,
-                 settings: IDMFConfig,
+                 settings: RIDTConfig,
                  data_store: BatchDataStore,
                  space: ComputationalSpace,
                  outdir: str,

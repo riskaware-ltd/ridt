@@ -176,8 +176,7 @@ class CSVToConfigFile:
         else:
             path = self.output_file_path
         
-        with ConfigFileWriter(dirname(path)) as cfw:
-            cfw(basename(path), self.new)
+        ConfigFileWriter(dirname(path), basename(path), self.new)
 
     def ord(self, n):
         return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}\

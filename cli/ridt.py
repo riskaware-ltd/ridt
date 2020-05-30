@@ -14,11 +14,11 @@ from base.settings import ComputationalSpace
 from base import RIDTOSError
 
 @click.group()
-def idmf():
+def ridt():
     """The indoor diffusion modelling framework entry point."""
     pass
 
-@idmf.command()
+@ridt.command()
 @click.argument('config_file', type=click.Path(exists=True))
 @click.argument('output_dir', type=click.Path(exists=True))
 def run(config_file, output_dir):
@@ -46,7 +46,7 @@ def run(config_file, output_dir):
     print("\nComplete.")
 
 
-@idmf.command()
+@ridt.command()
 @click.argument('config_file', type=click.Path(exists=True))
 @click.argument('csv_file', type=click.Path(exists=True))
 @click.option('-o', '--output_file', type=click.Path())

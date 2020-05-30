@@ -14,17 +14,14 @@ class ST13(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class and the
+           :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
-        config_file = "tests/systemtests/st13/config.json"
-        csv_file = "tests/systemtests/st13/info.csv"
-        output = "tests/systemtests/st13"
+        self.config_file = "tests/systemtests/st13/config.json"
+        self.csv_file = "tests/systemtests/st13/info.csv"
+        self.output = "tests/systemtests/st13"
 
-        # with CSVToConfigFile() as ctc:
-        #     ctc(config_file, csv_file, output)
-
-    def test_verify(self):
+    def test_modes(self):
         pass
 
 

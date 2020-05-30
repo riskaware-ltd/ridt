@@ -7,7 +7,7 @@ from os.path import join
 from base import ComputationalSpace
 
 from config import summary
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units
 
 from data import BatchDataStore
@@ -37,7 +37,7 @@ class BatchDataStoreAnalyser:
         return None
 
     def __init__(self,
-                 settings: IDMFConfig,
+                 settings: RIDTConfig,
                  data_store: BatchDataStore,
                  space: ComputationalSpace,
                  outdir: str,

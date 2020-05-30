@@ -1,3 +1,7 @@
+import sys
+
+import math
+
 from base import Settings
 from base import Terminus
 from base import List
@@ -14,9 +18,9 @@ def custom_formatwarning(msg, *args, **kwargs):
 
 warnings.formatwarning = custom_formatwarning
 
-class IDMFConfig(Settings):
+class RIDTConfig(Settings):
 
-    """The :class:`~.IDMFConfig` class. It inherits from
+    """The :class:`~.RIDTConfig` class. It inherits from
     :class:`~.Settings`. For information about the behaviour of
     :class:`~..Settings` derived classes, please refer to the :class:`~..Settings`
     documentation.
@@ -82,7 +86,7 @@ class IDMFConfig(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.IDMFConfig` class.
+        """The constructor for the :class:`~.RIDTConfig` class.
 
         Parameters
         ----------
@@ -103,13 +107,17 @@ class IDMFConfig(Settings):
         self.time_samples = NonNegativeInteger
         self.total_time = NonNegativeFloat
 
+        self.dimensions = Dimensions
+        self.spatial_samples = SpatialSamples
+
         self.spatial_units = SpatialUnits
+        self.physical_properties = PhysicalProperties
         self.concentration_units = ConcentrationUnits
         self.exposure_units = ExposureUnits
         self.mass_units = MassUnits
 
         self.fresh_air_change_rate_units = FreshAirChangeRateUnits
-        self.fresh_air_change_rate = NonNegativeFloat
+        self.fresh_air_change_rate = PositiveFloat
 
         self.modes = ModeSettings
         self.thresholds = Thresholds
@@ -117,7 +125,7 @@ class IDMFConfig(Settings):
         self.models = ModelSettings
 
     def consistency_check(self):
-        """Checker to be called after instantiating the :class:`~.IDMFConfig` class.
+        """Checker to be called after instantiating the :class:`~.RIDTConfig` class.
         Maintains that certain requirements are met and caught before initializing the run.
         Raises
         ------
@@ -164,16 +172,10 @@ class IDMFConfig(Settings):
         ValueError
             If the spatial units are not mm, cm, m.
         """
-        
-        dim = self.models.eddy_diffusion.dimensions
-        if dim.x * dim.y * dim.z != self.models.well_mixed.volume:
-            warnings.warn(
-                "The calculated volume for the eddy diffusion model is "
-                "different from the volume specified in the well mixed model.")
 
         for mode in ["instantaneous", "infinite_duration", "fixed_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
-                dim = self.models.eddy_diffusion.dimensions
+                dim = self.dimensions
                 for axis in ["x", "y", "z"]:
                     par = getattr(value, axis)
                     bound = getattr(dim, axis)
@@ -227,6 +229,30 @@ class IDMFConfig(Settings):
                     raise ConsistencyError(
                 f"{mode} source {key} end time is "
                 f"outside time domain [0, {self.total_time}).")
+        
+        dims = ["x", "y", "z"]
+        for plane in self.models.eddy_diffusion.monitor_locations.planes.values():
+            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
+            if isinstance(plane.distance, list):
+                if max(plane.distance) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(f"{plane} is outside the space domain")
+            else:
+                if plane.distance > getattr(self.dimensions, dim):
+                    raise ConsistencyError(f"{plane} is outside the space domain")
+
+        for key, point in self.models.eddy_diffusion.monitor_locations.points.items():
+            for dim in dims:
+                if getattr(point, dim) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(
+                f"{key}'s {dim} value, is outside space domain "
+                f"(0, {getattr(self.dimensions, dim)})")
+
+        for key, line in self.models.eddy_diffusion.monitor_locations.lines.items():
+            for dim in dims:
+                if getattr(line.point, dim) > getattr(self.dimensions, dim):
+                    raise ConsistencyError(
+                f"{key}'s {dim} value, is outside space domain "
+                f"(0, {getattr(self.dimensions, dim)})")
 
         thresh = self.thresholds
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
@@ -271,6 +297,49 @@ class IDMFConfig(Settings):
             f"The number of requrested contour plots ({contour_number}) cannot exceed the "
             f"number of time samples ({self.time_samples}).")
 
+
+class PhysicalProperties(Settings):
+    @Settings.assign
+    def __init__(self, values: dict):
+        self.agent_molecular_weight_units = AgentMolecularWeightUnits
+        self.agent_molecular_weight = float
+        self.pressure_units = PressureUnits
+        self.pressure = float
+        self.temperature_units = TemperatureUnits
+        self.temperature = float
+
+
+class AgentMolecularWeightUnits(StringSelection):
+    @Terminus.assign
+    def __init__(self, value: str):
+        self.options = [
+            "mol.m-3"
+        ]
+    
+    def check(self):
+        pass
+    
+
+class PressureUnits(StringSelection):
+    @Terminus.assign
+    def __init__(self, value: str):
+        self.options = [
+            "Pa"
+        ]
+    
+    def check(self):
+        pass
+
+
+class TemperatureUnits(StringSelection):
+    @Terminus.assign
+    def __init__(self, value: str):
+        self.options = [
+            "K"
+        ]
+    
+    def check(self):
+        pass
 
 
 
@@ -367,7 +436,7 @@ class ConcentrationUnits(StringSelection):
         """
         self.options = [
             "kg.m-3",
-            "g.m-3",
+            "kg.kg-1",
             "mg.m-3",
             "ppm",
             "ppb",
@@ -488,7 +557,6 @@ class ModelSettings(Settings):
             settings configurations.
         """
         self.eddy_diffusion = EddyDiffusion
-        self.well_mixed = WellMixed
 
 
 class ModeSettings(Settings):
@@ -897,8 +965,6 @@ class EddyDiffusion(Settings):
             The values corresponding to the eddy diffusion
             model type.
         """
-        self.dimensions = Dimensions
-        self.spatial_samples = SpatialSamples
         self.monitor_locations = MonitorLocations
         self.coefficient = Coefficient
         self.images = Images
@@ -907,30 +973,6 @@ class EddyDiffusion(Settings):
         self.lines_plots = LinePlots
         self.points_plots = PointPlots
 
-    def consistency_check(self):
-        dims = ["x", "y", "z"]
-        for plane in self.monitor_locations.planes.values():
-            dim = [axis for axis in dims if axis not in str(plane.axis)][0]
-            if isinstance(plane.distance, list):
-                if max(plane.distance) > getattr(self.dimensions, dim):
-                    raise ConsistencyError(f"{plane} is outside the space domain")
-            else:
-                if plane.distance > getattr(self.dimensions, dim):
-                    raise ConsistencyError(f"{plane} is outside the space domain")
-
-        for key, point in self.monitor_locations.points.items():
-            for dim in dims:
-                if getattr(point, dim) > getattr(self.dimensions, dim):
-                    raise ConsistencyError(
-                f"{key}'s {dim} value, is outside space domain "
-                f"(0, {getattr(self.dimensions, dim)})")
-
-        for key, line in self.monitor_locations.lines.items():
-            for dim in dims:
-                if getattr(line.point, dim) > getattr(self.dimensions, dim):
-                    raise ConsistencyError(
-                f"{key}'s {dim} value, is outside space domain "
-                f"(0, {getattr(self.dimensions, dim)})")
 
 class AnalysisSettings(Settings):
     @Settings.assign
@@ -1041,9 +1083,9 @@ class Dimensions(Settings):
             The values corresponding to the dimensions
             of the container.
         """
-        self.x = NonNegativeFloat
-        self.y = NonNegativeFloat
-        self.z = NonNegativeFloat
+        self.x = PositiveFloat 
+        self.y = PositiveFloat 
+        self.z = PositiveFloat
 
 
 class Length(Number):
@@ -1271,7 +1313,6 @@ class Images(Settings):
         """
         self.mode = ImageMode
         self.quantity = ImageSourceNumber 
-        self.max_error = Percentage
 
 
 class ImageSourceNumber(Number):
@@ -1705,6 +1746,33 @@ class NonNegativeFloat(Number):
             If the value isn't greater than 0.
         """
         self.lower_bound(0.0)
+
+
+class PositiveFloat(Number):
+    """The :class:`~.PositiveFloat` class. It inherits from
+    :class:`~.Number`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: float):
+        """The constructor for the :class:`~.PositiveFloat` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
+        self.type = float
+
+    def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 0.
+        """
+        self.lower_bound(0.0)
+
 
 
 class NonNegativeInteger(Number):

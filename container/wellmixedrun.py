@@ -9,7 +9,7 @@ from numpy import linspace
 from base import ComputationalSpace
 from equation import WellMixed
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 from data import BatchDataStore
 from data import BatchDataStoreWriter
@@ -26,7 +26,7 @@ BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
 class WellMixedRun:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str):
+    def __init__(self, settings: RIDTConfig, output_dir: str):
         print("Preparing Well Mixed run... ")
         self._settings = settings
         self._output_dir = output_dir
@@ -41,7 +41,7 @@ class WellMixedRun:
         self.write()
         print("Producing plots... ")
         self.plot()
-        print("\n\n")
+        print("\n")
 
     def prepare(self):
         restrict = {"models": "well_mixed"}
@@ -51,7 +51,7 @@ class WellMixedRun:
         for setting in tqdm(self.space.space, bar_format=BF):
             self.run(setting)
 
-    def run(self, setting: IDMFConfig):
+    def run(self, setting: RIDTConfig):
         self.data_store.add_run(setting)
         domain = Domain(setting)
         solver = WellMixed(setting)

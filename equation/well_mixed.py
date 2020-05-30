@@ -2,16 +2,17 @@ from numpy import ndarray
 from numpy import zeros
 from numpy import array 
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 import numpy as np
 
 
 class WellMixed:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: RIDTConfig):
         self.settings = settings
-        self.volume = settings.models.well_mixed.volume
+        self.dim = self.settings.dimensions
+        self.volume = self.dim.x * self.dim.y * self.dim.z
         self.fa_rate = settings.fresh_air_change_rate
         self.shape = (self.settings.time_samples,)
         self.conc = zeros(self.shape)

@@ -1,6 +1,6 @@
 import unittest
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config.configfileparser import ConfigFileParser
 from config.configfileparser import ConfigFileParserOSError
 from config.configfileparser import ConfigFileParserJSONError
@@ -13,10 +13,10 @@ class TestConfigFileParser(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        """setUp method which instantiates the :class:`~.RIDTConfig` class,
         and the :class:`~.ConfigFileParser` class."""
 
-        self.idmf = IDMFConfig
+        self.ridt = RIDTConfig
 
     def test_parse_file(self):
 

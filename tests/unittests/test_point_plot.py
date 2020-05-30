@@ -5,7 +5,7 @@ import os
 import numpy as np
 from matplotlib.lines import Line2D
 
-from config import IDMFConfig
+from config import RIDTConfig
 from plot import PointPlot
 
 
@@ -15,17 +15,17 @@ class TestPointPlot(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        """setUp method which instantiates the :class:`~.IDMFConfig` class,
+        """setUp method which instantiates the :class:`~.RIDTConfig` class,
         the :class:`~.PointPlot` class, and creates some initial
         variables."""
 
         with open("tests/unittests/test_resources/test_config.json") as f:
             loaded_json = json.load(f)
 
-        self.config = IDMFConfig(loaded_json)
+        self.config = RIDTConfig(loaded_json)
         self.config.consistency_check()
 
-        self.pp = PointPlot(self.config, "tests/unittests/test_resources")
+        self.pp = PointPlot(self.config, "tests/unittests/test_resources", "concentration")
 
         self.time_array = np.linspace(0, 10, 10)
         self.conc = np.linspace(0, 10, 10)
@@ -40,25 +40,6 @@ class TestPointPlot(unittest.TestCase):
         for file in resource_list:
             if file.endswith(".pdf"):
                 os.remove(f"tests/unittests/test_resources/{file}")
-
-    def test_plot(self):
-
-        """tests the plots to make sure that is plot is
-        of type :class:`~.Line2D.`"""
-
-        plots = self.pp.plot(self.conc)
-
-        for plot in plots:
-            self.assertEqual(type(plot), Line2D)
-
-    def test_make_title(self):
-
-        """tests to make sure that the title
-        is of type :obj:`str`."""
-
-        title = self.pp.make_title()
-        self.assertEqual(type(title), str)
-
 
 if __name__ == "__main__":
     unittest.main()

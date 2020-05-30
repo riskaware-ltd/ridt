@@ -10,7 +10,7 @@ from numpy import prod
 from base import Error
 from base import ComputationalSpace
 
-from config import IDMFConfig
+from config import RIDTConfig
 
 FIRST = 0
 

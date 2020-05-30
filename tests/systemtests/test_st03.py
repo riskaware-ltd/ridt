@@ -1,7 +1,7 @@
 import unittest
 
 from config import ConfigFileParser
-from config import ConsistencyError
+from config.ridtconfig import ConsistencyError
 
 
 class ST03(unittest.TestCase):
@@ -13,14 +13,14 @@ class ST03(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method which instantiates an
-        :class:`~.IDMFConfig` class."""
+        :class:`~.RIDTConfig` class."""
 
         with ConfigFileParser("default/config.json") as cfp:
             self.c = cfp
 
     def test_verify(self):
 
-        """Verifies that the :class:`~.IDMFConfig` class
+        """Verifies that the :class:`~.RIDTConfig` class
         has the correct source attributes."""
 
         self.assertEqual(

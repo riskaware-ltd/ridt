@@ -16,7 +16,7 @@ class ST16(unittest.TestCase):
     def setUp(self) -> None:
 
         """setUp method that instantiates the
-           :class:`~.IDMFConfig` class and the
+           :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
         with ConfigFileParser("tests/systemtests/st16/explicit.json") as cfp:
@@ -29,10 +29,10 @@ class ST16(unittest.TestCase):
 
     def test_verify(self):
         self.assertEqual(
-            self.explicit._EddyDiffusion__diffusion_coefficient(), 0.1
+            self.explicit.diffusion_coefficient(), 0.001
         )
         self.assertEqual(
-            self.tkeb._EddyDiffusion__diffusion_coefficient(), 0.824
+            self.tkeb.diffusion_coefficient(), 0.8835
         )
 
 

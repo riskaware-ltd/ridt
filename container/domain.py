@@ -3,18 +3,18 @@ from typing import Tuple
 from numpy import linspace
 from numpy import meshgrid
 
-from config.idmfconfig import IDMFConfig
-from config.idmfconfig import Point
-from config.idmfconfig import Line 
-from config.idmfconfig import Plane 
+from config.ridtconfig import RIDTConfig
+from config.ridtconfig import Point
+from config.ridtconfig import Line 
+from config.ridtconfig import Plane 
 
 
 class Domain:
 
-    def __init__(self, settings: IDMFConfig):
+    def __init__(self, settings: RIDTConfig):
         self.set = settings
-        self.dimensions = self.set.models.eddy_diffusion.dimensions
-        self.space_samples = self.set.models.eddy_diffusion.spatial_samples
+        self.dimensions = self.set.dimensions
+        self.space_samples = self.set.spatial_samples
         self._x = linspace(0.0, self.dimensions.x, self.space_samples.x)
         self._y = linspace(0.0, self.dimensions.y, self.space_samples.y)
         self._z = linspace(0.0, self.dimensions.z, self.space_samples.z)

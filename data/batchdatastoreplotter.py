@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 from base import ComputationalSpace
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import ConfigFileWriter
 
 from .batchdatastore import BatchDataStore
@@ -17,7 +17,7 @@ BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 class BatchDataStorePlotter:
 
     def __init__(self,
-                 settings: IDMFConfig,
+                 settings: RIDTConfig,
                  data_store: BatchDataStore,
                  space: ComputationalSpace,
                  outdir: str,

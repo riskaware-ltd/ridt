@@ -11,7 +11,7 @@ from numpy import linspace
 from numpy import meshgrid
 from numpy.ma import masked_where
 
-from config import IDMFConfig
+from config import RIDTConfig
 from config import Units 
 
 from container import Domain
@@ -27,7 +27,7 @@ from matplotlib import animation
 
 class ContourPlot:
 
-    def __init__(self, settings: IDMFConfig, output_dir: str, quantity: str):
+    def __init__(self, settings: RIDTConfig, output_dir: str, quantity: str):
         self.settings = settings
         self.output_dir = output_dir
         self.units = Units(settings)
@@ -77,7 +77,8 @@ class ContourPlot:
         plt.savefig(join(self.output_dir, f"{self.id}-{self.domain.time[self.t_index]:.2f}s.png"))
 
     def title(self):
-        return f"{self.quantity} - {self.id} - {self.domain.time[self.t_index]:.2f}s"
+        u = getattr(self.units, f'{self.quantity}')
+        return f"{self.quantity} ({u}) - {self.id} - {self.domain.time[self.t_index]:.2f}s"
     
     def xlabel(self):
         return f"{self.xaxis} ({self.units.space})"
@@ -92,7 +93,7 @@ class ContourPlot:
         return getattr(self.domain, self.yaxis)
     
     def get_figsize(self):
-        dim = self.settings.models.eddy_diffusion.dimensions
+        dim = self.settings.dimensions
         aspect_ratio = getattr(dim, self.xaxis) / getattr(dim, self.yaxis)
         return (8 * aspect_ratio, 6)
 
@@ -126,11 +127,11 @@ class ContourPlot:
         y_range = getattr(self.domain, list(self.plane.axis)[1])
         return x_range, y_range
 
-    def animate(self, data: ndarray):
-        plot = self.plot(data[0])
-        def frame(i):
-            return self.plot(data[i])
-        anim = animation.FuncAnimation(fig,
-                                       frame,
-                                       frames=self.settings.time_samples, blit=True)
-        anim.save("test.mp4", fps=5)
+    # def animate(self, data: ndarray):
+    #     plot = self.plot(data[0])
+    #     def frame(i):
+    #         return self.plot(data[i])
+    #     anim = animation.FuncAnimation(fig,
+    #                                    frame,
+    #                                    frames=self.settings.time_samples, blit=True)
+    #     anim.save("test.mp4", fps=5)

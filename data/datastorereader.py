@@ -6,7 +6,7 @@ from base import ComputationalSpace
 from base import Error
 
 from config import ConfigFileParser
-from config import IDMFConfig
+from config import RIDTConfig
 
 from .batchdatastore import BatchDataStore
 from .directoryagent import DirectoryAgent
@@ -19,7 +19,7 @@ class DataStoreReader:
         instance.__init__(*args, **kwargs)
         return instance.data_store
 
-    def __init__(self, settings: IDMFConfig, directory: str, quantity: str):
+    def __init__(self, settings: RIDTConfig, directory: str, quantity: str):
         self.directory = directory
         self.settings = settings
         self.quantity = quantity
@@ -43,7 +43,7 @@ class DataStoreReader:
                     self.data_store.add_run(setting)
                     self.data_store[setting] = self.load(setting, da.ddir)
     
-    def load(self, setting: IDMFConfig, directory: str):
+    def load(self, setting: RIDTConfig, directory: str):
         rv = DataStore()
         locations = setting.models.eddy_diffusion.monitor_locations
 
