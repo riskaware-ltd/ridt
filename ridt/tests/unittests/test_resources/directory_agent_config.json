@@ -1,0 +1,153 @@
+{
+    "dispersion_model": "eddy_diffusion",
+
+    "time_units": "s",
+    "time_samples": 10,
+    "total_time": 10.0,
+
+    "concentration_units": "kgm-3",
+    "exposure_units": "mgminm-3",
+
+    "spatial_units": "m",
+
+    "total_air_change_rate": 1.0,
+    "fresh_air_change_rate": {
+        "array": [0.01, 0.001, 0.0001]
+    },
+    "human_readable_data_output": true,
+    "modes": {
+        "instantaneous": {
+            "sources":{
+                "source_1": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "mass": 1.0,
+                    "time": 0.0
+                }
+            }
+        },
+
+        "infinite_duration": {
+            "sources": {
+                "source_1": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "rate": 1.0,
+                    "time": 0.0
+                }
+            }
+        },
+
+        "fixed_duration": {
+            "sources": {
+                "source_1": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0,
+                    "rate": 1.0,
+                    "start_time": 0.2,
+                    "end_time": 0.5
+                }
+            }
+        }
+    },
+
+    "thresholds": {
+        "concentration": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ],
+        "exposure": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            4.0
+        ]
+    },
+
+    "models":{
+        "eddy_diffusion": {
+            "spatial_units": "m",
+            "dimensions": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "spatial_samples": {
+                "x": 10,
+                "y": 10,
+                "z": 10
+            },
+            "coefficient": {
+                "calculation": "EXPLICIT",
+                "value": 1.0,
+                "tkeb": {
+                    "number_of_supply_vents": 1
+                }
+            },
+            "images": {
+                "quantity": 3,
+                "max_error": 1.0
+            },
+            "monitor_locations": {
+                "points": {
+                    "point_1": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "point_2": {
+                        "x": 2.0,
+                        "y": 2.0,
+                        "z": 2.0
+                    }
+                },
+                "lines": {
+                    "line_1": {
+                        "point": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "parallel_axis": "x"
+                    }
+                },
+                "planes": {
+                    "plane_1": {
+                        "axis": "xy",
+                        "distance": 1.0
+                    }
+                }
+            },
+            "point_plots": {
+                "output": false
+            },
+            "line_plots": {
+                "output": true,
+                "spatial_resolution": 10.0
+            },
+            "contour_plots": {
+                "output": true,
+                "concentration": true,
+                "exposure": true,
+                "creation_frequency": 0.01,
+                "number_of_contours": 10,
+                "range": "auto",
+                "scale": "linear",
+                "contours": {
+                    "min": 1.0,
+                    "max": 1.5
+                }
+            }
+        },
+        "well_mixed": {
+            "volume": 1.0
+        }
+    }
+}

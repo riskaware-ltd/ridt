@@ -14,6 +14,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        ridt=cli.ridt:ridt
+        ridt=ridt.cli.ridt:ridt
     ''',
 )
