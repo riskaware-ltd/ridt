@@ -19,84 +19,83 @@ def custom_formatwarning(msg, *args, **kwargs):
 warnings.formatwarning = custom_formatwarning
 
 class RIDTConfig(Settings):
+    """The settings object for ridt.
 
-    """The :class:`~.RIDTConfig` class. It inherits from
-    :class:`~.Settings`. For information about the behaviour of
-    :class:`~..Settings` derived classes, please refer to the :class:`~..Settings`
-    documentation.
+    This takes a dictionary and checks that all relevant information exists
+    in the dictioary.
 
     Attributes
-    ---------
-    dispersion_model: :obj:`str`
-        A string selecting the type of dispersion model.
+    ----------
+    well_mixed : :obj:`bool`
+        The flag indicating whether to evaluate the well mixed model.
 
-    release_type: :obj:`str`
-        A string selecting the release type.
-
-    time_units: :class:`~.TimeUnits` 
-        A string dictating the units of time used within the
-        simulation.
-
-    time_samples: :obj:`int`
-        The number of intervals that the total time is split
-        up into.
-
-    total_time: :class:`~.NonNegativeFloat`
-        A non negative float which corresponds to the total
-        time of the simulation.
-
-    concentration_units: :class:`~.ConcentrationUnits` 
-        The units of the concentration of the material.
-
-    exposure_units: :class:`~.ExposureUnits` 
-        The units of the exposure of the material
-        within the container.
-
-    spatial_units: :class:`~.SpatialUnits` 
-        The spatial units of the container.
-
-    spatial_samples: :obj:`int`
-        The number of intervals that the container is split
-        up into.
-
-    total_air_change_rate: :class:`~.NonNegativeFloat`
-        The total air change rate in the system.
-
-    fresh_air_change_rate: :class:`~.NonNegativeFloat`
-        The fresh air change rate in the system.
-
-    monitor_locations: :class:`~.MonitorLocations`
-        A :class:`~.Dict` child that contains paths
-        to the MonitorLocations configurations.
-
-    thresholds: :class:`~.NonNegativeFloats`
-        A :class:`~.Settings` child containing the paths to the Threshold
-        configurations.
+    eddy_diffusion: :obj:`bool`
+        The flag indicating whether to evaluate the eddy diffusion model.
     
-    modes : :class:`~.ModeSettings`
-        A :class:`~.Settings` child containin mode specific settings.
+    time_units : :class:`~.TimeUnits`
+        The temporal units selection.
+    
+    time_samples : :class:`~.NonNegativeInteger`
+        The temporal discretisation.
+    
+    total_time : :class:`~.NonNegativeFloat`
+        The total time for the simulation.
+    
+    dimensions : :class:`~.Dimensions`
+        The spatial bounds of the system.
+    
+    spatial_samples : :class:`~.SpatialSamples`
+        The spatial discretisation of the system.
 
-    models : :class:`~.ModelSettings`
-        A :class:`~.Settings` child containin model specific settings.
+    spatial_units : :class:`~.SpatialUnits`
+        The spatial units selection.
 
-    Returns
-    -------
-    None
+    physical_properties : :class:`~.PhysicalProperties`
+        The physical properties of the system.
+    
+    concentration_units : :class:`~.ConcentrationUnits`
+        The concentration units selection.
+    
+    exposure_units : :class:`~.ExposureUnits`
+        The exposure units selection.
+    
+    mass_units : :class:`~.MassUnits`
+        The mass units selection.
+    
+    fresh_air_change_rate : :class:`~.FreshAirChangeRate`
+        The fresh air change rate.
 
+    fresh_air_change_rate_units : :class:`~.FreshAirChangeRateUnits`
+        The fresh air change rate unit selection.
+    
+    modes : :class:`~.Modes`
+        Source settings.
+    
+    thresholds : :class:`~.Thresholds`
+        Threshold settings.
+    
+    models : :class:`~.Models`
+        Model specific settings.
+
+    Parameters
+    ----------
+    value : :obj:`dict`
+        The dictionary of values to be verified and stored.
+
+    Raises
+    ------
+    
     """
+
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.RIDTConfig` class.
+        """The RIDTConfig initaliser
 
         Parameters
         ----------
-        values : :obj:`dict`
-            The dictionary corresponding to the read in .json
-            config file.
+        value : :obj:`dict`
+            The dictionary of values to be verified and stored.
 
-        Returns
-        -------
-        None
 
         """
         self.well_mixed = bool
@@ -125,52 +124,26 @@ class RIDTConfig(Settings):
         self.models = ModelSettings
 
     def consistency_check(self):
-        """Checker to be called after instantiating the :class:`~.RIDTConfig` class.
-        Maintains that certain requirements are met and caught before initializing the run.
+        """Verifies the self consistency of the settings object.
+
+        Returns
+        -------
+        None
+
         Raises
         ------
-        ValueError
-            If the end time of a fixed duration source is less than the start time.
+        :class:`~.ConsistencyError
+            If any sources lie outside the simulation domain.
+        :class:`~.ConsistencyError
+            If any sources' release times are outside the simulation domain.
+        :class:`~.ConsistencyError
+            If any monitor locations are outside of the simulation domain.
+        :class:`~.ConsistencyError
+            If more than 5 thresholds of a given type are defined.
+        :class:`~.ConsistencyError
+            If the number of a given type of plots requested is greater than
+            the time discretisation.
 
-        ValueError
-            If there are more than five concentration or exposure thresholds.
-
-        ValueError
-            If the type of plane does not coincide with an orthogonal axis.
-
-        ValueError
-            If the plane lies outside of the dimensions of the container.
-
-        ValueError
-            If the min value of the manual contour is greater than the max value.
-
-        ValueError
-            If the contour range type is not manual or auto.
-
-        ValueError
-            If the contour scaling is not linear or logarithmic.
-
-        ValueError
-            if the release type is not instantaneous, fixedduration
-            or infiniteduration.
-
-        ValueError
-            If the type of dispersion model is not well mixed or
-            eddy diffusion.
-
-        ValueError
-            If the time units are not seconds, minutes or hours.
-
-        ValueError
-            If the concentration units are not
-            kgm-3, mgm-3, kgm-3, ppm, ppb or ppt.
-
-        ValueError
-            If the exposure units are not
-             mgminm-3 or kgsm-3.
-
-        ValueError
-            If the spatial units are not mm, cm, m.
         """
 
         for mode in ["instantaneous", "infinite_duration", "fixed_duration"]:
@@ -299,8 +272,39 @@ class RIDTConfig(Settings):
 
 
 class PhysicalProperties(Settings):
+    """The physical properties settings object.
+
+    Attributes
+    ----------
+    agent_molecular_weight_units : :class:`~.AgentMolecularWeightUnits`
+        The agent molecular weight units selection.
+
+    agent_molecular_weight : :class:`~.AgentMolecularWeight`
+        The agent molecular weight.
+    
+    pressure_units : :class:`~.PressureUnits`
+        The pressure units selection.
+
+    pressure: :class:`~.Pressure`
+        The pressure of the atmosphere.
+    
+    temperature_units : :class:`~.TemperatureUnits`
+        The temperature units selection.
+
+    temperature: :class:`~.Temperature`
+        The temperature of the atmosphere.
+
+    """
     @Settings.assign
     def __init__(self, values: dict):
+        """The PhysicalProperties initialiser
+
+        Parameters
+        ----------
+        value : :obj:`dict`
+            The dictionary of values to be verified and stored.
+
+        """
         self.agent_molecular_weight_units = AgentMolecularWeightUnits
         self.agent_molecular_weight = float
         self.pressure_units = PressureUnits
@@ -310,8 +314,24 @@ class PhysicalProperties(Settings):
 
 
 class AgentMolecularWeightUnits(StringSelection):
+    """The agent molecular weights units selection class.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
     @Terminus.assign
     def __init__(self, value: str):
+        """The AgentMolecularWeightUnits class initialiser
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosed value.
+
+        """
         self.options = [
             "mol.m-3"
         ]
@@ -321,8 +341,24 @@ class AgentMolecularWeightUnits(StringSelection):
     
 
 class PressureUnits(StringSelection):
+    """The pressure units selection class.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
     @Terminus.assign
     def __init__(self, value: str):
+        """The PressureUnits class initialiser.
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosed value.
+
+        """
         self.options = [
             "Pa"
         ]
@@ -332,8 +368,24 @@ class PressureUnits(StringSelection):
 
 
 class TemperatureUnits(StringSelection):
+    """The temperature units selection class.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
     @Terminus.assign
     def __init__(self, value: str):
+        """The TemperatureUnits class initialiser.
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosed value.
+
+        """
         self.options = [
             "K"
         ]
@@ -344,6 +396,11 @@ class TemperatureUnits(StringSelection):
 
 
 class FreshAirChangeRate(Number):
+    """The FreshAirChangeRate class
+
+    Stores the value of the fresh air change rate.
+
+    """
 
     @Terminus.assign
     def __init__(self, value: float):
@@ -351,6 +408,9 @@ class FreshAirChangeRate(Number):
 
     
     def check(self):
+        """Checks that the value is in the required bounds.
+
+        """
         self.lower_bound(5e-4)
         self.upper_bound(5e2)
 
@@ -358,15 +418,21 @@ class FreshAirChangeRate(Number):
 class DispersionModel(StringSelection):
     """The dispersion model selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, value: str):
-        """The constructor for the :class:`DispersionModel` class.
+        """The DispersionModel class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the dispersion model selection.
+            The chosed value.
+
         """
         self.options = [
             "eddy_diffusion",
@@ -380,15 +446,21 @@ class DispersionModel(StringSelection):
 class ReleaseType(StringSelection):
     """The release type selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`ReleaseType` class.
+        """The ReleaseType class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the release type selection.
+            The chosed value.
+
         """
         self.options = [
             "instantaneous",
@@ -403,15 +475,21 @@ class ReleaseType(StringSelection):
 class TimeUnits(StringSelection):
     """The time units selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`TimeUnits` class.
+        """The TimeUnits class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the time units selection.
+            The chosed value.
+
         """
         self.options = [
             "s",
@@ -424,15 +502,21 @@ class TimeUnits(StringSelection):
 class ConcentrationUnits(StringSelection):
     """The time units selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`ConcentrationUnits` class.
+        """The ConcentrationUnits class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the concentration units selection.
+            The chosed value.
+
         """
         self.options = [
             "kg.m-3",
@@ -449,15 +533,21 @@ class ConcentrationUnits(StringSelection):
 class ExposureUnits(StringSelection):
     """The time units selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`ExposureUnits` class.
+        """The ExposureUnits class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the exposure units selection.
+            The chosed value.
+
         """
         self.options = [
             "mg.min.m-3",
@@ -471,15 +561,21 @@ class ExposureUnits(StringSelection):
 class SpatialUnits(StringSelection):
     """The time units selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`SpatialUnits` class.
+        """The SpatialUnits class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the spatial units selection.
+            The chosed value.
+
         """
         self.options = [
             "m",
@@ -492,15 +588,21 @@ class SpatialUnits(StringSelection):
 class MassUnits(StringSelection):
     """The mass units selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`MassUnits` class.
+        """The MassUnits class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the mass units selection.
+            The chosed value.
+
         """
         self.options = [
             "kg",
@@ -513,15 +615,21 @@ class MassUnits(StringSelection):
 class FreshAirChangeRateUnits(StringSelection):
     """The fresh air change rate units selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, valu: str):
-        """The constructor for the :class:`FreshAirChangeRateUnits` class.
+        """The FreshAirChangeRateUnits class initialiser.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the fresh air change rate units selection.
+            The chosed value.
+
         """
         self.options = [
             "m3.s-1",
@@ -532,23 +640,18 @@ class FreshAirChangeRateUnits(StringSelection):
 
 
 class ModelSettings(Settings):
-    """The :class:`~.ModelSettings` class. It inherits from :class:`~.Settings`
-    class
+    """The Model Settings class.
 
     Attributes
     ----------
     eddy_diffusion: :class:`~.EddyDiffusion`
-        A :class:`~.Settings` child containing the paths
-        to the EddyDiffusion configurations.
+        The  eddy diffusion model settings.
 
-    well_mixed: :class:`~.WellMixed`
-        A :class:`~.Settings` child containing the paths
-        to the WellMixed configurations.
 
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.ModelSettings` class.
+        """The ModelSettings class initialiser.
 
         Parameters
         ----------
@@ -580,7 +683,7 @@ class ModeSettings(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.ModeSettings` class.
+        """The ModeSettings class initialiser.
 
         Parameters
         ----------
@@ -607,7 +710,7 @@ class InstantaneousSettings(Settings):
 
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.InstantaneousSettings` class.
+        """The InstantaneousSettings class initialiser.
 
         Parameters
         ----------
@@ -650,18 +753,23 @@ class InstantaneousSource(Settings):
     ---------
     x: :class:`~.NonNegativeFloat`
         The x coordinate of the source.
+
     y: :class:`~.NonNegativeFloat`
         The y coordinate of the source.
+
     z: :class:`~.NonNegativeFloat`
         The z coordinate of the source.
+
     mass: :class:`~.NonNegativeFloat`
         The mass of the material released.
+
     time: :class:`~.NonNegativeFloat`
         The time that the material is released.
+
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.InstantaneousSource` class.
+        """The InstantaneousSource class initialiser.
 
         Parameters
         ----------
@@ -677,6 +785,11 @@ class InstantaneousSource(Settings):
 
 
 class InstantaneousReleaseMass(Number):
+    """The instantaous release mass setting.
+
+    Container the value of an instantaneous release mass.
+
+    """
     @Terminus.assign
     def __init__(self, value: float):
         self.type = float
@@ -686,6 +799,11 @@ class InstantaneousReleaseMass(Number):
         self.upper_bound(10.0)
 
 class ReleaseRate(Number):
+    """The release rate setting.
+
+    Contains the value for the rate of release for a source.
+    
+    """
     @Terminus.assign
     def __init__(self, value: float):
         self.type = float
@@ -703,16 +821,18 @@ class InfiniteDurationSettings(Settings):
     sources: :class:`~.Dict`
         Path to the dictionary of infinite duration sources within
         the simulation.
+
     """
     @Settings.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.InfiniteDurationSettings` class.
+        """The InfiniteDurationSettings class initialiser.
 
         Parameters
         ----------
         values : :obj:`dict`
             The dictionary corresponding to the infinite duration
             sources.
+
         """
         self.sources = InfiniteDurationSourceDict
 
@@ -726,10 +846,11 @@ class InfiniteDurationSourceDict(Dict):
      type: :class:`~.InfiniteDurationSource`
          Path to the dictionary of values of the infinite duration
          sources.
+
      """
     @Dict.assign
     def __init__(self, values: dict):
-        """The constructor for the :class:`~.InfiniteDurationSourceDict` class.
+        """The InfiniteDurationSourceDict  class initialiser.
 
         Parameters
         ----------
@@ -748,14 +869,19 @@ class InfiniteDurationSource(Settings):
     ---------
     x: :class:`~.NonNegativeFloat`
         The x coordinate of the source.
+
     y: :class:`~.NonNegativeFloat`
         The y coordinate of the source.
+
     z: :class:`~.NonNegativeFloat`
         The z coordinate of the source.
+
     rate: :class:`~.NonNegativeFloat`
         The mass of the material released.
+
     time: :class:`~.NonNegativeFloat`
         The time that the material is released.
+
     """
     @Settings.assign
     def __init__(self, values: dict):
@@ -766,6 +892,7 @@ class InfiniteDurationSource(Settings):
         values : :obj:`dict`
             The dictionary corresponding to the infinite duration
             sources configurations.
+
         """
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
@@ -806,6 +933,7 @@ class FixedDurationSourceDict(Dict):
     type: :class:`~.FixedDurationSource`
         Path to the dictionary of values of the fixed duration
         sources.
+
     """
 
     @Dict.assign
@@ -816,6 +944,7 @@ class FixedDurationSourceDict(Dict):
         ----------
         values : :obj:`dict`
             The value corresponding to the fixed duration sources.
+
         """
         self.type = FixedDurationSource
 
@@ -828,17 +957,23 @@ class FixedDurationSource(Settings):
     ---------
     x: :class:`~.NonNegativeFloat`
         The x coordinate of the source.
+
     y: :class:`~.NonNegativeFloat`
         The y coordinate of the source.
+
     z: :class:`~.NonNegativeFloat`
         The z coordinate of the source.
+
     rate: :class:`~.NonNegativeFloat`
         The mass of the material released.
+
     start_time: :class:`~.NonNegativeFloat`
         The time that the material is released.
+
     end_time: :class:`~.NonNegativeFloat`
         The time that the source stops emitting
         the material.
+
     """
     @Settings.assign
     def __init__(self, values: dict):
@@ -849,6 +984,7 @@ class FixedDurationSource(Settings):
         values : :obj:`dict`
             The dictionary corresponding to the fixed duration
              sources configurations.
+
         """
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
@@ -865,10 +1001,13 @@ class Point(Settings):
     ---------
     x: :class:`~.NonNegativeFloat`
         The x coordinate of the point.
+
     y: :class:`~.NonNegativeFloat`
         The y coordinate of the point.
+
     z: :class:`~.NonNegativeFloat`
         The z coordinate of the point.
+
     """
     @Settings.assign
     def __init__(self, values: dict):
@@ -878,6 +1017,7 @@ class Point(Settings):
         ----------
         values : :obj:`dict`
             The values corresponding to the point location.
+
         """
         self.x = NonNegativeFloat
         self.y = NonNegativeFloat
@@ -893,6 +1033,7 @@ class Thresholds(Settings):
     concentration: :class:`~.ThresholdList`
         Path to the list of concentration thresholds within
         the simulation.
+
     exposure: :class:`~.ThresholdList`
         Path to the list of exposure thresholds within
         the simulation.
@@ -906,6 +1047,7 @@ class Thresholds(Settings):
         values : :obj:`dict`
             The values corresponding to the exposure
             and concentration thresholds.
+
         """
         self.concentration = ThresholdList
         self.exposure = ThresholdList
@@ -920,6 +1062,7 @@ class ThresholdList(List):
     type: :class:`~.Threshold`
         Path to the dictionary of values of the thresholds
         in the simulation.
+
     """
     @List.assign
     def __init__(self, values: list):
@@ -929,6 +1072,7 @@ class ThresholdList(List):
         ----------
         values : :obj:`dict`
             The values corresponding to the thresholds.
+
         """
         self.type = NonNegativeFloat
 
@@ -975,19 +1119,33 @@ class EddyDiffusion(Settings):
 
 
 class AnalysisSettings(Settings):
+    """The analysis settings 
+
+    Attributes
+    ----------
+    percentage_exceedance : :class:`~.Percentage`
+        The percentage which must be exceeded in percent exceed threshold
+        calcluations.
+    
+    exclude_uncertain_values: :obj:`bool`
+        Whether to exclude values within 2m of any source from analysis.
+
+    """
     @Settings.assign
     def __init__(self, values: dict):
+        """The AnalysisSettings class initialiser.
+
+        Parameters
+        ----------
+        values : :obj:`dict`
+            The values corresponding to the eddy diffusion
+            model type.
+
+        """
+ 
         self.percentage_exceedance = Percentage
         self.exclude_uncertain_values = bool
 
-
-class DomainSelection(Settings):
-    @Settings.assign
-    def __init__(self, values: dict):
-        self.all_points = bool
-        self.all_lines = bool
-        self.all_planes = bool
-        self.all_domain = bool
 
 
 class LinePlots(Settings):
@@ -1186,15 +1344,22 @@ class Coefficient(Settings):
 
 class CoefficientMode(StringSelection):
     """The diffusion coefficient mode selection
-    It inherits from :class:`~.Terminus`.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`CoefficientMode` class.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the way to calculate the diffusion coefficient.
+            The chosed value.
+
         """
         self.options = [
             "EXPLICIT",
@@ -1257,8 +1422,24 @@ class TKEB(Settings):
 
 
 class TKEBBound(StringSelection):
+    """The TKEB bound selection class.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+    
+    """
     @Terminus.assign
     def __init__(self, values: dict):
+        """The TKEBBound class initialiser.
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosed value.
+        
+        """
         self.options = [
             "lower",
             "regression",
@@ -1271,6 +1452,11 @@ class TKEBBound(StringSelection):
 
 
 class TotalAirChangeRate(Number):
+    """Total air change rate settings
+
+    Contains the value of the total air change rate.
+
+    """
     @Terminus.assign
     def __init__(self, value: float):
         self.type = float
@@ -1281,6 +1467,11 @@ class TotalAirChangeRate(Number):
 
 
 class NumberOfSupplyVents(Number):
+    """Number of supply vents.
+
+    Contains the number of supply vents.
+
+    """
     @Terminus.assign
     def __init__(self, value: int):
         self.type = int 
@@ -1327,15 +1518,21 @@ class ImageSourceNumber(Number):
 class ImageMode(StringSelection):
     """The image mode selection
 
-    It inherits from :class:`~.Terminus`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`ImageMode` class.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the way to choose the number of images.
+            The chosed value.
+
         """
         self.options = [
             "manual",
@@ -1410,15 +1607,21 @@ class ContourPlots(Settings):
 class RangeMode(StringSelection):
     """The contour range mode selection setting class.
 
-    It inherits from :class:`~.StringSelection`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, value: str):
         """The constructor for the :class:`RangeMode` class.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the range mode selection.
+            The chosed value.
+
         """
         self.options = [
             "auto",
@@ -1432,15 +1635,21 @@ class RangeMode(StringSelection):
 class ScaleType(StringSelection):
     """The contour scale type selection setting class.
 
-    It inherits from :class:`~.Terminus`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, values: dict):
         """The constructor for the :class:`ScaleType` class.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the scale type selection.
+            The chosed value.
+
         """
         self.options = [
             "linear",
@@ -1531,15 +1740,21 @@ class Line(Settings):
 class ParallelAxis(StringSelection):
     """The parallel axis selection setting class.
 
-    It inherits from :class:`~.Terminus`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, value: str):
         """The constructor for the :class:`ParallelAxis` class.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the parallel axis.
+            The chosed value.
+
         """
         self.options = [
             "x",
@@ -1625,15 +1840,21 @@ class Plane(Settings):
 class Axis(StringSelection):
     """The axis selection setting class.
 
-    It inherits from :class:`~.Terminus`.
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
 
     """
     @Terminus.assign
     def __init__(self, value: str):
         """The constructor for the :class:`Axis` class.
 
+        Parameters
+        ----------
         value : :obj:`str`
-            The string indicating the axis.
+            The chosed value.
+
         """
         self.options = [
             "xy",
