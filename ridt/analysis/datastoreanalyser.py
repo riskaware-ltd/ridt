@@ -152,7 +152,7 @@ class DataStoreAnalyser:
 
         The largest percentage that exceeds all threshold values.
 
-        A corresponding :class:`~.ResultsContainer` derived class instances
+        A corresponding :class:`~.ResultContainer` derived class instances
         is created to hold each result.
 
         Returns
