@@ -2,7 +2,6 @@ from typing import Tuple
 
 from numpy import ndarray
 from numpy import argmax
-from numpy import max
 from numpy import unravel_index
 from numpy import where
 from numpy import prod

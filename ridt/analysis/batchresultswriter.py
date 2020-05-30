@@ -44,12 +44,6 @@ class BatchResultsWriter:
     quantity: :obj:`str`
         The string id for the quantity stored in the data  store.
 
-    data_store : :class:`~.BatchDataStore`
-        The batch data store to be analysed.
-    
-    dir_agent: :class:`~.DirectoryAgent`
-        The  :class:`~.DirectoryAgent` instance for this run.
-    
     analysis : :obj:`dict` [:class:`~.RIDTConfig`, :class:`~.DataStoreAnalyser`]
         A dictionary of :class:`~.DataStoreAnalyser` instances for each
         :class:`~.RIDTConfig` object in :attr:`space`.

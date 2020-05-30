@@ -33,8 +33,10 @@ release = '1.0'
 extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
+    'sphinx.ext.intersphinx'
 ]
+
+typehints_fully_qualified = False
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),

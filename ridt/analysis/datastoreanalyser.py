@@ -35,8 +35,68 @@ from .resultcontainers import MaxPercentExceedance
 
 
 class DataStoreAnalyser:
+    """The Data Store Analyser class.
 
-    def __init__(self, setting: RIDTConfig, data_store: DataStore, quantity: str):
+    Iterates through all selected geometries and computes all quantities
+    such as the maximum value etc.
+
+    Attributes
+    ----------
+    setting : :class:`~.RIDTConfig`
+        The settings for the run in question.
+    
+    domain : :class:`~.Domain`
+        The instance of :class:`~.Domain` corresponding to :attr:`setting`.
+
+    quantity: :obj:`str`
+        The string id for the quantity stored in the data  store.
+
+    data_store : :class:`~.DataStore`
+        The data store to be analysed.
+    
+    thresholds : :obj:`list` [:obj:`float`]
+        The threshold values corresponding to :attr:`quantity` defined in
+        :attr:`setting`.
+    
+    units : :class:`~.Units`
+        The instance of :class:`~.Units` corresponding to :attr:`setting`.
+    
+    maximum : :obj:`list` [:class:`~.Maximum`]
+        The lists of :class:`~.Maximum` instances created.
+    
+    exceedance : :obj:`list` [:class:`~.Exceedance`]
+        The lists of :class:`~.Exceedance` instances created.
+    
+    percent_exceedance: :obj:`list` [:class:`~.PercentExceedance`]
+        The lists of :class:`~.PercentExceedance` instances created.
+    
+    max_percent_exceedance: :obj:`list` [:class:`~.MaxPercentExceedance`]
+        The lists of :class:`~.MaxPercentExceedance` instances created.
+    
+    """
+    def __init__(self,
+                 setting: RIDTConfig,
+                 data_store: DataStore,
+                 quantity: str):
+        """The :class`~.DataStoreAnalyser` class initialiser.
+        
+        Calls the :meth:`~.DataStoreAnalyser.evaluate` method.
+
+        If flag is set in config file, will exclude values within 2m of all
+        sources.
+
+        Parameters
+        ----------
+        setting : :class:`~.RIDTConfig`
+            The settings for the run in question.
+
+        data_store : :class:`~.DataStore`
+            The data store to be analysed.
+
+        quantity : :obj:`str`
+            The string id for the quantity stored in the data  store.
+
+       """
 
         self.setting = setting
         self.units = Units(setting)
@@ -57,14 +117,49 @@ class DataStoreAnalyser:
 
     @property
     def geometries(self):
+        """:obj:`list` [:obj:`str`] : the list of geometries selected for
+        evaluation in :attr:`setting`.
+
+        """
         locations = self.setting.models.eddy_diffusion.monitor_locations
         return [g for g, e in locations.evaluate.items() if e]
 
     def threshold_converter(self):
+        """Converts the threshold into SI units.
+
+        Converts the thresholds in :attr:`setting` corresponding to
+        :attr:`quantity` into SI units.
+
+        Returns
+        -------
+        :obj:`list` [:obj:`float`]
+            The list of threshold values in SI units. 
+        """
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
 
     def evaluate(self):
+        """Loops over all selected geometries and computes various quantities.
+
+        The following quantities are evaluated:
+
+        The maximum value.
+
+        The fastest time to all threshold values.
+
+        The fastest time to the defined percentage of domain to all threshold
+        values.
+
+        The largest percentage that exceeds all threshold values.
+
+        A corresponding :class:`~.ResultsContainer` derived class instances
+        is created to hold each result.
+
+        Returns
+        -------
+        None
+
+        """
         p =  self.setting.models.eddy_diffusion.analysis.percentage_exceedance
         for geometry in self.geometries:
             for id in getattr(self.data_store, geometry):
@@ -86,6 +181,16 @@ class DataStoreAnalyser:
                         MaxPercentExceedance(self.setting, *D, self.quantity, value, index, t))
     
     def exclude_uncertain_values(self):
+        """Sets values within 2m of source to nan.
+
+        Iterates through all domains in data store and sets values within 
+        2m of any source to nan.
+
+        Returns
+        -------
+        None
+
+        """
         new_data_store = deepcopy(self.data_store)
         um = UncertaintyMask(self.setting)
         for geometry in self.geometries:
@@ -96,6 +201,18 @@ class DataStoreAnalyser:
 
     @property
     def time_to_well_mixed(self):
+        """Evaluates the time for system to become 'well mixed'
+
+        Computes the time it takes for the full domain normalised standard
+        deviation to become <= 0.1.
+
+        Returns
+        -------
+        Union[:obj:`float`, :obj:`None`] 
+            If there exists a time when well mixed state is acheived that time
+            is returned, else :obj:`None`.
+
+        """
         for i in range(self.setting.time_samples):
             d = self.data_store.domain["domain"][i, :, :, :]
             value = nanstd(d) / nanmean(d)

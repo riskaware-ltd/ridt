@@ -3,7 +3,8 @@ from itertools import product
 from numpy import zeros
 from numpy import array
 from numpy import ndarray
-from numpy.linalg import norm  
+from numpy.linalg import norm
+from numpy import nan
 
 from ridt.config import RIDTConfig
 from ridt.container import Domain
@@ -31,7 +32,7 @@ class UncertaintyMask:
             p = array((x, y, z))
             for s in self.sources:
                 if norm(s - p) <= 2.0:
-                    rv[index] = 0.0
+                    rv[index] = nan
                 else:
                     rv[index] = data[index]
         return rv
