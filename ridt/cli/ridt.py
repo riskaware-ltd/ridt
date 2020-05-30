@@ -15,17 +15,18 @@ from ridt.base import RIDTOSError
 
 @click.group()
 def ridt():
-    """The indoor diffusion modelling framework entry point."""
+    """The rapid indoor diffusion modelling tool (ridt)."""
     pass
 
 @ridt.command()
 @click.argument('config_file', type=click.Path(exists=True))
 @click.argument('output_dir', type=click.Path(exists=True))
 def run(config_file, output_dir):
+    """Run diffusion model."""
+
     if not isdir(output_dir):
         sys.exit(f"{output_dir} is not a directory.\n\nAborted.")
 
-    """Run one or several config files and write all data to the given directory."""
     try:
         s = ConfigFileParser(config_file)
     except (ConfigFileParserJSONError,
@@ -52,6 +53,7 @@ def run(config_file, output_dir):
 @click.option('-o', '--output_file', type=click.Path())
 @click.option('--force/--no-force', default=False)
 def csv_to_config(config_file, csv_file, output_file, force):
+    """Merge CSV file to config JSON file. """
     if config_file == output_file:
         if not force:
             sys.exit("To overwrite the original config file, use the --force"
