@@ -31,7 +31,7 @@ class ConfigFileWriter:
         instance.__init__(*args, **kwargs)
 
     def __init__(self, output_dir: str, file_name: str, data: dict):
-        self.path = join(self.output_dir, file_name)
+        self.path = join(output_dir, file_name)
         self.data = data
         self.__write_file()
        

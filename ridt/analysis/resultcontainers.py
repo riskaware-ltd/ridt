@@ -517,7 +517,7 @@ class MaxPercentExceedance(ResultContainer):
             t = self.domain.time[self.index]
             rv += f"id: {self.id}\n"
             rv += f"time: {t:.2f}{self.units.time}\n"
-            rv += f"value: {self.value}%\n\n"
+            rv += f"value: {self.value:.2f}%\n\n"
         else:
             rv += "None\n\n"
         return rv

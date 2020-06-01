@@ -1180,7 +1180,6 @@ class PointPlots(Settings):
     def __init__(self, values: dict):
         self.output = bool
         self.scale = ScaleType
-        self.number = NonNegativeInteger
 
 
 class MonitorLocations(Settings):
@@ -1553,12 +1552,6 @@ class ContourPlots(Settings):
     output : :obj:`bool`
         Whether or not we output the contour plots.
 
-    concentration: :obj:`bool`
-        Show contour plots of the concentration value.
-
-    exposure: :obj:`bool`
-        Show the contour plots of the exposure value.
-
     creation_frequency: :class:`~.NonNegativeFloat`
         How often we wish to create a contour plot of each plane in 1/s.
 
@@ -1588,8 +1581,6 @@ class ContourPlots(Settings):
             The values corresponding to the contour plots.
         """
         self.output = bool
-        self.concentration = bool
-        self.exposure = bool
         self.animate = bool
         self.number = NonNegativeInteger
         self.number_of_contours = NonNegativeInteger

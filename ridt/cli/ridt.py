@@ -1,5 +1,14 @@
 import sys
+
+import shutil
+
 from os.path import isdir
+from os.path import join
+from os.path import dirname
+from os import getcwd
+from os import listdir
+
+
 import click
 
 from ridt.base import ConsistencyError
@@ -17,6 +26,24 @@ from ridt.base import RIDTOSError
 def ridt():
     """The rapid indoor diffusion modelling tool (ridt)."""
     pass
+
+@ridt.command()
+def init():
+    """Copy a default config files current working directory.
+
+    """
+    try:
+        source_path = join(dirname(__file__), "..", "default")
+        for item in listdir(source_path):
+            s = join(source_path, item)
+            d = join(getcwd(), item)
+            if isdir(s):
+                shutil.copytree(s, d)
+            else:
+                shutil.copy2(s, d)
+    except OSError as e:
+        print(f"Could not clone default config file. Error: {e}")
+
 
 @ridt.command()
 @click.argument('config_file', type=click.Path(exists=True))

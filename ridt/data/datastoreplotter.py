@@ -39,7 +39,10 @@ class DataStorePlotter:
         for geometry, plotter in DataStorePlotter.geometries.items():
             config = getattr(settings.models.eddy_diffusion, f"{geometry}_plots")
             if not config.output: continue
-            indices = self.spread(settings.time_samples, config.number)
+            try:
+                indices = self.spread(settings.time_samples, config.number)
+            except AttributeError:
+                indices = None
             dir_agent.create_plot_dir(geometry, quantity)
             plotter = plotter(settings, dir_agent.pdir, quantity)
             for id, data in getattr(data_store, geometry).items():
