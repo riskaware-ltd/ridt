@@ -1,44 +1,44 @@
 \contentsline {section}{\numberline {1}Installation}{3}{section.1}
-\contentsline {section}{\numberline {2}Basic Usage}{3}{section.2}
+\contentsline {section}{\numberline {2}Basic Usage}{4}{section.2}
 \contentsline {section}{\numberline {3}The RIDT Configuration File}{6}{section.3}
 \contentsline {subsection}{\numberline {3.1}JSON Format}{6}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Settings Summary}{6}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}\texttt {eddy\_diffusion}}{6}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.1}\texttt {eddy\_diffusion}}{7}{subsubsection.3.2.1}
 \contentsline {subsubsection}{\numberline {3.2.2}\texttt {well\_mixed}}{7}{subsubsection.3.2.2}
 \contentsline {subsubsection}{\numberline {3.2.3}\texttt {concentration\_units}}{7}{subsubsection.3.2.3}
 \contentsline {subsubsection}{\numberline {3.2.4}\texttt {exposure\_units}}{7}{subsubsection.3.2.4}
 \contentsline {subsubsection}{\numberline {3.2.5}\texttt {mass\_units}}{7}{subsubsection.3.2.5}
-\contentsline {subsubsection}{\numberline {3.2.6}\texttt {time\_units}}{7}{subsubsection.3.2.6}
+\contentsline {subsubsection}{\numberline {3.2.6}\texttt {time\_units}}{8}{subsubsection.3.2.6}
 \contentsline {subsubsection}{\numberline {3.2.7}\texttt {time\_samples}}{8}{subsubsection.3.2.7}
 \contentsline {subsubsection}{\numberline {3.2.8}\texttt {total\_time}}{8}{subsubsection.3.2.8}
 \contentsline {subsubsection}{\numberline {3.2.9}\texttt {spatial\_units}}{8}{subsubsection.3.2.9}
 \contentsline {subsubsection}{\numberline {3.2.10}\texttt {dimensions}}{8}{subsubsection.3.2.10}
 \contentsline {paragraph}{\numberline {3.2.10.1}\texttt {dimensions.x}}{8}{paragraph.3.2.10.1}
-\contentsline {paragraph}{\numberline {3.2.10.2}\texttt {dimensions.y}}{8}{paragraph.3.2.10.2}
+\contentsline {paragraph}{\numberline {3.2.10.2}\texttt {dimensions.y}}{9}{paragraph.3.2.10.2}
 \contentsline {paragraph}{\numberline {3.2.10.3}\texttt {dimensions.z}}{9}{paragraph.3.2.10.3}
 \contentsline {subsubsection}{\numberline {3.2.11}\texttt {spatial\_samples}}{9}{subsubsection.3.2.11}
 \contentsline {paragraph}{\numberline {3.2.11.1}\texttt {spatial\_samples.x}}{9}{paragraph.3.2.11.1}
 \contentsline {paragraph}{\numberline {3.2.11.2}\texttt {spatial\_samples.y}}{9}{paragraph.3.2.11.2}
 \contentsline {paragraph}{\numberline {3.2.11.3}\texttt {spatial\_samples.z}}{9}{paragraph.3.2.11.3}
-\contentsline {subsubsection}{\numberline {3.2.12}\texttt {fresh\_air\_change\_rate\_units}}{9}{subsubsection.3.2.12}
+\contentsline {subsubsection}{\numberline {3.2.12}\texttt {fresh\_air\_change\_rate\_units}}{10}{subsubsection.3.2.12}
 \contentsline {subsubsection}{\numberline {3.2.13}\texttt {fresh\_air\_change\_rate}}{10}{subsubsection.3.2.13}
 \contentsline {subsubsection}{\numberline {3.2.14}\texttt {physical\_properties}}{10}{subsubsection.3.2.14}
 \contentsline {paragraph}{\numberline {3.2.14.1}\texttt {agent\_molecular\_weight\_units}}{10}{paragraph.3.2.14.1}
 \contentsline {paragraph}{\numberline {3.2.14.2}\texttt {agent\_molecular\_weight}}{10}{paragraph.3.2.14.2}
 \contentsline {paragraph}{\numberline {3.2.14.3}\texttt {pressure\_units}}{10}{paragraph.3.2.14.3}
-\contentsline {paragraph}{\numberline {3.2.14.4}\texttt {pressure}}{10}{paragraph.3.2.14.4}
+\contentsline {paragraph}{\numberline {3.2.14.4}\texttt {pressure}}{11}{paragraph.3.2.14.4}
 \contentsline {paragraph}{\numberline {3.2.14.5}\texttt {temperature\_units}}{11}{paragraph.3.2.14.5}
 \contentsline {paragraph}{\numberline {3.2.14.6}\texttt {temperature}}{11}{paragraph.3.2.14.6}
 \contentsline {subsubsection}{\numberline {3.2.15}\texttt {modes}}{11}{subsubsection.3.2.15}
 \contentsline {subsubsection}{\numberline {3.2.16}\texttt {instantaneous}}{11}{subsubsection.3.2.16}
 \contentsline {paragraph}{\numberline {3.2.16.1}\texttt {instantaneous.sources}}{11}{paragraph.3.2.16.1}
-\contentsline {paragraph}{\numberline {3.2.16.2}\texttt {instantaneous.sources.source}}{11}{paragraph.3.2.16.2}
+\contentsline {paragraph}{\numberline {3.2.16.2}\texttt {instantaneous.sources.source}}{12}{paragraph.3.2.16.2}
 \contentsline {paragraph}{\numberline {3.2.16.3}\texttt {instantaneous.sources.source.x}}{12}{paragraph.3.2.16.3}
 \contentsline {paragraph}{\numberline {3.2.16.4}\texttt {instantaneous.sources.source.y}}{12}{paragraph.3.2.16.4}
 \contentsline {paragraph}{\numberline {3.2.16.5}\texttt {instantaneous.sources.source.z}}{12}{paragraph.3.2.16.5}
 \contentsline {paragraph}{\numberline {3.2.16.6}\texttt {instantaneous.sources.source.mass}}{12}{paragraph.3.2.16.6}
 \contentsline {paragraph}{\numberline {3.2.16.7}\texttt {instantaneous.sources.source.time}}{12}{paragraph.3.2.16.7}
-\contentsline {subsubsection}{\numberline {3.2.17}\texttt {fixed\_duration}}{12}{subsubsection.3.2.17}
+\contentsline {subsubsection}{\numberline {3.2.17}\texttt {fixed\_duration}}{13}{subsubsection.3.2.17}
 \contentsline {paragraph}{\numberline {3.2.17.1}\texttt {fixed\_duration.sources}}{13}{paragraph.3.2.17.1}
 \contentsline {paragraph}{\numberline {3.2.17.2}\texttt {fixed\_duration.sources.source}}{13}{paragraph.3.2.17.2}
 \contentsline {paragraph}{\numberline {3.2.17.3}\texttt {fixed\_duration.sources.source.x}}{13}{paragraph.3.2.17.3}
@@ -130,7 +130,7 @@
 \contentsline {subsection}{\numberline {B.1}Instantaneous release}{36}{subsection.B.1}
 \contentsline {subsection}{\numberline {B.2}Constant and continuous release}{36}{subsection.B.2}
 \contentsline {subsection}{\numberline {B.3}Constant release rate with finite duration}{36}{subsection.B.3}
-\contentsline {section}{\numberline {C}Eddy Diffusion Models}{36}{appendix.C}
+\contentsline {section}{\numberline {C}Eddy Diffusion Model}{36}{appendix.C}
 \contentsline {subsection}{\numberline {C.1}Instantaneous release}{36}{subsection.C.1}
 \contentsline {subsection}{\numberline {C.2}Constant and continuous release}{37}{subsection.C.2}
 \contentsline {subsection}{\numberline {C.3}Constant release rate with finite duration}{37}{subsection.C.3}
