@@ -94,7 +94,6 @@ class ResultsWriter:
         self.thresholds = self.threshold_converter()
         self.analysis = analysis
         self.dir_agent = dir_agent 
-        self.create_dirs()
         self.domain = Domain(setting)
         self.summary()
         self.maximum()
@@ -123,18 +122,6 @@ class ResultsWriter:
         """
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
-    
-    def create_dirs(self):
-        """Create all subdirectories for output for each selected geometry,
-        using :attr:`dir_agent`.
-
-        Returns
-        -------
-        None
-
-        """
-        for geometry in self.geometries:
-            self.dir_agent.create_analysis_dir(geometry, self.quantity)
 
     def write(self, file_path: str, header: List[str], lines: Iterable) -> None:
         """Write array of values to csv file.
@@ -199,6 +186,7 @@ class ResultsWriter:
         
         """ 
         for geometry in self.geometries:
+            self.dir_agent.create_analysis_dir(geometry, self.quantity)
             items = self.get_valid(geometry, self.analysis.maximum)
             items.sort(reverse=True)
             rows = [item.row for item in items]
@@ -225,6 +213,7 @@ class ResultsWriter:
         ]
         for r, reverse in results:
             for geometry in self.geometries:
+                self.dir_agent.create_analysis_dir(geometry, self.quantity)
                 for t in self.thresholds:
                     valid = self.get_valid(geometry, r)
                     items = [i for i in valid if i.threshold == t]
@@ -304,6 +293,7 @@ class ResultsWriter:
         None
 
         """
+        file.write("\n")
         file.write("".join("=" for i in range(len(title))) + "\n")
         file.write(title + "\n")
         file.write("".join("=" for i in range(len(title))) + "\n")
@@ -323,6 +313,7 @@ class ResultsWriter:
         -------
         None
         """
+        file.write("\n")
         file.write("".join("-" for i in range(len(subtitle))) + "\n")
         file.write(subtitle + "\n")
         file.write("".join("-" for i in range(len(subtitle))) + "\n")

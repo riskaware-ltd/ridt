@@ -223,6 +223,7 @@ class BatchResultsWriter:
         None
 
         """
+        file.write("\n")
         file.write("".join("=" for i in range(len(title))) + "\n")
         file.write(title + "\n")
         file.write("".join("=" for i in range(len(title))) + "\n")
@@ -242,6 +243,7 @@ class BatchResultsWriter:
         -------
         None
         """
+        file.write("\n")
         file.write("".join("-" for i in range(len(subtitle))) + "\n")
         file.write(subtitle + "\n")
         file.write("".join("-" for i in range(len(subtitle))) + "\n")
