@@ -121,7 +121,8 @@
             "points_plots": {
                 "output": true,
                 "scale": "logarithmic",
-                "number": 2
+                "number": 2,
+                "time_axis_units": "s"
             },
             "lines_plots": {
                 "output": true,

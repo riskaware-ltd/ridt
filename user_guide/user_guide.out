@@ -106,39 +106,40 @@
 \BOOKMARK [3][-]{subsubsection.4.2.40}{models.eddy\137diffusion.points\137plots}{subsection.4.2}% 106
 \BOOKMARK [4][-]{paragraph.4.2.40.1}{points\137plots.output}{subsubsection.4.2.40}% 107
 \BOOKMARK [4][-]{paragraph.4.2.40.2}{points\137plots.scale}{subsubsection.4.2.40}% 108
-\BOOKMARK [3][-]{subsubsection.4.2.41}{models.eddy\137diffusion.lines\137plots}{subsection.4.2}% 109
-\BOOKMARK [4][-]{paragraph.4.2.41.1}{lines\137plots.output}{subsubsection.4.2.41}% 110
-\BOOKMARK [4][-]{paragraph.4.2.41.2}{lines\137plots.scale}{subsubsection.4.2.41}% 111
-\BOOKMARK [4][-]{paragraph.4.2.41.3}{lines\137plots.animate}{subsubsection.4.2.41}% 112
-\BOOKMARK [4][-]{paragraph.4.2.41.4}{lines\137plots.number}{subsubsection.4.2.41}% 113
-\BOOKMARK [3][-]{subsubsection.4.2.42}{models.eddy\137diffusion.planes\137plots}{subsection.4.2}% 114
-\BOOKMARK [4][-]{paragraph.4.2.42.1}{planes\137plots.output}{subsubsection.4.2.42}% 115
-\BOOKMARK [4][-]{paragraph.4.2.42.2}{planes\137plots.scale}{subsubsection.4.2.42}% 116
-\BOOKMARK [4][-]{paragraph.4.2.42.3}{planes\137plots.animate}{subsubsection.4.2.42}% 117
-\BOOKMARK [4][-]{paragraph.4.2.42.4}{planes\137plots.number}{subsubsection.4.2.42}% 118
-\BOOKMARK [4][-]{paragraph.4.2.42.5}{planes\137plots.range}{subsubsection.4.2.42}% 119
-\BOOKMARK [4][-]{paragraph.4.2.42.6}{planes\137plots.number\137of\137contours}{subsubsection.4.2.42}% 120
-\BOOKMARK [4][-]{paragraph.4.2.42.7}{planes\137plots.contours}{subsubsection.4.2.42}% 121
-\BOOKMARK [5][-]{subparagraph.4.2.42.7.1}{planes\137plots.contours.min}{paragraph.4.2.42.7}% 122
-\BOOKMARK [5][-]{subparagraph.4.2.42.7.2}{planes\137plots.contours.max}{paragraph.4.2.42.7}% 123
-\BOOKMARK [1][-]{section.5}{Batch Mode}{}% 124
-\BOOKMARK [1][-]{section.6}{csv-to-config}{}% 125
-\BOOKMARK [1][-]{section.7}{Run Analysis}{}% 126
-\BOOKMARK [2][-]{subsection.7.1}{Maxium Values}{section.7}% 127
-\BOOKMARK [2][-]{subsection.7.2}{Time to Threshold Values}{section.7}% 128
-\BOOKMARK [2][-]{subsection.7.3}{Time for Percent of Domain to Threshold Values}{section.7}% 129
-\BOOKMARK [2][-]{subsection.7.4}{Maximum Percent of Domain to Exceed Threshold Values}{section.7}% 130
-\BOOKMARK [2][-]{subsection.7.5}{Extrema}{section.7}% 131
-\BOOKMARK [2][-]{subsection.7.6}{Batch Run Analysis}{section.7}% 132
-\BOOKMARK [1][-]{appendix.A}{The Full Default Configuration File}{}% 133
-\BOOKMARK [1][-]{appendix.B}{The Well Mixed Model}{}% 134
-\BOOKMARK [2][-]{subsection.B.1}{Instantaneous release}{appendix.B}% 135
-\BOOKMARK [2][-]{subsection.B.2}{Constant and continuous release}{appendix.B}% 136
-\BOOKMARK [2][-]{subsection.B.3}{Constant release rate with finite duration}{appendix.B}% 137
-\BOOKMARK [1][-]{appendix.C}{Eddy Diffusion Model}{}% 138
-\BOOKMARK [2][-]{subsection.C.1}{Instantaneous release}{appendix.C}% 139
-\BOOKMARK [2][-]{subsection.C.2}{Constant and continuous release}{appendix.C}% 140
-\BOOKMARK [2][-]{subsection.C.3}{Constant release rate with finite duration}{appendix.C}% 141
-\BOOKMARK [1][-]{appendix.D}{Equations to calculate the eddy diffusion coefficient}{}% 142
-\BOOKMARK [1][-]{appendix.E}{Time to Well Mixed}{}% 143
-\BOOKMARK [1][-]{appendix.F}{Upper Exposure Limit}{}% 144
+\BOOKMARK [4][-]{paragraph.4.2.40.3}{points\137plots.time\137axis\137units}{subsubsection.4.2.40}% 109
+\BOOKMARK [3][-]{subsubsection.4.2.41}{models.eddy\137diffusion.lines\137plots}{subsection.4.2}% 110
+\BOOKMARK [4][-]{paragraph.4.2.41.1}{lines\137plots.output}{subsubsection.4.2.41}% 111
+\BOOKMARK [4][-]{paragraph.4.2.41.2}{lines\137plots.scale}{subsubsection.4.2.41}% 112
+\BOOKMARK [4][-]{paragraph.4.2.41.3}{lines\137plots.animate}{subsubsection.4.2.41}% 113
+\BOOKMARK [4][-]{paragraph.4.2.41.4}{lines\137plots.number}{subsubsection.4.2.41}% 114
+\BOOKMARK [3][-]{subsubsection.4.2.42}{models.eddy\137diffusion.planes\137plots}{subsection.4.2}% 115
+\BOOKMARK [4][-]{paragraph.4.2.42.1}{planes\137plots.output}{subsubsection.4.2.42}% 116
+\BOOKMARK [4][-]{paragraph.4.2.42.2}{planes\137plots.scale}{subsubsection.4.2.42}% 117
+\BOOKMARK [4][-]{paragraph.4.2.42.3}{planes\137plots.animate}{subsubsection.4.2.42}% 118
+\BOOKMARK [4][-]{paragraph.4.2.42.4}{planes\137plots.number}{subsubsection.4.2.42}% 119
+\BOOKMARK [4][-]{paragraph.4.2.42.5}{planes\137plots.range}{subsubsection.4.2.42}% 120
+\BOOKMARK [4][-]{paragraph.4.2.42.6}{planes\137plots.number\137of\137contours}{subsubsection.4.2.42}% 121
+\BOOKMARK [4][-]{paragraph.4.2.42.7}{planes\137plots.contours}{subsubsection.4.2.42}% 122
+\BOOKMARK [5][-]{subparagraph.4.2.42.7.1}{planes\137plots.contours.min}{paragraph.4.2.42.7}% 123
+\BOOKMARK [5][-]{subparagraph.4.2.42.7.2}{planes\137plots.contours.max}{paragraph.4.2.42.7}% 124
+\BOOKMARK [1][-]{section.5}{Batch Mode}{}% 125
+\BOOKMARK [1][-]{section.6}{csv-to-config}{}% 126
+\BOOKMARK [1][-]{section.7}{Run Analysis}{}% 127
+\BOOKMARK [2][-]{subsection.7.1}{Maxium Values}{section.7}% 128
+\BOOKMARK [2][-]{subsection.7.2}{Time to Threshold Values}{section.7}% 129
+\BOOKMARK [2][-]{subsection.7.3}{Time for Percent of Domain to Threshold Values}{section.7}% 130
+\BOOKMARK [2][-]{subsection.7.4}{Maximum Percent of Domain to Exceed Threshold Values}{section.7}% 131
+\BOOKMARK [2][-]{subsection.7.5}{Extrema}{section.7}% 132
+\BOOKMARK [2][-]{subsection.7.6}{Batch Run Analysis}{section.7}% 133
+\BOOKMARK [1][-]{appendix.A}{The Full Default Configuration File}{}% 134
+\BOOKMARK [1][-]{appendix.B}{The Well Mixed Model}{}% 135
+\BOOKMARK [2][-]{subsection.B.1}{Instantaneous release}{appendix.B}% 136
+\BOOKMARK [2][-]{subsection.B.2}{Constant and continuous release}{appendix.B}% 137
+\BOOKMARK [2][-]{subsection.B.3}{Constant release rate with finite duration}{appendix.B}% 138
+\BOOKMARK [1][-]{appendix.C}{Eddy Diffusion Model}{}% 139
+\BOOKMARK [2][-]{subsection.C.1}{Instantaneous release}{appendix.C}% 140
+\BOOKMARK [2][-]{subsection.C.2}{Constant and continuous release}{appendix.C}% 141
+\BOOKMARK [2][-]{subsection.C.3}{Constant release rate with finite duration}{appendix.C}% 142
+\BOOKMARK [1][-]{appendix.D}{Equations to calculate the eddy diffusion coefficient}{}% 143
+\BOOKMARK [1][-]{appendix.E}{Time to Well Mixed}{}% 144
+\BOOKMARK [1][-]{appendix.F}{Upper Exposure Limit}{}% 145

@@ -146,7 +146,8 @@
             "points_plots": {
                 "output": true,
                 "scale": "logarithmic",
-                "number": 10
+                "number": 10,
+                "time_axis_units": "s"
             },
             "lines_plots": {
                 "output": false,

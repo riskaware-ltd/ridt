@@ -1233,8 +1233,39 @@ class PointPlots(Settings):
     """
     @Settings.assign
     def __init__(self, values: dict):
+        self.time_axis_units = TimeAxisUnits
         self.output = bool
         self.scale = ScaleType
+
+
+class TimeAxisUnits(StringSelection):
+    """The time axis unit selection
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
+    @Terminus.assign
+    def __init__(self, values: dict):
+        """The constructor for the :class:`TimeAxisUnits` class.
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosed value.
+
+        """
+        self.options = [
+            "s",
+            "m",
+            "h"
+        ]
+
+    def check(self):
+        pass
+
 
 
 class MonitorLocations(Settings):

@@ -1,6 +1,10 @@
 import warnings
 
+import time
+
 import math
+
+from datetime import timedelta
 
 from os.path import join
 
@@ -15,7 +19,15 @@ from ridt.container import Domain
 from typing import List
 
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates 
+import matplotlib.ticker as tkr
 
+def xfmt(x,pos=None):
+    ''' custom date formatting '''
+    x = mdates.num2date(x)
+    label = x.strftime('%H:%M:%S')
+    label = label.lstrip('0')
+    return label
 
 class PointPlot:
     """The class that generates line plots over time.
@@ -97,7 +109,9 @@ class PointPlot:
         plt.ylabel(self.ylabel())
         if self.config.scale == "logarithmic":
             plt.yscale("log")
-        plot = plt.plot(self.domain.time, data, marker='.')
+        plt.locator_params(nbins=10, axis='x')
+        plot = plt.plot(self.convert_times(), data, marker='.')
+
         return plot
 
     def save_fig(self):
@@ -137,4 +151,22 @@ class PointPlot:
             The y-axis label string.
 
         """
-        return f"Time ({self.settings.time_units})"
+        return f"Time ({self.config.time_axis_units}) [decimal fractions]"
+    
+    def convert_times(self):
+        """Converts the time axis into date_time ticks
+
+        Returns
+        -------
+        :obj:`list`[:obj:`str`]
+            The times as datetime strings.
+
+        """
+        if self.config.time_axis_units == 's':
+            return [t  for t in self.domain.time]
+        elif self.config.time_axis_units == 'm':
+            return [t / 60  for t in self.domain.time]
+        elif self.config.time_axis_units == 'h':
+            return [t / 3600  for t in self.domain.time]
+        
+

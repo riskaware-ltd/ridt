@@ -261,7 +261,9 @@
                 // Flag to determine if any plots are generated.
                 "output": true,
                 // Choose whether the y-axis scale is 'logarithmic' or 'linear'.
-                "scale": "logarithmic"
+                "scale": "logarithmic",
+                // The units to display the time axis.
+                "time_axis_units": "s"
             },
             // The settings relating to the plots of the line-like monitor
             // locations. 

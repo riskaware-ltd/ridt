@@ -162,6 +162,7 @@
                 }
             },
             "points_plots": {
+                "time_axis_units": "s",
                 "output": true,
                 "scale": "logarithmic",
                 "number": 3
