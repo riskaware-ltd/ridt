@@ -1,5 +1,7 @@
 from os.path import join
 
+from typing import Union
+
 from tqdm import tqdm
 
 from numpy import zeros
@@ -22,46 +24,107 @@ from ridt.analysis import BatchDataStoreAnalyser
 from ridt.analysis import Exposure
 
 
-BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
-
-geometries = []
-
 class EddyDiffusionRun:
+    """The class which orchestrates an Eddy Diffusion model run.
 
-    def __init__(self, settings: RIDTConfig, output_dir: str):
+    Attributes
+    ----------
+    setting : :class:`~.RIDTConfig`
+        The settings for the run in question.
 
-        print("Preparing Eddy Diffusion run...")
+    data_store : :class:`~.BatchDataStore`
+        The batch run data store for concentration values.
+
+    outdir: :obj:`str`
+        The path to the output directory for the run.
+    
+    space : :class:`~.ComputationalSpace`
+        The :class:`~.ComputationalSpace` instance corresponding to the
+        :attr:`settings` attribute.
+    
+    exposure_store : :obj:`Union`[:class:`~.BatchDataStore`, None]
+        The batch run data store for exposure values.
+    
+    """
+
+
+    def __init__(self, settings: RIDTConfig, outdir: str):
+        """The constructor for the :class:`EddyDiffusionRun` class.
+
+        Parameters
+        ----------
+        settings : :class:`~.RIDTConfig`
+            The settings for the run in question.
+
+        outdir : :obj:`str`
+            The path to the output directory for the run.
+
+        """
         self.settings = settings
-        self.output_dir = output_dir
+        self.outdir = outdir
         self.data_store = BatchDataStore()
         self.exposure_store = None
         self.space = self.prepare()
-        print("Evaluating model over domain...")
         self.evaluate()
-        print("Computing exposure...")
         self.compute_exposure()
-        print("Writing data to disk... ")
         self.write()
-        print("Producing plots... ")
         self.plot()
-        print("Performing data ananlysis...")
         self.analyse()
 
     @property
     def geometries(self):
+        """:obj:`list` [:obj:`str`] : the list of geometries selected for
+        evaluation in :attr:`settings`.
+
+        """
         locations = self.settings.models.eddy_diffusion.monitor_locations
         return [g for g, e in locations.evaluate.items() if e]
 
     def prepare(self) -> ComputationalSpace:
+        """Instantiates :class:`~.ComputationalSpace` instance.
+
+        Generates a :class:`~.ComputationalSpace` instance from
+        :attr:`settings`. 
+
+        Returns
+        -------
+        :class:`~.ComputationalSpace`
+            The Computational Space created from :attr:`settings`. 
+        """
+        print("Preparing Eddy Diffusion run...")
         restrict = {"models": "eddy_diffusion"}
         return ComputationalSpace(self.settings, restrict)
     
-    def evaluate(self):
-        for setting in tqdm(self.space.space, bar_format=BF):
+    def evaluate(self) -> None:
+        """Loops over all elements in :attr:`space` and evaluates the model.
+
+        Returns
+        -------
+        None
+
+        """
+        for setting in self.space.space:
+            count = f"{self.space.linear_index(setting) + 1}/{len(self.space)}"
+            print(f"Evaluating computational space element {count}")
             self.run(setting)
 
-    def run(self, setting: RIDTConfig):
+    def run(self, setting: RIDTConfig) -> None:
+        """Evaluates the model for a set of parameters, for all geometries.
+    
+        Loops over all monitor locations that have been selected for evaluation
+        and evaluates them over their respective domains. Writes output to
+        :attr:`data_store`.
 
+        Parameters
+        ----------
+        settings : :class:`~.RIDTConfig`
+            The settings for the run in question.
+
+        Returns
+        -------
+        None
+
+        """
         self.data_store.add_run(setting)
 
         domain = Domain(setting)
@@ -69,22 +132,85 @@ class EddyDiffusionRun:
         locations = setting.models.eddy_diffusion.monitor_locations
 
         for geometry in self.geometries:
+            print(f"Evaluating {geometry} monitor locations...")
             for name, item in getattr(locations, geometry).items():
+                print(f"Evaluating {name}...")
                 output = solver(*getattr(domain, geometry)(item), domain.time)
                 self.data_store[setting].add(geometry, name, squeeze(output))
     
-    def compute_exposure(self):
-        self.exposure_store = Exposure(self.settings, self.data_store)
+    def compute_exposure(self) -> None:
+        """Computes the exposure from the concentration data.
 
-    def write(self):
-        BatchDataStoreWriter(self.settings, self.data_store, self.space, self.output_dir, "concentration")
-        BatchDataStoreWriter(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
+        Saves the result to a new data store :attr:`exposure_store`
 
-    def plot(self):
-        BatchDataStorePlotter(self.settings, self.data_store, self.space, self.output_dir, "concentration",)
-        BatchDataStorePlotter(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
+        Returns
+        -------
+        None
 
-    def analyse(self):
-        BatchDataStoreAnalyser(self.settings, self.data_store, self.space, self.output_dir, "concentration")
-        BatchDataStoreAnalyser(self.settings, self.exposure_store, self.space, self.output_dir, "exposure")
+        """
+        if self.settings.compute_exposure:
+            print("\nComputing exposure...")
+            self.exposure_store = Exposure(self.settings, self.data_store)
+
+    def args(self, data_store: BatchDataStore, quantity: str) -> tuple:
+        """A helper function that returns a tuple of some values.
+
+        Parameters
+        ----------
+
+        data_store : :class:`~.BatchDataStore`
+            A batch data store.
+
+        quantity : :obj:`str`
+            The name of the quantity in the data store.
+
+        Returns
+        -------
+        :obj:`tuple`
+            The various quantites as a tuple.
+
+        """
+        return self.settings, data_store, self.space, self.outdir, quantity
+
+    def write(self) -> None:
+        """Writes all data stores to disk.
+
+        Returns
+        -------
+        None
+
+        """
+        print("\nWriting data to disk... ")
+        BatchDataStoreWriter(*self.args(self.data_store, "concentration"))
+        if self.settings.compute_exposure:
+            BatchDataStoreWriter(*self.args(self.exposure_store, "exposure"))
+
+
+    def plot(self) -> None:
+        """Plots all requested data and writes it to disk.
+
+        Returns
+        -------
+        None
+
+        """
+        print("\nProducing plots... ")
+        BatchDataStorePlotter(*self.args(self.data_store, "concentration"))
+        if self.settings.compute_exposure:
+            BatchDataStorePlotter(*self.args(self.exposure_store, "exposure"))
+
+    def analyse(self) -> None:
+        """Performs all relevant analysis and writes it to disk.
+
+        Returns
+        -------
+        None
+
+        """
+        if not self.settings.models.eddy_diffusion.analysis.perform_analysis:
+            return
+        print("\nPerforming data ananlysis...")
+        BatchDataStoreAnalyser(*self.args(self.data_store, "concentration"))
+        if self.settings.compute_exposure:
+            BatchDataStoreAnalyser(*self.args(self.exposure_store, "exposure"))
 
