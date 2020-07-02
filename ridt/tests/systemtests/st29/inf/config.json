@@ -1,54 +1,33 @@
 {
-    "eddy_diffusion": true,
+    "eddy_diffusion": false,
     "well_mixed": true,
-    "integration_method": "cumulativetrapezoidal",
+    "integration_method": "romberg",
     "spatial_units": "m",
     "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
     "time_units": "s",
-    "time_samples": 50,
-    "total_time": 100.0,
+    "time_samples": 61,
+    "total_time": 6000.0,
     "fresh_air_change_rate_units": "m3.s-1",
-    "fresh_air_change_rate": 1.0,
+    "fresh_air_change_rate": 1.3888888888888888,
     "modes": {
         "instantaneous": {
-            "sources": {
-                "source_1": {
-                    "x": 0.5,
-                    "y": 0.5,
-                    "z": 0.5,
-                    "mass": {
-                        "min": 0.0,
-                        "max": 5.0,
-                        "num": 30
-                    },
-                    "time": 0.0
-                }
-            }
+            "sources": {}
         },
         "infinite_duration": {
             "sources": {
                 "source_1": {
-                    "x": 0.5,
-                    "y": 0.5,
-                    "z": 0.5,
-                    "rate": 0.01,
+                    "x": 10.0,
+                    "y": 5.0,
+                    "z": 1.0,
+                    "rate": 0.1,
                     "time": 0.0
                 }
             }
         },
         "fixed_duration": {
-            "sources": {
-                "source_1": {
-                    "x": 0.5,
-                    "y": 0.5,
-                    "z": 0.5,
-                    "rate": 0.01,
-                    "start_time": 1.0,
-                    "end_time": 0.0
-                }
-            }
+            "sources": {}
         }
     },
     "thresholds": {
@@ -67,11 +46,29 @@
             1.0
         ]
     },
+    "physical_properties": {
+        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight": 1.0,
+        "pressure_units": "Pa",
+        "pressure": 1.0,
+        "temperature_units": "K",
+        "temperature": 273.0
+    },
+    "dimensions": {
+        "x": 10.0,
+        "y": 10.0,
+        "z": 10.0
+    },
+    "spatial_samples": {
+        "x": 21,
+        "y": 21,
+        "z": 10
+    },
     "models": {
         "eddy_diffusion": {
             "coefficient": {
-                "calculation": "TKEB",
-                "value": 0.001,
+                "calculation": "EXPLICIT",
+                "value": 0.01,
                 "tkeb": {
                     "bound": "lower",
                     "total_air_change_rate": 1.0,
@@ -80,7 +77,8 @@
             },
             "images": {
                 "mode": "manual",
-                "quantity": 3
+                "quantity": 20,
+                "max_error": 1.0
             },
             "analysis": {
                 "percentage_exceedance": 10.0,
@@ -90,24 +88,13 @@
             "monitor_locations": {
                 "evaluate": {
                     "points": true,
-                    "lines": true,
-                    "planes": true,
+                    "lines": false,
+                    "planes": false,
                     "domain": false
                 },
-                "points": {
-                    "point_1": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
+                "points": {},
                 "lines": {},
-                "planes": {
-                    "plane_1": {
-                        "axis": "xy",
-                        "distance": 1.0
-                    }
-                },
+                "planes": {},
                 "domain": {
                     "domain": true
                 }
@@ -121,7 +108,7 @@
                 "output": false,
                 "scale": "logarithmic",
                 "animate": true,
-                "number": 50
+                "number": 10
             },
             "planes_plots": {
                 "output": false,
@@ -137,25 +124,10 @@
                     "max": 1.5
                 }
             }
+        },
+        "well_mixed": {
+            "volume": 3000.0
         }
-    },
-    "spatial_samples": {
-        "x": 20,
-        "y": 20,
-        "z": 10
-    },
-    "dimensions": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-    },
-    "physical_properties": {
-        "agent_molecular_weight_units": "mol.m-3",
-        "agent_molecular_weight": 1.0,
-        "pressure_units": "Pa",
-        "pressure": 1.0,
-        "temperature_units": "K",
-        "temperature": 273.0
     },
     "compute_exposure": true,
     "write_data_to_csv": true

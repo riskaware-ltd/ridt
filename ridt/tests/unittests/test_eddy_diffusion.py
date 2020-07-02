@@ -27,10 +27,11 @@ class TestEddyDiffusion(unittest.TestCase):
     def test_outputs(self):
 
         """Ensures the concentration is of type array"""
+        X, Y, Z = np.meshgrid(self.x_space,
+                              self.y_space,
+                              self.z_space)
 
-        concentration = self.ed(
-            self.x_space, self.y_space, self.z_space, self.time_array
-        )
+        concentration = self.ed(X, Y, Z, self.time_array)
         self.assertEqual(type(concentration), np.ndarray)
 
 

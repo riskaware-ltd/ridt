@@ -2,6 +2,7 @@
     "eddy_diffusion": true,
     "well_mixed": true,
     "spatial_units": "m",
+    "integration_method": "cumulativetrapezoidal",
     "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
@@ -83,7 +84,8 @@
             },
             "analysis": {
                 "percentage_exceedance": 10.0,
-                "exclude_uncertain_values": true
+                "exclude_uncertain_values": true,
+                "perform_analysis": true
             },
             "monitor_locations": {
                 "evaluate": {
@@ -166,7 +168,7 @@
                 "range": "auto",
                 "scale": "logarithmic",
                 "contours": {
-                    "min": 0.0,
+                    "min": 1e-10,
                     "max": 1.5
                 }
             }
@@ -189,5 +191,7 @@
         "pressure": 1.0,
         "temperature_units": "K",
         "temperature": 273.0
-    }
+    },
+    "compute_exposure": true,
+    "write_data_to_csv": true
 }

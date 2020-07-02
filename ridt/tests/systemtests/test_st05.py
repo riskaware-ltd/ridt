@@ -53,10 +53,6 @@ class ST05(unittest.TestCase):
         self.assertEqual(
             hasattr(self.c.models.eddy_diffusion.planes_plots, "output"), True)
         self.assertEqual(
-            hasattr(self.c.models.eddy_diffusion.planes_plots, "concentration"), True)
-        self.assertEqual(
-            hasattr(self.c.models.eddy_diffusion.planes_plots, "exposure"), True)
-        self.assertEqual(
             hasattr(self.c.models.eddy_diffusion.planes_plots, "number_of_contours"), True)
         self.assertEqual(
             hasattr(self.c.models.eddy_diffusion.planes_plots, "range"), True)
