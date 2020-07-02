@@ -143,10 +143,12 @@ class Settings:
             is not of the required type, as defined in the derived class'
             constructor.
         
-        :class:`~.AssignError`
+        :class:`~.SettingCheckError`
             If a check error is caught when assigning a setting to a
             :class:`~.Terminus` instance.
 
+        :class:`~.
+        
         Note
         ----
         If the setting found in the `values` is None, then this function will
@@ -232,8 +234,8 @@ class Terminus(ABC):
 
     If the expected type of a :class:`~.Settings` derived class attribute
     inherits from :class:`Termninus`, then when __getattribute__ is called to
-    access the :class:`Terminus` instance, it will return the single
-    :class:`Terminus` instance attribute instead.
+    access the :class:`Terminus` instance, it will return the :attr:`value`
+    attribute instead.
 
     This structure allows for value checks to be applied to individual settings,
     on instantiation of :class:`~.Settings` derived classes.
@@ -242,6 +244,15 @@ class Terminus(ABC):
     :meth:`Terminus.assign` should be applied to :class:`Terminus` derived class
     constructors. If this is done, the abstract method :meth:`Terminus.check` is
     automatically called after the derived class' constructor.
+
+    Attributes
+    ----------
+    type : :obj:`type`
+        The attribute defined in the child class that determines the type of the
+        setting stored in the class.
+
+    value : :obj:`Any`
+        The value stored after all checks have been passed.
 
     """
     @property
@@ -259,7 +270,7 @@ class Terminus(ABC):
         def wrapper(self, *args):
             method(self, *args)
             self.distribute(*args)
-            self.action(self.check)
+            self.action()
         return wrapper
 
     @abstractmethod
@@ -269,7 +280,7 @@ class Terminus(ABC):
 
         Raises
         ------
-        :obj:`TypeError`
+        :class:`~.TypeError`
             If the passed value is of the wrong type.
         
         :obj:`ValueError`
@@ -278,7 +289,7 @@ class Terminus(ABC):
         """
         pass
 
-    def action(self, check_method):
+    def action(self):
         """Method that handles exceptions thrown by the :meth:`Terminus.check`
         function.
 
@@ -311,6 +322,18 @@ class Terminus(ABC):
             The value passed to the constructor of the :class:`Terminus`
             derived class.
 
+        Raises
+        ------
+        :class:`~.TypeAttributeNotImplementedError`
+            If the type attribute has not been defined in the derived class
+            constructor. 
+
+        :class:`~.TypeAttributeTypeError`
+            If the :attr:`type` is not of type :obj:`type`
+
+        :class:`~.SettingTypeError`
+            If the type of the passed value is not :attr:`type`.
+
         """
         if not hasattr(self, "type"):
             raise TypeAttributeNotImplementedError(self.__class__)
@@ -324,28 +347,33 @@ class Terminus(ABC):
 class List(Settings):
     """A base class for a list of settings classes.
 
-    This class is used to store a number of identical :class:`~.Settings` or
-    :class:`~.Terminus` derived settings.
-
-    It can have only ONE class attribute.  If more are added, the
-    MultiplicityError is raised.
+    This class is used to store a number of settings objects. Instances must be
+    of same type. 
 
     The implementation of the derived class constructor should be as follows::
 
-        @TerminusSet.assign
+        @Settings.assign
         def __init__(self, values: list):
             self.value = type
     
     Where `type` is the type of the objects that will be in the list.
 
-    """
+    Attributes
+    ----------
+    type : :obj:`type`
+        The attribute defined in the child class that determines the type of the
+        setting stored in the class.
 
+    value : :obj:`List`[:obj:`Any`]
+        The list of value stored after all checks have been passed.
+
+    """
     @property
     def get(self):
         return self.value
 
     def distribute(self, values: list):
-        """Method called by the decorator :meth:`List.assign` that
+        """Method called by the decorator :meth:`Settings.assign` that
         tries to assign the values passed to the constructor of the
         :class:`List` derived class.
 
@@ -361,12 +389,22 @@ class List(Settings):
 
         Raises
         ------
+        :class:`~.TypeAttributeNotImplementedError`
+            If the type attribute has not been defined in the derived class
+            constructor. 
+
+        :class:`~.TypeAttributeTypeError`
+            If the :attr:`type` is not of type :obj:`type`
+
         :class:`~.SettingTypeError`
             If `values` is not a :obj:`list`.
         
         :class:`~.SettingsListTypeError`
             If any of the items in `values` are not of the required type,
             as specified in the derived class.
+
+        :class:`~.SettingsErrorMessage`
+            If any exceptions are raised when instantiating any subsettings.
 
         """
         if not hasattr(self, "type"):
@@ -433,21 +471,27 @@ class List(Settings):
 
 
 class Dict(Settings):
-    """A base class for a dict of settings classes.
+    """A base class for a dictionary of settings classes.
 
-    This class is used to store a number of identical :class:`~.Settings` or
-    :class:`~.Terminus` derived settings.
-
-    It can have only ONE class attribute.  If more are added, the
-    MultiplicityError is raised.
+    This class is used to store a number of settings objects. Instances must be
+    of same type. 
 
     The implementation of the derived class constructor should be as follows::
 
         @Settings.assign
-        def __init__(self, values: list):
+        def __init__(self, values: dict):
             self.value = type
     
-    Where `type` is the type of the objects that will be in the list.
+    Where `type` is the type of the objects that will be in the dictionary.
+
+    Attributes
+    ----------
+    type : :obj:`type`
+        The attribute defined in the child class that determines the type of the
+        setting stored in the class.
+
+    value : :obj:`Dict`[:obj:`str`, :obj:`Any`]
+        The list of value stored after all checks have been passed.
 
     """
 
@@ -456,7 +500,7 @@ class Dict(Settings):
         return self.value
 
     def distribute(self, values: dict):
-        """Method called by the decorator :meth:`Dict.assign` that
+        """Method called by the decorator :meth:`Settings.assign` that
         tries to assign the values passed to the constructor of the
         :class:`Dict` derived class.
 
@@ -472,12 +516,22 @@ class Dict(Settings):
 
         Raises
         ------
+        :class:`~.TypeAttributeNotImplementedError`
+            If the type attribute has not been defined in the derived class
+            constructor. 
+
+        :class:`~.TypeAttributeTypeError`
+            If the :attr:`type` is not of type :obj:`type`
+
         :class:`~.SettingTypeError`
-            If `values` is not a :obj:`dict`.
+            If `values` is not a :obj:`list`.
         
-        :class:`~.SettingsDictTypeError`
-            If any of the values in `values` are not of the required type,
+        :class:`~.SettingsListTypeError`
+            If any of the items in `values` are not of the required type,
             as specified in the derived class.
+
+        :class:`~.SettingsErrorMessage`
+            If any exceptions are raised when instantiating any subsettings.
 
         """
         if not hasattr(self, "type"):
@@ -554,12 +608,54 @@ class Dict(Settings):
 
 
 class StringSelection(Terminus):
+    """The as class that stores a string from a predefined list.
+
+    Attributes
+    ----------
+    type : :obj:`type`
+        The attribute defined in the child class that determines the type of the
+        setting stored in the class.
+
+    value: :obj:`str`
+        The stored string.
+    
+    options : :obj:`List`[:obj:`str`]
+        The predefined list of string that are valid. This attribute should be
+        defined in the child constructor.
+
+    """
     
     @property
     def get(self):
         return self.value
 
-    def distribute(self, value):
+    def distribute(self, value: str):
+        """Method called by the decorator :meth:`Settings.assign` that
+        tries to assign the values passed to the constructor of the
+        :class:`Dict` derived class.
+
+        Parameters
+        ----------
+        value: :obj:`str`
+            The value to be stored.
+
+        Raises
+        ------
+        :class:`~.OptionsAttributeNotImplementedError`
+            If the :attr:`options` attribute has not been defined in the derived
+            class constructor.
+
+        :class:`~.OptionsAttributeTypeError`
+            If the item contained in the :attr:`options` attribute are not
+            strings.
+
+        :class:`~.SettingTypeError`
+            If the passed value `value` is not a :obj:`str`.
+
+        :class:`~.SettingStringSelectionError`
+            If the passed value `value` is not in :attr:`options`.
+
+        """
         if not hasattr(self, "options"):
             raise OptionsAttributeNotImplementedError(self.__class__)
         if not isinstance(self.options, list):
@@ -573,16 +669,60 @@ class StringSelection(Terminus):
 
 
 class Number(Terminus):
+    """The special Terminus variant that is for numerical values.
+
+    This class support range values in the form of arrays of min/max/num
+    definitions.
+
+    Attributes
+    ----------
+    is_range : :obj:`bool`
+        True if the instance contains a range of values.
+    
+    match : :obj:`Union`[None, :obj:`str`]
+        The match parameter of the range if a match parameter exists.
+    
+    value : :obj:`Union`[:obj:`float`, :obj:`int`, :obj:`List`]
+        The value or list of values stored.
+    
+    """
 
     @property
     def is_range(self):
+        """:obj:`bool` : True if the instance contains a range of values.
+        
+        """
         return self._range
     
     @property
     def match(self):
+        """:obj:`Union`[None, :obj:`str`] : The match parameter.
+
+        """
         return self._match
 
     def distribute(self, value):
+        """Method called by the decorator :meth:`Terminus.assign` that
+        tries to assign the values passed to the constructor of the
+        :class:`Number` derived class.
+
+        Parameters
+        ----------
+        value : :obj:`Union`[:obj:`float`, :obj:`int`, :obj:`dict`]
+            
+        Raises
+        ------
+        :class:`~.TypeAttributeNotImplementedError`
+            If the type attribute has not been defined in the derived class
+            constructor. 
+
+        :class:`~.TypeAttributeTypeError`
+            If the :attr:`type` is not of type :obj:`type`
+
+        :class:`~.SettingTypeError`
+            If `values` is not a number or valid range dictionary.
+        
+        """
         if not hasattr(self, "type"):
             raise TypeAttributeNotImplementedError(self.__class__)
         if not isinstance(self.type, type):
@@ -601,11 +741,32 @@ class Number(Terminus):
         type(value))
     
     def __value(self, value):
+        """The method that assigns the attributes if a single value is passed.
+
+        Parameters
+        ----------
+        value : :obj:`Union`[:obj:`float`, :obj:`int`]
+            The value to be stored.
+
+        """
         self.value = value
         self._range = False
         self._match = None
     
     def __array(self, value: dict):
+        """The method that assigns the attributes if a array of value is passed.
+
+        Parameters
+        ----------
+        value : :obj:`dict`[:obj:`str`, :obj:`list`]
+            The dictionary with "array": listofvalues.
+
+        Raises
+        ------
+        :class:`~.SettingTypeError`
+            If the values in the array are not the same type as :attr:`type`
+
+        """
         for item in value["array"]:
             if not isinstance(item, self.type):
                 raise SettingTypeError(self.type, type(item))
@@ -618,6 +779,42 @@ class Number(Terminus):
 
     
     def __range(self, value: dict):
+        """The method that assigns the attributes if a array of value is passed.
+
+        Parameters
+        ----------
+        value : :obj:`dict`
+            The dictionary with the range definition. Must be of the form::
+
+                {
+                    "max": value,
+                    "min": value,
+                    "num": int
+                }
+            
+            Where value is of the defined type.
+
+        Raises
+        ------
+        :class:`~.SettingRangeTypeError`
+            If type(`value`["min"]) is not :attr`type`.
+
+        :class:`~.SettingRangeKeyError`
+            If `value`["min"] does not exist.
+
+        :class:`~.SettingRangeTypeError`
+            If type(`value`["max"]) is not :attr`type`.
+
+        :class:`~.SettingRangeKeyError`
+            If `value`["max"] does not exist.
+
+        :class:`~.SettingRangeTypeError`
+            If type(`value`["num"]) is not :obj:`int`. 
+
+        :class:`~.SettingRangeKeyError`
+            If `value`["num"] does not exist.
+
+        """
         try:
             if not isinstance(value["min"], self.type):
                 raise SettingRangeTypeError("min", self.type)
@@ -644,6 +841,21 @@ class Number(Terminus):
 
     
     def lower_bound(self, value):
+        """Checks if values are above or equal to a lower bound.
+        
+        Helper function to be called in derived class check implementation.
+
+        Parameters
+        ----------
+        value : :obj:`Union`[:obj:`float`, :obj:`int`]
+            The lower bound.
+
+        Raises
+        ------
+        :obj:`ValueError`
+            If any values are less than or equal to the provided bound.
+
+        """
         if isinstance(self.value, self.type):
             if self.value < value:
                 raise ValueError(f"must be >= {value}")
@@ -658,6 +870,21 @@ class Number(Terminus):
                 raise ValueError(f"must be >= {value}")
     
     def upper_bound(self, value):
+        """Checks if values are below or equal to an upper bound.
+        
+        Helper function to be called in derived class check implementation.
+
+        Parameters
+        ----------
+        value : :obj:`Union`[:obj:`float`, :obj:`int`]
+            The upper bound.
+
+        Raises
+        ------
+        :obj:`ValueError`
+            If any values are greater than or equal to the provided bound.
+
+        """
         if isinstance(self.value, self.type):
             if self.value > value:
                 raise ValueError(f"must be <= {value}")
@@ -672,6 +899,21 @@ class Number(Terminus):
                 raise ValueError(f"must be <= {value}")
     
     def lower_bound_exclusive(self, value):
+        """Checks if values are above an upper bound.
+        
+        Helper function to be called in derived class check implementation.
+
+        Parameters
+        ----------
+        value : :obj:`Union`[:obj:`float`, :obj:`int`]
+            The lower bound.
+
+        Raises
+        ------
+        :obj:`ValueError`
+            If any values are greater than the provided bound.
+
+        """
         if isinstance(self.value, self.type):
             if self.value <= value:
                 raise ValueError(f"must be > {value}")
@@ -686,6 +928,21 @@ class Number(Terminus):
                 raise ValueError(f"must be > {value}")
     
     def upper_bound_exclusive(self, value):
+        """Checks if values are above an lower bound.
+        
+        Helper function to be called in derived class check implementation.
+
+        Parameters
+        ----------
+        value : :obj:`Union`[:obj:`float`, :obj:`int`]
+            The lower bound.
+
+        Raises
+        ------
+        :obj:`ValueError`
+            If any values are greater than the provided bound.
+
+        """
         if isinstance(self.value, self.type):
             if self.value >= value:
                 raise ValueError(f"must be < {value}")
@@ -700,10 +957,43 @@ class Number(Terminus):
                 raise ValueError(f"must be < {value}")
  
 
-
 class ComputationalSpace:
+    """Class that creates a tensor of settings objects from ranges.
+
+    Given a settings object with :class:`~.Number` subsettings that are ranges,
+    this class will construct a tensor where each element is a settings object
+    with a particular value chosen for each range.
+
+    Attributes
+    ----------
+    setting : :obj:`Type`[:class:`~.Settings`]
+        The base settings object to be expanded.
+    
+    restrict : :obj:`dict`
+        A dictionary of :obj:`str`: :obj:`str` pairs that are used to exclude
+        subsetting branches from the exploration function for finding ranges.
+        If when searching the settings object for ranges, a setting with the
+        same name as a key in :attr:``restrict` is found, only subsettings with
+        name equal to the corresponding key will be searched.
+    
+    """
 
     def __init__(self, setting: Type[Settings], restrict: Dict[str, str]):
+        """The constructor for the :class:`ComputationalSpace` class.
+
+        Parameters
+        ----------
+        setting : :obj:`Type`[:class:`~.Settings`]
+            The settings object being expanded.
+
+        restrict : :obj:`dict`[:obj:`str`, :obj:`str`]
+            A dictionary of :obj:`str`: :obj:`str` pairs that are used to exclude
+            subsetting branches from the exploration function for finding ranges.
+            If when searching the settings object for ranges, a setting with the
+            same name as a key in :attr:``restrict` is found, only subsettings with
+            name equal to the corresponding key will be searched.
+
+        """
         self.setting = setting
         self.restrict = restrict
         self.addresses = list()
@@ -870,6 +1160,9 @@ class ComputationalSpace:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
+    def __len__(self):
+        return len(self.space)
 
 
 class SettingRangeKeyError(Error):
