@@ -214,7 +214,7 @@ class DataStoreAnalyser:
 
         """
         for i in range(self.setting.time_samples):
-            d = self.data_store.domain["domain"][i, :, :, :]
+            d = self.data_store.get("domain", "domain")[i, :, :, :]
             value = nanstd(d) / nanmean(d)
             if value <= 0.1:
                 return self.domain.time[i]

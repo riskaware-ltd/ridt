@@ -191,7 +191,10 @@ class Maximum(ResultContainer):
         """:obj:`bool` : Returns true if contains valid index, else false.
 
         """
-        return True if self.index else False
+        if self.index and self.value != "nan":
+            return True
+        else:
+            return False
     
 
 class Exceedance(ResultContainer):

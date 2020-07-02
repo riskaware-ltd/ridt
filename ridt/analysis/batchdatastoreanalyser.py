@@ -118,8 +118,9 @@ class BatchDataStoreAnalyser:
             self.results[self.settings] = result
             ResultsWriter(self.settings, result, self.dir_agent, self.quantity)
         else:
-            for setting, store in tqdm(self.data_store.items(), bar_format=BF):
+            for setting, store in self.data_store.items():
                 idx = self.space.linear_index(setting)
+                print(f"Analysing computational space element {idx + 1}/{len(self.space)}")
                 self.dir_agent.create_root_dir(idx)
                 result = DataStoreAnalyser(setting, store, self.quantity)
                 self.results[setting] = result

@@ -95,7 +95,8 @@ class ResultsWriter:
         self.analysis = analysis
         self.dir_agent = dir_agent 
         self.domain = Domain(setting)
-        self.summary()
+        if quantity == "concentration":
+            self.summary()
         self.maximum()
         self.exceedance_analysis()
         self.extrema()
@@ -163,6 +164,7 @@ class ResultsWriter:
         ----------
         geometry : :obj:`str`
             The geometry in to filter for.
+
         results : :obj:`list` [:class:`~.ResultContainer`]
             The list of :class:`~.ResultConainer`.
 
@@ -254,7 +256,7 @@ class ResultsWriter:
         self.title(f, self.analysis.maximum[FIRST].title)
         for geometry in self.geometries:
             items = self.get_valid(geometry, self.analysis.maximum)
-            self.subtitle(f, items[FIRST].extreme_title)
+            self.subtitle(f, self.analysis.maximum[FIRST].extreme_title)
             if items:
                 item = max(items)
                 f.write(item.string)
@@ -360,7 +362,7 @@ class ResultsWriter:
         """
         solver = EddyDiffusion(self.setting)
         dim = self.setting.dimensions
-        l = sqrt(dim.x * dim.y * dim.z)
+        l = pow(dim.x * dim.y * dim.z, 1.0 / 3.0)
         return {
             "x": dim.x * dim.x / solver.diff_coeff,
             "y": dim.y * dim.y / solver.diff_coeff,
