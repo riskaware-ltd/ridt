@@ -75,6 +75,25 @@
 
 \tableofcontents
 
+\section{Introduction}
+
+This document describes the usage and features of the Rapid Indoor Diffusion
+Tool (RIDT). RIDT is a Python implementation of two different analytical
+dispersion models, Eddy Diffusion and Well Mixed. It allows the calculation of
+concentrations and exposures based on an arbitrary set of instantaneous,
+infinite duration, and fixed duration source terms in a cuboid bounded system.
+The Well Mixed model is a set of dimensionless exponential decay equations,
+whereas the Eddy Diffusion model is a variant of the standard solution to the 1D
+diffusion equation solved with closed boundary contiditons, combined in a
+separable product in three dimensions. Details regarding the mathematical
+definitions the Well Mixed and Eddy Diffusion models can be found in Appendices
+\ref{app:wellmixed} and \ref{app:eddydiff} respectively. These models have been
+validated against experimental data, within their specified bounds
+\cite{foat20}.\\
+
+\noindent This software was developed by Riskaware Ltd. under contract for the UK Defence
+Science and Technology Laboratories.\\
+
 \section{Installation}\label{sec:installation}
 
 The following guide is for Windows. However RIDT should function on OSX, and
@@ -256,8 +275,7 @@ there are three new files of note
 \end{itemize}
 
 \noindent The file \code{run\_summary.txt} contains a human readable run summary
-including some sanity check calculations. For more information about the run
-summary please see Section \ref{sec:runsummary}. The files
+including some sanity check calculations. The files
 \code{concentration\_extrema.txt} and \code{exposure\_extrema.txt} contain
 quantites that are computed over all defined geometries. For more information
 about what analysis is performed and how it is presented, please see Section
@@ -300,7 +318,28 @@ JSON.\\
 \noindent The ability for JSON object to contain other JSON objects makes the
 format very flexible and ideal for configuration files. Those people familiar
 with the Python programming language will note the similarity between the Python
-dictionary data structure.
+dictionary data structure.\\
+
+\noindent The standard JSON format does not permit in line comments to be added.
+Standard text editor linters will show any text comments as errors. Furthermore
+any JSON parser will throw an error if it parses anything other that standard
+JSON syntax. As metioned in the previous section, files with the extension
+\code{.jsonc} can contain comments of the form\\
+\begin{lstlisting}[language=json, firstnumber=1]
+{
+    // This is an inline comment in a .jsonc file.
+    // It is prepended by a double forward slash.
+    "a_normal": "setting"
+}
+\end{lstlisting}
+\medskip
+
+\noindent It is possible that you will need to install the relevant extension in
+your text editor if you want to see syntax highlighting in \code{.jsonc} files.
+This commented form of JSON will not work as an input file for RIDT,
+however it can provide useful annotations for other users, or notes for
+yourself. 
+
 
 \subsection{Settings Summary}
 In this section we will provide detailed information about the function of each
@@ -337,6 +376,45 @@ the configuration file, otherwise the model will not be evaluated.
 If \code{true} RIDT will evaluate the Well Mixed model (Section
 \ref{app:wellmixed}) with the parameters and over the domains defined in the
 configuration file, otherwise the model will not be evaluated.
+
+\subsubsection{\code{compute\_exposure}}
+\begin{itemize}
+    \item[$\diamond$] type: boolean
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] true
+        \item[$\rightarrow$] false
+    \end{itemize}
+\end{itemize}
+If \code{true} RIDT will compute, plot, and analyse the exposure.
+
+\subsubsection{\code{write\_data\_to\_csv}}
+\begin{itemize}
+    \item[$\diamond$] type: boolean
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] true
+        \item[$\rightarrow$] false
+    \end{itemize}
+\end{itemize}
+If \code{true} RIDT will write all computed data to csv files.
+
+\subsubsection{\code{integration\_method}}\label{sec:integrationmethod}
+\begin{itemize}
+    \item[$\diamond$] type: string 
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] "cumulativetrapezoidal"
+        \item[$\rightarrow$] "romberg"
+    \end{itemize}
+\end{itemize}
+This string determines which method of integration to use when evaluating the
+eddy diffusion model. When Romberg is selected, every point in time will be
+integrated from zero, to a high degree of precision. When Cumulative Trapezoidal
+is selected, a cumulative integral is perfomed over all time points evaluated.
+Use Romberg when you want to evaluate a small number of time points to a high
+degree of precision.
+
 
 \subsubsection{\code{concentration\_units}}\label{sec:concentrationunits}
 \begin{itemize}
@@ -543,7 +621,7 @@ versions.]
     \item[$\diamond$] type: float 
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] $>0.0$
+        \item[$\rightarrow$] $>=0.0$
     \end{itemize}
 \end{itemize}
 This setting determines the value of the fresh air change rate.
@@ -657,6 +735,10 @@ must all have different string identifiers. For example\\
     }
 }
 \end{lstlisting}
+\medskip
+
+\noindent If you want to remove all sources of this type, delete all entries
+contained within the \code{"sources": \{\}} object.
 
 \paragraph{\code{instantaneous.sources.source}}\label{sec:instsource}
 \begin{itemize}
@@ -752,6 +834,10 @@ must all have different string identifiers. For example\\
     }
 }
 \end{lstlisting}
+\medskip
+
+\noindent If you want to remove all sources of this type, delete all entries
+contained within the \code{"sources": \{\}} object.
 
 \paragraph{\code{fixed\_duration.sources.source}}\label{sec:fixsource}
 \begin{itemize}
@@ -846,6 +932,10 @@ must all have different string identifiers. For example\\
     }
 }
 \end{lstlisting}
+\medskip
+
+\noindent If you want to remove all sources of this type, delete all entries
+contained within the \code{"sources": \{\}} object.
 
 \paragraph{\code{infinite\_duration.sources.source}}\label{sec:infsource}
 \begin{itemize}
@@ -1123,6 +1213,18 @@ of the Eddy Diffusion model. It is used if the
 This settings object contains settings pertaining to the analysis performed on
 the data after the models have been evaluated.
 
+\paragraph{\code{analysis.perform\_analysis}}\label{sec:percex}
+\begin{itemize}
+    \item[$\diamond$] type: boolean
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] true
+        \item[$\rightarrow$] false
+    \end{itemize}
+\end{itemize}
+If \code{true} this boolean will mean the analysis is performed. If \code{false}
+no analysis is performed.
+
 \paragraph{\code{analysis.percentage\_exceedance}}\label{sec:percex}
 \begin{itemize}
     \item[$\diamond$] type: float
@@ -1224,14 +1326,18 @@ are themselves JSON objects. This setting is different from other settings in
 that an arbitrary number of points can be defined. The only restriction is they
 must all have different string identifiers. For example\\
 \begin{lstlisting}[language=json,firstnumber=1]
-"instantaneous": {
-    "sources":{
+"monitor_locations": {
+    "points":{
         "my_point": {...},
         "your_point": {...},
         "everyones_point": {...}
     }
 }
 \end{lstlisting}
+\medskip
+
+\noindent If you want to remove all monitor locations of this type, delete all
+entries contained within the \code{"points": \{\}} object.
 
 \subsubsection{\code{monitor\_locations.points.point}}
 \begin{itemize}
@@ -1288,14 +1394,18 @@ are themselves JSON objects. This setting is different from other settings in
 that an arbitrary number of lines can be defined. The only restriction is they
 must all have different string identifiers. For example\\
 \begin{lstlisting}[language=json,firstnumber=1]
-"instantaneous": {
-    "sources":{
+"monitor_locations": {
+    "lines":{
         "my_line": {...},
         "your_line": {...},
         "everyones_line": {...}
     }
 }
 \end{lstlisting}
+\medskip
+
+\noindent If you want to remove all monitor locations of this type, delete all
+entries contained within the \code{"lines": \{\}} object.
 
 \subsubsection{\code{monitor\_locations.lines.line}}
 \begin{itemize}
@@ -1375,14 +1485,18 @@ are themselves JSON objects. This setting is different from other settings in
 that an arbitrary number of planes can be defined. The only restriction is they
 must all have different string identifiers. For example\\
 \begin{lstlisting}[language=json,firstnumber=1]
-"instantaneous": {
-    "sources":{
+"monitor_locations": {
+    "planes":{
         "my_plane": {...},
         "your_plane": {...},
         "everyones_plane": {...}
     }
 }
 \end{lstlisting}
+\medskip
+
+\noindent If you want to remove all monitor locations of this type, delete all
+entries contained within the \code{"planes": \{\}} object.
 
 \subsubsection{\code{monitor\_locations.planes.plane}}
 \begin{itemize}
@@ -2156,8 +2270,7 @@ $t$ = 0.
 \subsection{Instantaneous release}\label{app:EddyInst}
 
 The equation for concentration resulting from an instantaneous point release in
-a cuboid bounded space (Drivas et al., Modeling indoor air exposure from
-short-term point source releases, Indoor Air 6 (1996) 271-277).
+a cuboid bounded space \cite{drivas96}.
 \begin{eqnarray}\label{eq:cuboid-decay-inst}
 	C(t) = \frac{M\: \exp(-\lambda_f\:t)}{8(\pi\:D_e\:t)^{\frac{3}{2}}} r_{x}(t)
 	r_{y}(t) r_{z}(t)
@@ -2192,11 +2305,8 @@ are the length, width and height of the room.
 \subsection{Constant and continuous release}\label{sec:EddyCont}
 
 The equation for concentration, $C_{cont}(t)$
-[\SI{}{\kilo\gram\per\meter\cubed}], resulting 
-in a cuboid bounded space (Cheng et al., Modeling exposure close to airpoll
-ution sources in naturally ventilated residences: Association of turbulent
-diffusion coffcient with air change rate, Environ. Sci. Technol. 45 (9) (2011))
-556 4016{4022).
+[\SI{}{\kilo\gram\per\meter\cubed}], resulting in a cuboid bounded space
+\cite{cheng11}. 
 \begin{equation}\label{eq:modelCont}
 	C_{cont}(t) = \int^{t}_0  \frac{S\: \exp(-\lambda_f\:t)}{8(\pi\:D_e\:t)^{\frac{3}{2}}} r_{x}(t) r_{y}(t) r_{z}(t)\:dt
 \end{equation}
@@ -2233,5 +2343,45 @@ regression equation gives the mid-point value.
 where $Q$ [\SI{}{\meter\cubed\per\second}] is the total supply flow rate and $N$
 is the number of supply vents. A lower bound for $D_e$ should be applied when
 using these equations, which is \SI{1e-3}{\meter\squared\per\second}. 
+
+\section{Time to Well Mixed}\label{app:timetowellmixed}
+The equation used to calculate the time taken for the room to become well mixed,
+in the case of the Eddy Diffusion model is \cite{drescher95}
+\begin{equation}
+    t_{\text{wm}}=\frac{\sigma_{c}}{\mu_{c}} \leq 0.1
+\end{equation}
+
+\noindent where $\sigma_{c}$ is the standard deviation of the conentration over
+the domain, and $\mu_{c}$ is the spatially averaged conentration over the
+domain.
+
+\section{Upper Exposure Limit}\label{app:upperexpolimit}
+In the case of an instantaneous or finite duration release, an upper limit of
+the exposure due to each source can be computed as follows \cite{parker16}
+\begin{equation}
+    E_{\text{upper}} = \frac{M}{Q_{f}}
+\end{equation}
+
+\noindent where $M$ is the total mass released over the lifetime of the source
+and $Q_f$ is the fresh air change rate.
+
+\begin{thebibliography}{10}
+    \bibitem{drivas96} Drivas \emph{et al.}, \emph{Modeling indoor air exposure from
+    short-term point source releases}, Indoor Air \textbf{6}
+271-277 (1996)
+\bibitem{cheng11} Cheng \emph{et al.}, \emph{Modeling exposure close to air pollution
+sources in naturally ventilated residences: Association of turbulent diffusion
+coffcient with air change rate}, Environ. Sci. Technol. \textbf{45} 9
+4016-4022 (2011)
+    \bibitem{drescher95} A.C. Drescher \emph{et al.}, \emph{Mixing of a point-source
+    indoor pollutant by forced convection}, Indoor Air \textbf{5}
+    204-214 (1995).
+    \bibitem{foat20} T. Foat \emph{et al.} \emph{A relationship for the diffusion coefficient
+    in eddy diffusion based indoor dispersion modelling}, Building and
+    Environment \textbf{169} 106591 (2020) 
+    \bibitem{parker16} Parker, S., \emph{et al.}, \emph{Visual assessment
+    of contaminant impacts in multizone buildings}. Building and Environment,
+    \textbf{102}, 39-53 (2016).  
+\end{thebibliography}
 
 \end{document}
