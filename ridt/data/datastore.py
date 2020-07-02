@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from numpy import ndarray
-from numpy import argmax
+from numpy import nanargmax
 from numpy import unravel_index
 from numpy import where
 from numpy import prod
@@ -15,27 +15,103 @@ FIRST = 0
 
 
 class DataStore:
+    """The data store than contains computed quantities over vaious geometries.
 
+    There are four different sub stores for point, line, plane and full domain 
+    grids. They can store quantities corresponding to different monitor
+    locations defined in a settings file. The store data for various times (axis
+    0) It also provides calculation of various quantities over the various
+       grids.
+
+    Attributes
+    ----------
+    points : :obj:`Dict`[:obj:`str`, :class:`~numpy.ndarray`]
+        The dictionary containing all point monitor location value grids.
+
+    lines : :obj:`Dict`[:obj:`str`, :class:`~numpy.ndarray`]
+        The dictionary containing all line monitor location value grids.
+
+    planes : :obj:`Dict`[:obj:`str`, :class:`~numpy.ndarray`]
+        The dictionary containing all plane monitor location value grids.
+
+    domain : :obj:`Dict`[:obj:`str`, :class:`~numpy.ndarray`]
+        The dictionary containing all full domain value grids.
+
+    """
     class Dimensions:
+        """A 'static' member class that contains infomation abount the
+
+        dimensionality of the different geometry types.
+
+        """
         points = 1
         lines = 2
         planes = 3
         domain = 4
 
     def __init__(self):
+        """The :class:`DataStore` constructor.
+
+        """
         self.points = dict()
         self.lines = dict()
         self.planes = dict()
         self.domain = dict()
     
-    def add(self, geometry: str, id: str, data: ndarray):
+    def add(self, geometry: str, id: str, data: ndarray)-> None:
+        """Adds a new item to the data store.
+
+        Parameters
+        ----------
+        geometry : :obj:`str`
+            The type of grid to be stored.
+
+        id : :obj:`str`
+            The id of the grid to be stored.
+
+        data : :class:`~ndarray.ndarray`
+            The grid to be stored.
+
+        Raises
+        ------
+        :class:`~.DataStoreGeometryError`
+            If the passed geometry type is invalid.
+
+        Returns
+        -------
+        None
+
+        """
         try:
             self.verify(data, getattr(DataStore.Dimensions, geometry))
             getattr(self, geometry)[id] = data
         except AttributeError:
             raise DataStoreGeometryError(geometry)
     
-    def get(self, geometry: str, id: str):
+    def get(self, geometry: str, id: str) -> ndarray:
+        """Returns the grid given a geometry type and id string.
+
+        Parameters
+        ----------
+        geometry : :obj:`str`
+            The type of grid to be found.
+
+        id : :obj:`str`
+            The id of the grid to be found.
+
+        Returns
+        -------
+        :class:`~numpy.ndarray`
+            The grid to be stored.
+
+        Raises
+        ------
+        :class:`~.DataStoreGeometryError`
+            If the passed geometry type is invalid.
+        :class:`~.DataStoreIDError`
+            If the passed ID does not exist in the store..
+
+        """
         try:
             return getattr(self, geometry)[id]
         except AttributeError:
@@ -43,23 +119,103 @@ class DataStore:
         except KeyError:
             raise DataStoreIDError(id, geometry)
 
-    def verify(self, data: ndarray, dimensions: int):
+    def verify(self, data: ndarray, dimensions: int) -> None:
+        """Verifies if a grid is valid.
+
+        Parameters
+        ----------
+        data : :class:`~ndarray.ndarray`
+            The grid to be verified.
+
+        dimensions : :obj:`int`
+            The number of dimensions the grid should have.
+
+        Raises
+        ------
+        :class:`~.DataStoreTypeError`
+            If the grid is not a numpy array.
+
+        :class:`~.DataStoreDimensionalityError`
+            If the grid has the incorrect number of dimensions.
+        """
         if not isinstance(data, ndarray):
             raise DataStoreTypeError(type(data))
         if len(data.shape) is not dimensions:
             raise DataStoreDimensionalityError(len(data.shape), dimensions)
     
     def maximum(self, geometry: str, id: str) -> Tuple[Tuple[int], ndarray]:
+        """Finds and returns the maximum value, and its index, of a grid.
+
+        Parameters
+        ----------
+        geometry : :obj:`str`
+            The type of grid to be evaluated.
+
+        id : :obj:`str`
+            The id of the grid to be evaluated.
+
+        Returns
+        -------
+        :obj:`Tuple`[:obj:`Tuple`[:obj:`int`], float]
+            The index and value of the maximum in the grid.
+
+        """
         data = self.get(geometry, id)
-        index = unravel_index(argmax(data), data.shape)
+        try:
+            index = unravel_index(nanargmax(data), data.shape)
+        except ValueError:
+            index = None
         return index, data[index]
     
     def exceeds(self, geometry: str, id: str, value: float) -> Tuple[int]:
+        """Returns the index of the first time a grid exceeds 'value'
+
+        Parameters
+        ----------
+        geometry : :obj:`str`
+            The type of grid to be evaluated.
+
+        id : :obj:`str`
+            The id of the grid to be evaluated.
+
+        value : :obj:`float`
+            The threshold to be exceeded.
+
+        Returns
+        -------
+        :obj:`Union`[:obj:`Tuple`[:obj:`int`], None]
+            The index where and when the first exceedence occurred, or None if
+            no exceedence.
+
+        """
         data = self.get(geometry, id)
         exceeds = self.zip(where(data >= value))
         return exceeds[FIRST] if exceeds else None
 
     def percentage_exceeds(self, geometry: str, id: str, value: float, percent: float) -> int:
+        """Returns the time index where 'percent'% of the grid exceeds 'value'
+
+        Parameters
+        ----------
+        geometry : :obj:`str`
+            The type of grid to be evaluated.
+
+        id : :obj:`str`
+            The id of the grid to be evaluated.
+
+        value : :obj:`float`
+            The threshold to be exceeded.
+
+        percent : :obj:`float`
+            The percentage of the grid requred to exceed 'value'.
+
+        Returns
+        -------
+        :obj:`Union`[:obj:`int`, None]
+            The time index where the precentage exceedence was reached or None
+            if not reached during simulation.
+
+        """
         data = self.get(geometry, id)
         shape = data.shape
         try:
@@ -73,6 +229,28 @@ class DataStore:
         return None
     
     def percentage_exceeds_max(self, geometry: str, id: str, value: float) -> Tuple[int, float]:
+        """Returns the maximum percentage of grid that exceeds `value`.
+
+        And the time index when it ocurred.
+
+        Parameters
+        ----------
+        geometry : :obj:`str`
+            The type of grid to be evaluated.
+
+        id : :obj:`str`
+            The id of the grid to be evaluated.
+
+        value : :obj:`float`
+            The threshold to be exceeded.
+
+        Returns
+        -------
+        :obj:`Tuple`[:obj:`Union`[:obj:`int`, None], :obj:`float`]
+            The time index and the percentage exceedence, or None and zero if no
+            exceedence.
+
+        """
         data = self.get(geometry, id)
         max_val = 0.0
         max_time = None
@@ -81,6 +259,7 @@ class DataStore:
             size = prod(shape[1:])
         except KeyError:
             size = 1
+
         for time in range(shape[0]):
             frac = 100 * len(self.zip(where(data[time] >= value))) / size
             if frac > max_val:

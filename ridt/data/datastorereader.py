@@ -13,6 +13,34 @@ from .directoryagent import DirectoryAgent
 from .datastore import DataStore
 
 class DataStoreReader:
+    """A class that attempts to read a data store from disk.
+
+    This will only work if the folder structure generated when writing the data
+    store to disk is un modified.
+
+    When creating a new instance of this class, an instance of
+    :class:`~.DataStore` or :class:`~.BatchDataStore` will be returned instead
+    of :class:`~.DataStoreReader`.
+
+    Attributes
+    ----------
+    directory: :obj:`str`
+        The directory where the data store is located.
+    
+    settings : :class:`~.RIDTConfig`
+        The settings for the run output stored in the data store.
+    
+    quantity: :obj:`str`
+        The string id for the quantity stored in the data  store.
+
+    space : :class:`~.ComputationalSpace`
+        The :class:`~.ComputationalSpace` instance corresponding to the
+        :attr:`settings` attribute.
+
+    data_store : :obj:`Union`[:class:`~.DataStore`, :class:`~.BatchDataStore`]
+        The parsed data store.
+
+    """
 
     def __new__(cls, *args, **kwargs):
         instance = super(DataStoreReader, cls).__new__(cls)
@@ -20,6 +48,20 @@ class DataStoreReader:
         return instance.data_store
 
     def __init__(self, settings: RIDTConfig, directory: str, quantity: str):
+        """The :class:`DataStoreReader` constructor.
+
+        Parameters
+        ----------
+        directory: :obj:`str`
+            The directory where the data store is located.
+        
+        settings : :class:`~.RIDTConfig`
+            The settings for the run output stored in the data store.
+        
+        quantity: :obj:`str`
+            The string id for the quantity stored in the data  store.
+
+        """
         self.directory = directory
         self.settings = settings
         self.quantity = quantity
@@ -29,10 +71,25 @@ class DataStoreReader:
 
     @property
     def geometries(self):
+        """:obj:`list` [:obj:`str`] : the list of geometries selected for
+        evaluation in :attr:`settings`.
+
+        """
         locations = self.settings.models.eddy_diffusion.monitor_locations
         return [g for g, e in locations.evaluate.items() if e]
 
-    def read(self):
+    def read(self) -> None:
+        """This method attempts to load the data store  .
+
+        If :attr:`settings` is a batch settings object then it will loop over
+        all elements in the computational space.
+
+        Returns
+        -------
+        None
+
+
+        """
         if self.space.zero:
             self.data_store = self.load(self.settings, self.directory)
         else:
@@ -44,6 +101,28 @@ class DataStoreReader:
                     self.data_store[setting] = self.load(setting, da.ddir)
     
     def load(self, setting: RIDTConfig, directory: str):
+        """Reads in each numpy array and stores it in the new data store.
+
+        Parameters
+        ----------
+
+        settings : :class:`~.RIDTConfig`
+            The settings for the run output stored in the data store.
+
+        directory: :obj:`str`
+            The directory where the data store is located.
+
+        Returns
+        -------
+        :class:`~.DataStore`
+            The parsed data store.
+
+        Raises
+        ------
+        :class:`~.DataStoreParsingError`
+            If unable to read a numpy binary file from disk.
+
+        """
         rv = DataStore()
         locations = setting.models.eddy_diffusion.monitor_locations
 
