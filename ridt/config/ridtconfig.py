@@ -32,6 +32,14 @@ class RIDTConfig(Settings):
     eddy_diffusion: :obj:`bool`
         The flag indicating whether to evaluate the eddy diffusion model.
     
+    compute_exposure: :obj:`bool`
+        The flag indicating whether to compute and perfom analysis on the
+        exposure.
+
+    write_data_to_csv: :obj:`bool`
+        The flag indicating whether to write all computed data to csv files, in
+        addition to the numpy bindary arrays (*.npy).
+
     time_units : :class:`~.TimeUnits`
         The temporal units selection.
     
@@ -100,10 +108,13 @@ class RIDTConfig(Settings):
         """
         self.well_mixed = bool
         self.eddy_diffusion = bool
+        self.compute_exposure = bool
+        self.write_data_to_csv = bool
 
+        self.integration_method = IntegrationMethod
 
         self.time_units = TimeUnits
-        self.time_samples = NonNegativeInteger
+        self.time_samples = TimeSamples
         self.total_time = NonNegativeFloat
 
         self.dimensions = Dimensions
@@ -116,7 +127,7 @@ class RIDTConfig(Settings):
         self.mass_units = MassUnits
 
         self.fresh_air_change_rate_units = FreshAirChangeRateUnits
-        self.fresh_air_change_rate = PositiveFloat
+        self.fresh_air_change_rate = NonNegativeFloat 
 
         self.modes = ModeSettings
         self.thresholds = Thresholds
@@ -230,19 +241,6 @@ class RIDTConfig(Settings):
         thresh = self.thresholds
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
             raise ConsistencyError(f"Cannot exceed more than 5 thresholds")
-        
-        point_number = self.models.eddy_diffusion.points_plots.number
-        if isinstance(point_number, list):
-            for item in point_number:
-                if item > self.time_samples:
-                    raise ConsistencyError(
-                f"The number of requrested plots ({item}) cannot exceed the "
-                f"number of time samples ({self.time_samples}).")
-        else:
-            if point_number > self.time_samples:
-                raise ConsistencyError(
-            f"The number of requrested plots ({item}) cannot exceed the "
-            f"number of time samples ({self.time_samples}).")
  
         line_number = self.models.eddy_diffusion.lines_plots.number
         if isinstance(line_number, list):
@@ -269,6 +267,32 @@ class RIDTConfig(Settings):
                 raise ConsistencyError(
             f"The number of requrested contour plots ({contour_number}) cannot exceed the "
             f"number of time samples ({self.time_samples}).")
+
+class TimeSamples(Number):
+    """The :class:`~.TimeSamples` class. It inherits from
+    :class:`~.Number`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: int):
+        """The constructor for the :class:`~.TimeSamples` class.
+
+        Parameters
+        ----------
+        value : :obj:`int`
+            The float value that is being checked.
+
+        """
+        self.type = int 
+
+    def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 0.
+        """
+        self.lower_bound_exclusive(1)
 
 
 class PhysicalProperties(Settings):
@@ -306,11 +330,11 @@ class PhysicalProperties(Settings):
 
         """
         self.agent_molecular_weight_units = AgentMolecularWeightUnits
-        self.agent_molecular_weight = float
+        self.agent_molecular_weight = NonNegativeFloat 
         self.pressure_units = PressureUnits
-        self.pressure = float
+        self.pressure = NonNegativeFloat
         self.temperature_units = TemperatureUnits
-        self.temperature = float
+        self.temperature = NonNegativeFloat
 
 
 class AgentMolecularWeightUnits(StringSelection):
@@ -339,6 +363,33 @@ class AgentMolecularWeightUnits(StringSelection):
     def check(self):
         pass
     
+class IntegrationMethod(StringSelection):
+    """The integration methods selection class.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: str):
+        """The IntegrationMethod class initialiser
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosed value.
+
+        """
+        self.options = [
+            "cumulativetrapezoidal",
+            "romberg"
+        ]
+    
+    def check(self):
+        pass
+ 
 
 class PressureUnits(StringSelection):
     """The pressure units selection class.
@@ -1070,7 +1121,7 @@ class ThresholdList(List):
 
         Parameters
         ----------
-        values : :obj:`dict`
+        values : :obj:`list`
             The values corresponding to the thresholds.
 
         """
@@ -1123,6 +1174,9 @@ class AnalysisSettings(Settings):
 
     Attributes
     ----------
+    perform_analysis: :obj:`bool`
+        Whether perform analysis or not.
+
     percentage_exceedance : :class:`~.Percentage`
         The percentage which must be exceeded in percent exceed threshold
         calcluations.
@@ -1143,6 +1197,7 @@ class AnalysisSettings(Settings):
 
         """
  
+        self.perform_analysis = bool
         self.percentage_exceedance = Percentage
         self.exclude_uncertain_values = bool
 
@@ -1163,7 +1218,7 @@ class LinePlots(Settings):
         self.output = bool
         self.animate = bool
         self.scale = ScaleType
-        self.number = NonNegativeInteger
+        self.number = PositiveInt 
 
 
 class PointPlots(Settings):
@@ -1582,7 +1637,7 @@ class ContourPlots(Settings):
         """
         self.output = bool
         self.animate = bool
-        self.number = NonNegativeInteger
+        self.number = PositiveInt 
         self.number_of_contours = NonNegativeInteger
         self.range = RangeMode
         self.scale = ScaleType 
@@ -1878,8 +1933,8 @@ class ManualContours(Settings):
         value : :obj:`dict`
             The values corresponding to manual contours.
         """
-        self.min = NonNegativeFloat
-        self.max = NonNegativeFloat
+        self.min = PositiveFloat 
+        self.max = PositiveFloat
 
 
 class WellMixed(Settings):
@@ -1983,7 +2038,33 @@ class PositiveFloat(Number):
         ValueError
             If the value isn't greater than 0.
         """
-        self.lower_bound(0.0)
+        self.lower_bound_exclusive(0.0)
+
+class PositiveInt(Number):
+    """The :class:`~.PositiveInt` class. It inherits from
+    :class:`~.Number`.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: int):
+        """The constructor for the :class:`~.PositiveInt` class.
+
+        Parameters
+        ----------
+        value : :obj:`float`
+            The float value that is being checked.
+        """
+        self.type = int
+
+    def check(self):
+        """Abstract method from :class:`~.Terminus`.
+        Raises
+        ------
+        ValueError
+            If the value isn't greater than 0.
+        """
+        self.lower_bound_exclusive(0)
+
 
 
 

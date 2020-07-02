@@ -2,9 +2,25 @@ from typing import Iterable
 
 from .ridtconfig import RIDTConfig
 from .units import Units
+from ridt.equation.eddy_diffusion import EddyDiffusion
 
 
-def summary(settings: RIDTConfig):
+def summary(settings: RIDTConfig) -> str:
+    """A function that generates a formatted string containing run info.
+
+    This takes a settings object and generates a string with various information
+    about the run. It also computes various sanity check quantities.
+
+    Parameters
+    ----------
+    settings : :class:`~.RIDTConfig`
+        The settings object for the run in question. 
+
+    Returns
+    -------
+    :obj:`str` 
+        The formatted string, ready to be written to a file.
+    """
     units = Units(settings)
     rv = str()
 
@@ -30,8 +46,12 @@ def summary(settings: RIDTConfig):
             rv += f"diffusion coefficient: TKEB\n"
             rv += f"\tvents: {coeff.tkeb.number_of_supply_vents}\n"
             rv += f"\ttotal air change rate: {coeff.tkeb.total_air_change_rate} m3.s-1\n"
+            M = EddyDiffusion(settings)
+            rv += f"diffusion coefficient value: {M.diffusion_coefficient()}m2.s-1\n"
+
         else:
-            rv += f"diffusion coefficient: {coeff.value}\n"
+             
+            rv += f"diffusion coefficient value: {coeff.value}m2.s-1\n"
         rv += f"\n"
     if settings.well_mixed:
         dim = settings.dimensions
@@ -52,6 +72,7 @@ def summary(settings: RIDTConfig):
         rv += f"\t\tz: {item.z} {units.space}\n"
         rv += f"\t\tmass: {item.mass} {units.mass}\n"
         rv += f"\t\ttime: {item.time} {units.time}\n"
+        dim = settings.dimensions
         if isinstance(item.mass, list) or\
            isinstance(dim.x, list) or\
            isinstance(dim.y, list) or\
@@ -64,7 +85,11 @@ def summary(settings: RIDTConfig):
            isinstance(settings.fresh_air_change_rate, list):
             rv += f"\t\tupper exposure limit: <various>\n"
         else:
-            rv += f"\t\tupper exposure limit: {(item.mass / settings.fresh_air_change_rate):.2e}{units.exposure_si}\n"
+            if settings.fresh_air_change_rate:
+                rv += f"\t\tupper exposure limit: {(item.mass / settings.fresh_air_change_rate):.2e}{units.exposure_si}\n"
+            else:
+                rv += f"\t\tupper exposure limit: infinite.\n"
+
 
         rv += f"\n"
     rv += "infinite duration:\n"
@@ -79,7 +104,11 @@ def summary(settings: RIDTConfig):
            isinstance(settings.fresh_air_change_rate, list):
             rv += f"\t\tsteady state well mix concentration: <various>\n"
         else:
-            rv += f"\t\tsteady state well mix concentration: {(item.rate / settings.fresh_air_change_rate):.2e}{units.concentration_si}\n"
+            if settings.fresh_air_change_rate:
+                rv += f"\t\tsteady state well mix concentration: {(item.rate / settings.fresh_air_change_rate):.2e}{units.concentration_si}\n"
+            else:
+                rv += f"\t\tsteady state well mix concentration: infinite\n"
+
         rv += f"\n"
     rv += "infinite duration:\n"
     for name, item in settings.modes.fixed_duration.sources.items():
@@ -90,6 +119,7 @@ def summary(settings: RIDTConfig):
         rv += f"\t\trate: {item.rate}\n"
         rv += f"\t\tstart_time: {item.end_time} {units.time}\n"
         rv += f"\t\tend_time: {item.end_time} {units.time}\n"
+        dim = settings.dimensions
         if isinstance(item.rate, list) or\
            isinstance(dim.x, list) or\
            isinstance(dim.y, list) or\
@@ -106,7 +136,11 @@ def summary(settings: RIDTConfig):
            isinstance(settings.fresh_air_change_rate, list):
             rv += f"\t\tupper exposure limit: <various>\n"
         else:
-            rv += f"\t\tupper exposure limit: {(item.rate * (item.end_time - item.end_time) / settings.fresh_air_change_rate):.2e}{units.exposure_si}\n"
+            if settings.fresh_air_change_rate:
+                rv += f"\t\tupper exposure limit: {(item.rate * (item.end_time - item.end_time) / settings.fresh_air_change_rate):.2e}{units.exposure_si}\n"
+            else:
+                rv += f"\t\tupper exposure limit: infinite\n"
+
         rv += f"\n"
     
     rv += "\n"

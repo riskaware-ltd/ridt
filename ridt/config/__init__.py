@@ -3,6 +3,8 @@ from .ridtconfig import Point
 from .ridtconfig import Line
 from .ridtconfig import Plane
 from .ridtconfig import InstantaneousSource
+from .ridtconfig import InfiniteDurationSource 
+from .ridtconfig import FixedDurationSource 
 
 from .configfileparser import ConfigFileParser
 from .configfileparser import ConfigFileParserJSONError
