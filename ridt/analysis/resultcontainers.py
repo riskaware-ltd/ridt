@@ -424,7 +424,7 @@ class PercentExceedance(ResultContainer):
         """:obj:`str` : the file name for the this result output.
 
         """
-        return f"{self.geometry}_exceeds_{self.threshold}{self.unit}.csv"
+        return f"{self.percent}%_of_{self.geometry}_exceeds_{self.threshold}{self.unit}.csv"
     
     @property
     def title(self):

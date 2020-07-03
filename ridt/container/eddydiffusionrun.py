@@ -135,6 +135,7 @@ class EddyDiffusionRun:
             print(f"Evaluating {geometry} monitor locations...")
             for name, item in getattr(locations, geometry).items():
                 print(f"Evaluating {name}...")
+                space = getattr(domain, geometry)(item)
                 output = solver(*getattr(domain, geometry)(item), domain.time)
                 self.data_store[setting].add(geometry, name, squeeze(output))
     

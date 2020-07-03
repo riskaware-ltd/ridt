@@ -11,6 +11,7 @@ from numpy import arange
 from numpy import power
 from numpy import linspace
 from numpy import meshgrid
+from numpy import transpose
 from numpy.ma import masked_where
 
 from ridt.config import RIDTConfig
@@ -126,10 +127,11 @@ class ContourPlot:
             levels = self.get_linear_scale()
             kwargs = {}
 
+
         plot = plt.contourf(
             self.get_xdomain(),
             self.get_ydomain(),
-            data, 
+            transpose(data), 
             levels,
             cmap=cm.RdBu_r,
             **kwargs)

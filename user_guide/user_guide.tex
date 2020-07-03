@@ -1575,7 +1575,7 @@ configuration file in the \code{monitor\_locations.domain} setting (Section
     \end{itemize}
 \end{itemize}
 This is a placeholder value and currenly serves no purpose. It must however be
-defined.
+defined. It does not matter if it is true or false.
 
 \subsubsection{\code{models.eddy\_diffusion.points\_plots}}
 \begin{itemize}
@@ -2187,25 +2187,38 @@ configuration file.
 The following analysis is perfomed on each run for every monitor location
 defined in the configuration file, that was marked for evaluation, for both
 concentration and exposure data. The data is output in CSV files in the run
-directory.
+directory, \code{<monitor\_location>/<quantity>/analysis/} where
+\code{<monitor\_location>} is either, points, lines, planes or domains, and
+\code{<analysis>} is either concentration or exposure.
+
 \subsection{Maxium Values}
 The maximum value achieved during the course of the run. The time, location, and
-value are povided.
+value are povided. These values can be found in\\
+
+\code{<monitor\_location>\_maximums.csv}.
 
 \subsection{Time to Threshold Values}
 For all thresholds defined in the configuration file, the time during the
 simulation that the threshold was reached, and the location where it happened.
+These values can be found in \\
+
+\code{<monitor\_location>\_exceeds\_<threshold>.csv}.
 
 \subsection{Time for Percent of Domain to Threshold Values}
 For all thresholds defined in the configuration file, the time during the
 simulation that the threshold was reached for a percentage of the domain. That
 percentage is specified in the
 \code{percentage\_exceedance} setting (Section
-\ref{sec:percex}).
+\ref{sec:percex}). These values can be found in\\
+
+\code{<percentage>\%\_of\_<monitor\_location>\_exceeds\_<threshold>.csv} 
 
 \subsection{Maximum Percent of Domain to Exceed Threshold Values}
 For all thresholds defined in the configuration file the maximum percentage of
-the domain that exceeds the threshold, over the entire course of the run.\\
+the domain that exceeds the threshold, over the entire course of the run. These
+values can be found in\\
+
+\code{<monitor\_location>\_max\%\_exceeds\_<threshold>.csv} \\
 
 \subsection{Extrema}
 \noindent For each run, a file \code{*\_extrema.txt} is saved to the output directory that
@@ -2256,7 +2269,8 @@ where $Q_f$ [\SI{}{\meter\cubed\per\second}] is the flow rate of fresh air into
 the room.
 \subsection{Constant and continuous release}\label{sec:WMCont}
 
-Equation for concentration in a well-mixed from a constant and continuous release
+Equation for concentration in a well-mixed from a constant and continuous
+release \cite{keil09}
 \begin{eqnarray}\label{eq:WMCont}
 	C(t) = \frac{S}{Q_f} \left[1 - \exp\left( -\lambda_f\:t\right) \right],
 \end{eqnarray}
@@ -2326,7 +2340,7 @@ The equation for concentration, $C_{cont}(t)$
 
 The equation for concentration, $C_{finite}(t)$
 [\SI{}{\kilo\gram\per\meter\cubed}], resulting from a finite duration point
-release in a cuboid bounded space. 
+release in a cuboid bounded space \cite{foat20},
 \begin{equation}\label{eq:modelFiniteDuration}
 	C_{finite}(t) = 
 	\begin{cases} 
@@ -2341,7 +2355,7 @@ The turbulent kinetic energy balance (TKEB) relationship to calculate $D_e$ is
 given below. There are three equations as there is some uncertainty over what
 what value $D_e$ should take. The upper prediction interval (PI) equation gives
 the upper value for $D_e$, the lower PI equation gives the lower value and the
-regression equation gives the mid-point value. 
+regression equation gives the mid-point value \cite{foat20}. 
 \begin{equation}\label{eq:karlUpper}
 	D_e(\text{upper PI}) = 0.827 \frac{Q}{\sqrt[3]{V\:N^2}} + 0.0565\:\frac{\text{m}^2}{\text{s}},
 \end{equation}
@@ -2393,6 +2407,9 @@ coffcient with air change rate}, Environ. Sci. Technol. \textbf{45} 9
     \bibitem{parker16} Parker, S., \emph{et al.}, \emph{Visual assessment
     of contaminant impacts in multizone buildings}. Building and Environment,
     \textbf{102}, 39-53 (2016).  
+    
+    \bibitem{keil09} C.B. Keil \emph{et al.}, \emph{Mathematical Models for Estimating
+Occupational Exposure to Chemicals}, AIHA, Fairfax, VA, 2009.
 \end{thebibliography}
 
 \end{document}

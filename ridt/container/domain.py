@@ -151,7 +151,7 @@ class Domain:
                 (unravel_index(i, (len(self.x), len(self.y))), item) for i, item in 
                 enumerate(product(self.x, self.y, [plane.distance]))
             ]
-        elif plane.parallel_axis == "yz":
+        elif plane.axis == "yz":
             return [
                 (unravel_index(i, (len(self.y), len(self.z))), item) for i, item in 
                 enumerate(product([plane.distance], self.y, self.z))
@@ -191,7 +191,7 @@ class Domain:
             The 3D meshgrid for the point.
         
         """
-        return meshgrid(point.x, point.y, point.z)
+        return meshgrid(point.x, point.y, point.z, indexing="ij")
 
     def lines(self, line: Line):
         """Returns the meshgrid corresponding to a line-like monitor locaiton.
@@ -208,11 +208,11 @@ class Domain:
         
         """
         if line.parallel_axis == "x":
-            return meshgrid(self.x, line.point.y, line.point.z)
+            return meshgrid(self.x, line.point.y, line.point.z, indexing="ij")
         elif line.parallel_axis == "y":
-            return meshgrid(line.point.x, self.y, line.point.z)
+            return meshgrid(line.point.x, self.y, line.point.z, indexing="ij")
         else:
-            return meshgrid(line.point.x, line.point.y, self.z)
+            return meshgrid(line.point.x, line.point.y, self.z, indexing="ij")
 
     def planes(self, plane: Plane):
         """Returns the meshgrid corresponding to a plane-like monitor locaiton.
@@ -229,11 +229,12 @@ class Domain:
         
         """
         if plane.axis == "xy":
-            return meshgrid(self.x, self.y, plane.distance)
+            rv = meshgrid(self.x, self.y, plane.distance, indexing="ij")
+            return rv
         elif plane.axis == "yz":
-            return  meshgrid(plane.distance, self.y, self.z)
+            return  meshgrid(plane.distance, self.y, self.z, indexing="ij")
         else:
-            return meshgrid(self.x, plane.distance, self.z)
+            return meshgrid(self.x, plane.distance, self.z, indexing="ij")
     
     def domain(self, *args, **kwargs):
         """An interface for the :attr:`full` parameter.
