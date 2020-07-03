@@ -22,7 +22,7 @@ class RIDTConfig(Settings):
     """The settings object for ridt.
 
     This takes a dictionary and checks that all relevant information exists
-    in the dictioary.
+    in the dictionary.
 
     Attributes
     ----------
@@ -143,15 +143,19 @@ class RIDTConfig(Settings):
 
         Raises
         ------
-        :class:`~.ConsistencyError
+        :class:`~.ConsistencyError`
             If any sources lie outside the simulation domain.
-        :class:`~.ConsistencyError
+
+        :class:`~.ConsistencyError`
             If any sources' release times are outside the simulation domain.
-        :class:`~.ConsistencyError
+
+        :class:`~.ConsistencyError`
             If any monitor locations are outside of the simulation domain.
-        :class:`~.ConsistencyError
+
+        :class:`~.ConsistencyError`
             If more than 5 thresholds of a given type are defined.
-        :class:`~.ConsistencyError
+
+        :class:`~.ConsistencyError`
             If the number of a given type of plots requested is greater than
             the time discretisation.
 

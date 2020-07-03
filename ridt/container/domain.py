@@ -27,21 +27,6 @@ class Domain:
     set : :obj:`~.RIDTConfig`
         The settings object for the current run.
     
-    x : :obj:`Iterable`[:obj:`float`]
-        The x domain of the system defined in :attr:`set`.
-    
-    y : :obj:`Iterable`[:obj:`float`]
-        The y domain of the system defined in :attr:`set`.
-    
-    z : :obj:`Iterable`[:obj:`float`]
-        The z domain of the system defined in :attr:`set`.
-    
-    full : :obj:`Tuple`[:class:`~numpy.ndarray`]
-        The full 3D meshgrid for the system defined in :attr:`set`.
-    
-    time : :obj:`Iterable`[:obj:`float`]
-        The time domain of the system defined in :attr:`set`.
-    
     """
 
     def __init__(self, settings: RIDTConfig):

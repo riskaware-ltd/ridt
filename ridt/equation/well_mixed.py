@@ -23,7 +23,7 @@ class WellMixed:
     settings : :class:`~.RIDTConfig`
         The settings for the run in question.
     
-    dim : :class:`~.Dimensions`
+    dim : :class:`~.ridt.config.ridtconfig.Dimensions`
         The dimensions settings object that define the bounds of the system.
 
     volume : :obj:`float`

@@ -65,10 +65,14 @@ html_theme = 'nature'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-def skip(app, what, name, obj, would_skip, options):
-    if name == "__init__":
-        return False
-    return would_skip
 
+
+# This is the expected signature of the handler for this event, cf doc
+def autodoc_skip_member_handler(app, what, name, obj, skip, options):
+    # Basic approach; you might want a regex instead
+    return name.startswith("test_")
+
+# Automatically called by sphinx at startup
 def setup(app):
-    app.connect("autodoc-skip-member", skip)
+    # Connect the autodoc-skip-member event from apidoc to the callback
+    app.connect('autodoc-skip-member', autodoc_skip_member_handler)

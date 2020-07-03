@@ -147,8 +147,6 @@ class Settings:
             If a check error is caught when assigning a setting to a
             :class:`~.Terminus` instance.
 
-        :class:`~.
-        
         Note
         ----
         If the setting found in the `values` is None, then this function will
@@ -676,12 +674,6 @@ class Number(Terminus):
 
     Attributes
     ----------
-    is_range : :obj:`bool`
-        True if the instance contains a range of values.
-    
-    match : :obj:`Union`[None, :obj:`str`]
-        The match parameter of the range if a match parameter exists.
-    
     value : :obj:`Union`[:obj:`float`, :obj:`int`, :obj:`List`]
         The value or list of values stored.
     
@@ -973,7 +965,7 @@ class ComputationalSpace:
         A dictionary of :obj:`str`: :obj:`str` pairs that are used to exclude
         subsetting branches from the exploration function for finding ranges.
         If when searching the settings object for ranges, a setting with the
-        same name as a key in :attr:``restrict` is found, only subsettings with
+        same name as a key in :attr:`restrict` is found, only subsettings with
         name equal to the corresponding key will be searched.
     
     """
@@ -990,7 +982,7 @@ class ComputationalSpace:
             A dictionary of :obj:`str`: :obj:`str` pairs that are used to exclude
             subsetting branches from the exploration function for finding ranges.
             If when searching the settings object for ranges, a setting with the
-            same name as a key in :attr:``restrict` is found, only subsettings with
+            same name as a key in :attr:`restrict` is found, only subsettings with
             name equal to the corresponding key will be searched.
 
         """
