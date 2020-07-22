@@ -145,7 +145,7 @@ def summary(settings: RIDTConfig) -> str:
         else:
             if settings.fresh_air_flow_rate:
                 rv += f"\t\tupper exposure limit: \
-                    {(item.rate * (item.end_time - item.end_time) / settings.fresh_air_flow_rate):.2e} {units.exposure_si}\n"
+                    {(item.rate * (item.end_time - item.start_time) / settings.fresh_air_flow_rate):.2e} {units.exposure_si}\n"
             else:
                 rv += f"\t\tupper exposure limit: infinite\n"
 

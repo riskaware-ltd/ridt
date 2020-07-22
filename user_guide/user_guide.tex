@@ -1261,7 +1261,7 @@ This float defines the percentage used to calculate the time to a domain
 percentage exceedance of a given threshold. Please see Section
 \ref{sec:analysis} for more information.
 
-\paragraph{\code{analysis.exclude\_uncertain\_values}}
+\paragraph{\code{analysis.exclude\_uncertain\_values}}\label{sec:excludevalue}
 \begin{itemize}
     \item[$\diamond$] type: boolean
     \item[$\diamond$] allowed values:
@@ -2213,20 +2213,32 @@ defined in the configuration file, that was marked for evaluation, for both
 concentration and exposure data. The data is output in CSV files in the run
 directory, \code{<monitor\_location>/<quantity>/analysis/} where
 \code{<monitor\_location>} is either, points, lines, planes or domains, and
-\code{<analysis>} is either concentration or exposure.
+\code{<analysis>} is either concentration or exposure.\\
+
+If specified in the configuration file (Section \ref{sec:excludevalues}), points
+within 2m of any source term will be excluded from the calculation.
 
 \subsection{Maxium Values}
 The maximum value achieved during the course of the run. The time, location, and
 value are povided. These values can be found in\\
 
-\code{<monitor\_location>\_maximums.csv}.
+\code{<monitor\_location>\_maximums.csv}. \\
+
+If specified in the configuration file (Section \ref{sec:excludevalues}), points
+within 2m of any source term will be excluded from the calculation.
 
 \subsection{Time to Threshold Values}
 For all thresholds defined in the configuration file, the time during the
 simulation that the threshold was reached, and the location where it happened.
 These values can be found in \\
 
-\code{<monitor\_location>\_exceeds\_<threshold>.csv}.
+\code{<monitor\_location>\_exceeds\_<threshold>.csv}.\\
+
+If multiple points in space reach the threshold at the same time, only one will
+be returned (The first in the enumerated cartesian product space).\\
+
+If specified in the configuration file (Section \ref{sec:excludevalues}), points
+within 2m of any source term will be excluded from the calculation.
 
 \subsection{Time for Percent of Domain to Threshold Values}
 For all thresholds defined in the configuration file, the time during the
@@ -2243,6 +2255,9 @@ the domain that exceeds the threshold, over the entire course of the run. These
 values can be found in\\
 
 \code{<monitor\_location>\_max\%\_exceeds\_<threshold>.csv} \\
+
+If specified in the configuration file (Section \ref{sec:excludevalues}), points
+within 2m of any source term will be excluded from the calculation.\\
 
 \subsection{Extrema}
 \noindent For each run, a file \code{*\_extrema.txt} is saved to the output directory that
