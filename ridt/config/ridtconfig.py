@@ -67,11 +67,11 @@ class RIDTConfig(Settings):
     mass_units : :class:`~.MassUnits`
         The mass units selection.
     
-    fresh_air_change_rate : :class:`~.FreshAirChangeRate`
-        The fresh air change rate.
+    fresh_air_flow_rate : :class:`~.FreshAirFlowRate`
+        The fresh air flow rate.
 
-    fresh_air_change_rate_units : :class:`~.FreshAirChangeRateUnits`
-        The fresh air change rate unit selection.
+    fresh_air_flow_rate_units : :class:`~.FreshAirFlowRateUnits`
+        The fresh air flow rate unit selection.
     
     modes : :class:`~.Modes`
         Source settings.
@@ -124,8 +124,8 @@ class RIDTConfig(Settings):
         self.exposure_units = ExposureUnits
         self.mass_units = MassUnits
 
-        self.fresh_air_change_rate_units = FreshAirChangeRateUnits
-        self.fresh_air_change_rate = NonNegativeFloat 
+        self.fresh_air_flow_rate_units = FreshAirFlowRateUnits
+        self.fresh_air_flow_rate = NonNegativeFloat 
 
         self.modes = ModeSettings
         self.thresholds = Thresholds
@@ -476,10 +476,10 @@ class TemperatureUnits(StringSelection):
         pass
 
 
-class FreshAirChangeRate(Number):
-    """The FreshAirChangeRate class
+class FreshAirFlowRate(Number):
+    """The FreshAirFlowRate class
 
-    Stores the value of the fresh air change rate.
+    Stores the value of the fresh air flow rate.
 
     """
 
@@ -693,8 +693,8 @@ class MassUnits(StringSelection):
         pass
 
 
-class FreshAirChangeRateUnits(StringSelection):
-    """The fresh air change rate units selection setting class.
+class FreshAirFlowRateUnits(StringSelection):
+    """The fresh air flow rate units selection setting class.
 
     Attributes
     ----------
@@ -704,7 +704,7 @@ class FreshAirChangeRateUnits(StringSelection):
     """
     @Terminus.assign
     def __init__(self, value: str):
-        """The FreshAirChangeRateUnits class initialiser.
+        """The FreshAirFlowRateUnits class initialiser.
 
         Parameters
         ----------
@@ -1535,7 +1535,7 @@ class TKEB(Settings):
             equation.
         """
         self.bound = TKEBBound
-        self.total_air_change_rate = TotalAirChangeRate 
+        self.total_air_flow_rate = TotalAirFlowRate 
         self.number_of_supply_vents = NumberOfSupplyVents 
 
 
@@ -1568,10 +1568,10 @@ class TKEBBound(StringSelection):
         pass
 
 
-class TotalAirChangeRate(Number):
-    """Total air change rate settings
+class TotalAirFlowRate(Number):
+    """Total air flow rate settings
 
-    Contains the value of the total air change rate.
+    Contains the value of the total air flow rate.
 
     """
     @Terminus.assign

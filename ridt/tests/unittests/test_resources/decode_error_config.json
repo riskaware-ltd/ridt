@@ -23,8 +23,8 @@
         "z": 10 
     },
 
-    "fresh_air_change_rate_units": "m3.s-1",
-    "fresh_air_change_rate": 5.0,
+    "fresh_air_flow_rate_units": "m3.s-1",
+    "fresh_air_flow_rate": 5.0,
 
     "physical_properties": {
         "agent_molecular_weight_units": "mol.m-3",
@@ -98,7 +98,7 @@
                 "value": 0.001,
                 "tkeb": {
                     "bound": "lower",
-                    "total_air_change_rate": 1.0,
+                    "total_air_flow_rate": 1.0,
                     "number_of_supply_vents": 1
                 }
             },

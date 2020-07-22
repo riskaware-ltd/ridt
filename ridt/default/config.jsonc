@@ -51,10 +51,10 @@
         "z": 10 
     },
 
-    // The units of the fresh air change rate.
-    "fresh_air_change_rate_units": "m3.s-1",
-    // The fresh air change rate.
-    "fresh_air_change_rate": 0.0,
+    // The units of the fresh air flow rate.
+    "fresh_air_flow_rate_units": "m3.s-1",
+    // The fresh air flow rate.
+    "fresh_air_flow_rate": 0.0,
 
     // The physical properties of the system. These are used to perform unit
     // conversion from ppm, ppb, and ppt.
@@ -171,8 +171,8 @@
                     // The bound of the TKEB term to use. (Please see user guide
                     // for more information).
                     "bound": "lower",
-                    // The total air change rate. (m3.s-1)
-                    "total_air_change_rate": 1.0,
+                    // The total air flow rate. (m3.s-1)
+                    "total_air_flow_rate": 1.0,
                     // The number of supply vents.
                     "number_of_supply_vents": 1
                 }

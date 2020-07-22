@@ -9,8 +9,6 @@
     "time_units": "s",
     "time_samples": 21,
     "total_time": 10000.0,
-    "fresh_air_change_rate_units": "m3.s-1",
-    "fresh_air_change_rate": 4.166666666666667,
     "dimensions": {
         "x": 50.0,
         "y": 20.0,
@@ -71,8 +69,8 @@
                 "value": 0.01,
                 "tkeb": {
                     "bound": "lower",
-                    "total_air_change_rate": 1.0,
-                    "number_of_supply_vents": 1
+                    "number_of_supply_vents": 1,
+                    "total_air_flow_rate": 1.0
                 }
             },
             "images": {
@@ -178,5 +176,7 @@
     },
     "compute_exposure": true,
     "write_data_to_csv": true,
-    "ridt_version": "v1.0"
+    "ridt_version": "v1.0",
+    "fresh_air_flow_rate": 4.166666666666667,
+    "fresh_air_flow_rate_units": "m3.s-1"
 }

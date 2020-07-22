@@ -8,8 +8,8 @@
     "concentration_units": "kgm-3",
     "exposure_units": "mgminm-3",
 
-    "total_air_change_rate": 1.0,
-    "fresh_air_change_rate": 0.2,
+    "total_air_flow_rate": 1.0,
+    "fresh_air_flow_rate": 0.2,
     "human_readable_data_output": true,
 
     "modes": {

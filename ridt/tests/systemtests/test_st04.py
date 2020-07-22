@@ -31,9 +31,9 @@ class ST04(unittest.TestCase):
         self.assertEqual(
             hasattr(self.c, "total_time"), True)
         self.assertEqual(
-            hasattr(self.c, "fresh_air_change_rate_units"), True)
+            hasattr(self.c, "fresh_air_flow_rate_units"), True)
         self.assertEqual(
-            hasattr(self.c, "fresh_air_change_rate"), True)
+            hasattr(self.c, "fresh_air_flow_rate"), True)
         self.assertEqual(
             hasattr(self.c, "modes"), True)
         self.assertEqual(

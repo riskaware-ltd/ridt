@@ -531,7 +531,7 @@ class EddyDiffusion:
             The coefficient.
 
         """
-        fa_rate = self.settings.fresh_air_change_rate
+        fa_rate = self.settings.fresh_air_flow_rate
         num = exp(-t * fa_rate / self.volume)
         den = 8 * power(pi * self.diff_coeff * t, 3.0 / 2.0)
         return num / den
@@ -547,14 +547,14 @@ class EddyDiffusion:
         """
         tkeb_settings = self.settings.models.eddy_diffusion.coefficient.tkeb
         vent_number = tkeb_settings.number_of_supply_vents
-        air_change_rate = tkeb_settings.total_air_change_rate
+        air_flow_rate = tkeb_settings.total_air_flow_rate
         coeff = self.settings.models.eddy_diffusion.coefficient
         bound = tkeb_settings.bound
 
         if coeff.calculation == "EXPLICIT":
             return coeff.value
         else:
-            tkeb_term = air_change_rate /\
+            tkeb_term = air_flow_rate /\
                 power(self.volume * power(vent_number, 2), 1.0 / 3.0)
             if bound == "lower":
                 return 0.827 * tkeb_term + 0.0565
