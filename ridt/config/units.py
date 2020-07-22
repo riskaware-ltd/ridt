@@ -71,7 +71,7 @@ class Units:
         """The conversion factor for provided concentration into SI units.
 
         This function will compute the scaling factor for the concentration
-        quantities to and from SI units. This is becuase all calculations RIDT
+        quantities to and from SI units. This is because all calculations RIDT
         performs internally are in SI units.
 
         Returns
@@ -105,7 +105,7 @@ class Units:
         """The conversion factor for provided exposure into SI units.
 
         This function will compute the scaling factor for the exposure
-        quantities to and from SI units. This is becuase all calculations RIDT
+        quantities to and from SI units. This is because all calculations RIDT
         performs internally are in SI units.
 
         Returns

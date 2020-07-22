@@ -6,6 +6,7 @@ from numpy import unravel_index
 
 from ridt.base import RIDTOSError
 
+
 class DirectoryAgent:
     """This class provides directory creation functionality.
 
@@ -24,7 +25,7 @@ class DirectoryAgent:
         The the current geometry dir relative to the :attr:`rootdir`.
     
     qdir : :obj:`str`
-        The current quantitiy dir relative to the :attr:`gdir`.
+        The current quantity dir relative to the :attr:`gdir`.
     
     ddir : :obj:`str`
         The current data dir relative to the :attr:`qdir`.

@@ -1,7 +1,5 @@
 import json
 
-from typing import Type
-
 from ridt.base import Error
 from ridt.base import SettingErrorMessage
 
@@ -80,6 +78,7 @@ class ConfigFileParser:
         except SettingErrorMessage as e:
             raise ConfigFileParserValidationError(self.path, e)
 
+
 class ConfigFileParserOSError(Error):
     """The exception raised when a :class:`~.ConfigFileParser` instance
     catches an error when parsing a config file path, or instantiating the
@@ -94,6 +93,7 @@ class ConfigFileParserOSError(Error):
               f"\n {error}"
         super().__init__(msg)
 
+
 class ConfigFileParserJSONError(Error):
     """The exception raised when a :class:`~.ConfigFileParser` instance
     catches an error when parsing a the JSON in a string parsed from a file.
@@ -106,6 +106,7 @@ class ConfigFileParserJSONError(Error):
         msg = f"While loading {path}, I encountered the following error:"\
               f"\n {error}. Please verify the integrity of the JSON file."
         super().__init__(msg)
+
 
 class ConfigFileParserValidationError(Error):
     """The exception raised when a :class:`~.ConfigFileParser` instance

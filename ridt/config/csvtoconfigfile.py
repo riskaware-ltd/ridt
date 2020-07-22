@@ -1,6 +1,5 @@
 import csv
 import sys
-import json
 
 from os.path import basename
 from os.path import dirname
@@ -9,6 +8,7 @@ from ridt.base import Error
 
 from ridt.config import ConfigFileParser
 from ridt.config import ConfigFileWriter
+
 
 class CSVToConfigFile:
 
@@ -261,7 +261,6 @@ class CSVToConfigFile:
                 raise CSVToConfigFileValueError("POI", self.ord(idx))
             except IndexError as e:
                 raise CSVToConfigFileIndexError("POI", self.ord(idx), 3)
- 
     
     def add_LIN(self):
         """Add the parsed LIN items to the source dictionary :attr:`new`
@@ -298,7 +297,6 @@ class CSVToConfigFile:
                 raise CSVToConfigFileValueError("LIN", self.ord(idx))
             except IndexError as e:
                 raise CSVToConfigFileIndexError("LIN", self.ord(idx), 6)
-
     
     def add_PLA(self):
         """Add the parsed PLA items to the source dictionary :attr:`new`
@@ -354,7 +352,7 @@ class CSVToConfigFile:
             The order suffix.
             
         """
-        return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}\
+        return str(n)+("th" if 4<=n%100<=20 else {1:"st", 2:"nd", 3:"rd"}\
             .get(n%10, "th"))
 
     def append_id(self, filename: str):

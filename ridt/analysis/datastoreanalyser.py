@@ -1,32 +1,15 @@
-import sys
-
-from typing import List
-from typing import Dict
-from typing import Union
-
 from copy import deepcopy
 
-from numpy import ndarray
-from numpy import any
-from numpy import where
-from numpy import max
-from numpy import argmax
-from numpy import unravel_index
 from numpy import nanstd
 from numpy import nanmean
-from numpy import sqrt
 
 from ridt.config import RIDTConfig
 from ridt.config import Units
 
 from ridt.container import Domain
 
-from ridt.equation import EddyDiffusion
-
 from ridt.data import DataStore
 from ridt.data import UncertaintyMask
-
-from .exposure import Exposure
 
 from .resultcontainers import Maximum
 from .resultcontainers import Exceedance
@@ -160,25 +143,25 @@ class DataStoreAnalyser:
         None
 
         """
-        p =  self.setting.models.eddy_diffusion.analysis.percentage_exceedance
+        p = self.setting.models.eddy_diffusion.analysis.percentage_exceedance
         for geometry in self.geometries:
             for id in getattr(self.data_store, geometry):
                 index, value = self.data_store.maximum(geometry, id)
-                D = (geometry, id, self.quantity)
-                self.maximum.append(Maximum(self.setting, *D, index, value))
+                cargs = (geometry, id, self.quantity)
+                self.maximum.append(Maximum(self.setting, *cargs, index, value))
         for t in self.thresholds:
             for geometry in self.geometries:
                 for id in getattr(self.data_store, geometry):
-                    D = (geometry, id)
-                    index = self.data_store.exceeds(*D, t)
+                    cargs = (geometry, id)
+                    index = self.data_store.exceeds(*cargs, t)
                     self.exceedance.append(
-                        Exceedance(self.setting, *D, self.quantity, index, t))
-                    index = self.data_store.percentage_exceeds(*D, t, p)
+                        Exceedance(self.setting, *cargs, self.quantity, index, t))
+                    index = self.data_store.percentage_exceeds(*cargs, t, p)
                     self.percent_exceedance.append(
-                        PercentExceedance(self.setting, *D, self.quantity, index, t, p))
+                        PercentExceedance(self.setting, *cargs, self.quantity, index, t, p))
                     index, value = self.data_store.percentage_exceeds_max(geometry, id, t)
                     self.max_percent_exceedance.append(
-                        MaxPercentExceedance(self.setting, *D, self.quantity, value, index, t))
+                        MaxPercentExceedance(self.setting, *cargs, self.quantity, value, index, t))
     
     def exclude_uncertain_values(self):
         """Sets values within 2m of source to nan.

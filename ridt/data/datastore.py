@@ -7,15 +7,10 @@ from numpy import where
 from numpy import prod
 
 from ridt.base import Error
-from ridt.base import ComputationalSpace
-
-from ridt.config import RIDTConfig
-
-FIRST = 0
 
 
 class DataStore:
-    """The data store than contains computed quantities over vaious geometries.
+    """The data store than contains computed quantities over various geometries.
 
     There are four different sub stores for point, line, plane and full domain 
     grids. They can store quantities corresponding to different monitor
@@ -39,7 +34,7 @@ class DataStore:
 
     """
     class Dimensions:
-        """A 'static' member class that contains infomation abount the
+        """A 'static' member class that contains information about the
 
         dimensionality of the different geometry types.
 
@@ -190,7 +185,7 @@ class DataStore:
         """
         data = self.get(geometry, id)
         exceeds = self.zip(where(data >= value))
-        return exceeds[FIRST] if exceeds else None
+        return exceeds[0] if exceeds else None
 
     def percentage_exceeds(self, geometry: str, id: str, value: float, percent: float) -> int:
         """Returns the time index where 'percent'% of the grid exceeds 'value'
@@ -207,12 +202,12 @@ class DataStore:
             The threshold to be exceeded.
 
         percent : :obj:`float`
-            The percentage of the grid requred to exceed 'value'.
+            The percentage of the grid required to exceed 'value'.
 
         Returns
         -------
         :obj:`Union`[:obj:`int`, None]
-            The time index where the precentage exceedence was reached or None
+            The time index where the percentage exceedence was reached or None
             if not reached during simulation.
 
         """
@@ -231,7 +226,7 @@ class DataStore:
     def percentage_exceeds_max(self, geometry: str, id: str, value: float) -> Tuple[int, float]:
         """Returns the maximum percentage of grid that exceeds `value`.
 
-        And the time index when it ocurred.
+        And the time index when it occurred.
 
         Parameters
         ----------

@@ -1,11 +1,5 @@
-import csv
-
-from os import mkdir
-
 from os.path import join
 
-from numpy import ndarray
-from numpy import savetxt
 from numpy import save
 
 from ridt.config import RIDTConfig
@@ -14,6 +8,7 @@ from ridt.config import ConfigFileWriter
 from .directoryagent import DirectoryAgent
 
 from .datastore import DataStore
+
 
 class DataStoreWriter:
     """A class that attempts to read a data store from disk.

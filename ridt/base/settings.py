@@ -1,24 +1,17 @@
 from __future__ import annotations
 
-import sys
-import inspect
 import builtins
 import operator
 import itertools
-
-from pprint import pprint
 
 from copy import deepcopy
 
 from collections.abc import Iterable
 
-from itertools import chain
-
 from typing import Union
 from typing import TypeVar
 from typing import Type
 from typing import List
-from typing import Tuple
 
 from abc import ABC
 from abc import abstractmethod
@@ -28,15 +21,16 @@ from functools import reduce
 
 from numpy import linspace
 from numpy import prod
-from numpy import meshgrid
 from numpy import unravel_index
 
 from .exceptions import Error
 
 import warnings
 
+
 def custom_formatwarning(msg, *args, **kwargs):
     return "Warning: " + str(msg) + '\n'
+
 
 warnings.formatwarning = custom_formatwarning
 
@@ -227,7 +221,7 @@ class Settings:
 class Terminus(ABC):
     """A base class for a terminating setting.
 
-    This class is used to store a single settting in a :class:`~.Settings`
+    This class is used to store a single setting in a :class:`~.Settings`
     derived class.
 
     If the expected type of a :class:`~.Settings` derived class attribute
@@ -579,7 +573,7 @@ class Dict(Settings):
             return rv
     
     def __len__(self):
-        """Mapping __len__ to attibute `value` __len__.
+        """Mapping __len__ to attribute `value` __len__.
         
         Returns
         -------
@@ -728,9 +722,9 @@ class Number(Terminus):
             self.__range(value)
         else:
             raise SettingTypeError(
-        f"{self.type} || {{'array': [{self.type}]}} || "
-        f"{{'min': {self.type}, 'max': {self.type}, 'num': {int}}}",
-        type(value))
+                f"{self.type} || {{'array': [{self.type}]}} || "
+                f"{{'min': {self.type}, 'max': {self.type}, 'num': {int}}}",
+                type(value))
     
     def __value(self, value):
         """The method that assigns the attributes if a single value is passed.
@@ -769,7 +763,6 @@ class Number(Terminus):
         except KeyError:
             self._match = None
 
-    
     def __range(self, value: dict):
         """The method that assigns the attributes if a array of value is passed.
 
@@ -831,7 +824,6 @@ class Number(Terminus):
         except KeyError:
             self._match = None
 
-    
     def lower_bound(self, value):
         """Checks if values are above or equal to a lower bound.
         
@@ -1075,7 +1067,7 @@ class ComputationalSpace:
             if len(self.values) > 1:
                 raise IndexError(f"too many indices for array {self.shape}")
             if not 0 <= indices < self.shape[0]:
-                raise IndexError(f"index {item} is out of bounds for axis {0} "
+                raise IndexError(f"index {indices} is out of bounds for axis {0} "
                                  f"with size {self.shape[0]}")
             index = indices
         else:
@@ -1224,7 +1216,7 @@ class SettingCheckError(Error):
 
 class SettingTypeError(Error):
     """The exception raised when the setting found in the passed :obj:`dict`
-    is of the wrong type, when intantiating a :class:`~.Dict` object.
+    is of the wrong type, when instantiating a :class:`~.Dict` object.
 
     """
     def __init__(self, expected: type, actual: type):
@@ -1236,7 +1228,7 @@ class SettingTypeError(Error):
             The expected type.
         
         actual : :obj:`type`
-            The recieved type.
+            The received type.
 
         """
         self.msg = f"Expecting : {expected} | Received: {actual}"
@@ -1250,7 +1242,7 @@ class SettingErrorMessage(Error):
     def __init__(self,
                  current_name: str,
                  branch_error: SettingErrorMessage = None,
-                 original_error: Union[SettingCheckError, SettingsTypeError] = None):
+                 original_error: Union[SettingCheckError, SettingTypeError] = None):
         """The constructor for the :class::`SettingTypeError` class.
 
         Parameters

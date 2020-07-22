@@ -1,5 +1,3 @@
-from typing import Dict
-
 from ridt.base import Error
 
 from ridt.config import RIDTConfig
@@ -109,7 +107,7 @@ class BatchDataStoreIDError(Error):
 
         """
         msg = f"The data store does not contain any data for "\
-                f"settings object {setting}."
+            f"settings object {setting}."
         super().__init__(msg)
 
 

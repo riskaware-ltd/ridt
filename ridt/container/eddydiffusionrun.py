@@ -1,11 +1,3 @@
-from os.path import join
-
-from typing import Union
-
-from tqdm import tqdm
-
-from numpy import zeros
-from numpy import meshgrid
 from numpy import squeeze 
 
 from ridt.base import ComputationalSpace
@@ -46,8 +38,6 @@ class EddyDiffusionRun:
         The batch run data store for exposure values.
     
     """
-
-
     def __init__(self, settings: RIDTConfig, outdir: str):
         """The constructor for the :class:`EddyDiffusionRun` class.
 
@@ -186,7 +176,6 @@ class EddyDiffusionRun:
         if self.settings.compute_exposure:
             BatchDataStoreWriter(*self.args(self.exposure_store, "exposure"))
 
-
     def plot(self) -> None:
         """Plots all requested data and writes it to disk.
 
@@ -210,7 +199,7 @@ class EddyDiffusionRun:
         """
         if not self.settings.models.eddy_diffusion.analysis.perform_analysis:
             return
-        print("\nPerforming data ananlysis...")
+        print("\nPerforming data analysis...")
         BatchDataStoreAnalyser(*self.args(self.data_store, "concentration"))
         if self.settings.compute_exposure:
             BatchDataStoreAnalyser(*self.args(self.exposure_store, "exposure"))

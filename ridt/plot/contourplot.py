@@ -3,16 +3,12 @@ import warnings
 from os.path import join
 
 from numpy import ndarray
-from numpy import log
 from numpy import log10
 from numpy import floor
 from numpy import ceil 
-from numpy import arange
 from numpy import power
 from numpy import linspace
-from numpy import meshgrid
 from numpy import transpose
-from numpy.ma import masked_where
 
 from ridt.config import RIDTConfig
 from ridt.config import Units 
@@ -22,12 +18,10 @@ from ridt.container import Domain
 from matplotlib import cm, ticker
 from matplotlib import colors
 
-from matplotlib.ticker import LogLocator
 from matplotlib.ticker import LogFormatter
-from matplotlib.ticker import MaxNLocator 
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
-from matplotlib import animation
+
 
 class ContourPlot:
     """The class that generates contour plots.
@@ -127,8 +121,7 @@ class ContourPlot:
             levels = self.get_linear_scale()
             kwargs = {}
 
-
-        plot = plt.contourf(
+        plt.contourf(
             self.get_xdomain(),
             self.get_ydomain(),
             transpose(data), 
@@ -138,10 +131,9 @@ class ContourPlot:
 
         if self.config.scale == "logarithmic":
             formatter = LogFormatter(10, labelOnlyBase=False)
-            cb = plt.colorbar(ticks=self.get_log_scale(), format=formatter)
+            plt.colorbar(ticks=self.get_log_scale(), format=formatter)
         else:
-            cb = plt.colorbar()
-
+            plt.colorbar()
 
         plt.tight_layout()
 
@@ -220,6 +212,7 @@ class ContourPlot:
         """
         dim = self.settings.dimensions
         aspect_ratio = getattr(dim, self.xaxis) / getattr(dim, self.yaxis)
+        # 8 x 6 is the default values for the fig size in matplotlib.
         return (8 * aspect_ratio, 6)
 
     def get_axes(self):
@@ -276,12 +269,3 @@ class ContourPlot:
             min_contour = self.config.contours.min
             max_contour = self.config.contours.max
         return linspace(min_contour, max_contour, self.config.number_of_contours)
-
-    # def animate(self, data: ndarray):
-    #     plot = self.plot(data[0])
-    #     def frame(i):
-    #         return self.plot(data[i])
-    #     anim = animation.FuncAnimation(fig,
-    #                                    frame,
-    #                                    frames=self.settings.time_samples, blit=True)
-    #     anim.save("test.mp4", fps=5)

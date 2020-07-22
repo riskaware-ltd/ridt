@@ -1,11 +1,5 @@
-import csv
-
-from os.path import join
-
 from tqdm import tqdm
 
-from numpy import save
-from numpy import min
 from numpy import max
 from numpy import linspace
 
@@ -21,6 +15,7 @@ from ridt.config import RIDTConfig
 from ridt.config import Units
 
 from ridt import bar_args
+
 
 class DataStorePlotter:
     """The class which plots the requested data from a :class:`~.DataStore`.
@@ -86,7 +81,7 @@ class DataStorePlotter:
                         plotter(id, rescaled_data[idx], max_val, idx)
 
     def spread(self, time_samples: int, number_of_plots: int):
-        """Returns a spread of time indicies over time domain.
+        """Returns a spread of time indices over time domain.
 
         Parameters
         ----------

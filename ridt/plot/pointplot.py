@@ -1,33 +1,25 @@
 import warnings
 
-import time
-
-import math
-
-from datetime import timedelta
-
 from os.path import join
 
 from numpy import ndarray
-from numpy import max
 
 from ridt.config import RIDTConfig
 from ridt.config import Units
 
 from ridt.container import Domain
 
-from typing import List
-
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates 
-import matplotlib.ticker as tkr
+
 
 def xfmt(x,pos=None):
-    ''' custom date formatting '''
+    """custom date formatting"""
     x = mdates.num2date(x)
     label = x.strftime('%H:%M:%S')
     label = label.lstrip('0')
     return label
+
 
 class PointPlot:
     """The class that generates line plots over time.
@@ -163,10 +155,10 @@ class PointPlot:
 
         """
         if self.config.time_axis_units == 's':
-            return [t  for t in self.domain.time]
+            return [t for t in self.domain.time]
         elif self.config.time_axis_units == 'm':
-            return [t / 60  for t in self.domain.time]
+            return [t / 60 for t in self.domain.time]
         elif self.config.time_axis_units == 'h':
-            return [t / 3600  for t in self.domain.time]
+            return [t / 3600 for t in self.domain.time]
         
 

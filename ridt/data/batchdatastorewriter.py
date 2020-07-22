@@ -1,9 +1,4 @@
-from os.path import join
-
-from tqdm import tqdm
-
 from ridt.base import ComputationalSpace
-from ridt.base import RIDTOSError
 
 from ridt.config import RIDTConfig
 from ridt.config import ConfigFileWriter
@@ -13,7 +8,6 @@ from .directoryagent import DirectoryAgent
 from .datastorewriter import DataStoreWriter
 from .datastorecsvwriter import DataStoreCSVWriter
 
-BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
 class BatchDataStoreWriter:
     """A class which handles the writing to disk of a batch data store.

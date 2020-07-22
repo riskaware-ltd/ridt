@@ -2,15 +2,11 @@ import csv
 
 from itertools import product
 
-from os import mkdir
-
 from os.path import join
 
 from tqdm import tqdm
 
 from numpy import ndarray
-from numpy import savetxt
-from numpy import save
 
 from ridt.base import RIDTOSError
 
@@ -24,6 +20,7 @@ from ridt.container import Domain
 from .datastore import DataStore
 
 from ridt import bar_args
+
 
 class DataStoreCSVWriter:
     """Class that writes a :class:`~.DataStore` instance to CSV files.
@@ -151,6 +148,6 @@ class DataStoreCSVWriter:
 
         print(f"Writing {id} {self.quantity} data to a csv file...")
         for index in tqdm(indices, total=len(indices), **bar_args):
-            values = self.domain.values(geometry, id, index)
+            values = self.domain.values(id, index)
             writer.writerow(list(values) + [data[index] / factor])
         f.close()

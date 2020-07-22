@@ -1,12 +1,7 @@
 from typing import Union
 
-from itertools import product
-
-from tqdm import tqdm
-
 from copy import deepcopy
 
-from numpy import zeros
 from numpy import array
 from numpy import ndarray
 from numpy.linalg import norm
@@ -18,8 +13,6 @@ from ridt.config import InfiniteDurationSource
 from ridt.config import FixedDurationSource 
 
 from ridt.container import Domain
-
-from ridt import bar_args
 
 Source = Union[InstantaneousSource, InfiniteDurationSource, FixedDurationSource]
 
@@ -173,6 +166,11 @@ class UncertaintyMask:
         
     def mask_domain(self, id: str, data: ndarray):
         """Mask values in domain array close to a source.
+
+        Note
+        ----
+        The `id` parameter is a placeholder for future functionality, where
+        multiple domains can be defined.
 
         Parameters
         ----------

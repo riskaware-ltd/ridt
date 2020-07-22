@@ -1,11 +1,3 @@
-from os.path import join
-
-from tqdm import tqdm
-
-from numpy import zeros
-from numpy import meshgrid
-from numpy import linspace
-
 from ridt.base import ComputationalSpace
 from ridt.equation import WellMixed
 
@@ -15,7 +7,6 @@ from ridt.data import BatchDataStore
 from ridt.data import BatchDataStoreWriter
 from ridt.data import BatchDataStorePlotter
 
-from ridt.analysis import BatchDataStoreAnalyser
 from ridt.analysis import Exposure
 
 from ridt.container import Domain
@@ -148,7 +139,7 @@ class WellMixedRun:
         Returns
         -------
         :obj:`tuple`
-            The various quantites as a tuple.
+            The various quantities as a tuple.
 
         """
         return self.settings, data_store, self.space, self.outdir, quantity

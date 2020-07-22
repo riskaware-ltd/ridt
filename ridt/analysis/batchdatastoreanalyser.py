@@ -1,14 +1,6 @@
-import sys
-
-from tqdm import tqdm
-
-from os.path import join
-
 from ridt.base import ComputationalSpace
 
-from ridt.config import summary
 from ridt.config import RIDTConfig
-from ridt.config import Units
 
 from ridt.data import BatchDataStore
 from ridt.data import DirectoryAgent
@@ -16,10 +8,7 @@ from ridt.data import DataStore
 
 from .datastoreanalyser import DataStoreAnalyser
 from .resultswriter import ResultsWriter
-from .exposure import Exposure
 from .batchresultswriter import BatchResultsWriter
-
-from pprint import pprint
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
 
@@ -56,8 +45,6 @@ class BatchDataStoreAnalyser:
         :class:`~.RIDTConfig` object in :attr:`space`.
 
     """
-
-
     def __new__(cls, *args, **kwargs):
         instance = super(BatchDataStoreAnalyser, cls).__new__(cls)
         instance.__init__(*args, **kwargs)

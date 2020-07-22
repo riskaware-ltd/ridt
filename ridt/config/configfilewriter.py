@@ -2,12 +2,7 @@ import json
 
 from os.path import join
 
-from typing import Type
-
 from ridt.base import Error
-from ridt.base import SettingErrorMessage
-
-from ridt.config import RIDTConfig
 
 
 class ConfigFileWriter:
@@ -54,9 +49,10 @@ class ConfigFileWriter:
 
         try:
             with open(self.path, 'w') as f:
-                 f.write(json.dumps(self.data, indent=4))
+                f.write(json.dumps(self.data, indent=4))
         except OSError as e:
             raise ConfigFileWriterOSError(self.path, e)
+
 
 class ConfigFileWriterOSError(Error):
     """The exception raised when a :class:`~.ConfigFileWriter` instance

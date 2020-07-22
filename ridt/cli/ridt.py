@@ -19,17 +19,16 @@ from ridt.config.configfileparser import ConfigFileParserValidationError
 from ridt.config.csvtoconfigfile import CSVToConfigFile
 from ridt.container.wellmixedrun import WellMixedRun
 from ridt.container.eddydiffusionrun import EddyDiffusionRun
-from ridt.base.settings import ComputationalSpace
 from ridt.base import RIDTOSError
 
 @click.group()
 def ridt():
-    """The rapid indoor diffusion modelling tool (ridt)."""
+    """The rapid indoor diffusion tool (ridt)."""
     pass
 
 @ridt.command()
 def init():
-    """Copy a default config files current working directory.
+    """Copy a default config file to current working directory.
 
     """
     try:

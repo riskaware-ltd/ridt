@@ -1,11 +1,9 @@
 from typing import Tuple
-from typing import Iterable 
 
 from itertools import product
 
 from numpy import linspace
 from numpy import meshgrid
-from numpy import ndarray
 from numpy import unravel_index
 
 from ridt.config.ridtconfig import RIDTConfig
@@ -15,11 +13,11 @@ from ridt.config.ridtconfig import Plane
 
 
 class Domain:
-    """A class the povides various spatial and temporal domain infomation.
+    """A class the provides various spatial and temporal domain information.
 
     This class provides various functions that give domain infomation relating
     to monitor locations and the total domain. The meshgrids over which the
-    equaations are evaluated are generated from the settings object by this
+    equations are evaluated are generated from the settings object by this
     class.
     
     Attributes
@@ -232,7 +230,7 @@ class Domain:
         """
         return self.full
     
-    def values(self, geometry: str, id: str, index: Tuple[int]):
+    def values(self, id: str, index: Tuple[int]):
         """Returns the spatio-temporal values for an index and monitor location
 
         This method takes a monitor location and some temporal meshgrid indices 
@@ -240,9 +238,6 @@ class Domain:
 
         Parameters
         ----------
-        geometry : :obj:`str`
-            The class of monitor location.
-
         id : :obj:`str`
             The monitor location id string.
 

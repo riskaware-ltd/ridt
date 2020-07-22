@@ -20,11 +20,12 @@ from .datastoreanalyser import DataStoreAnalyser
 
 FIRST = 0
 
+
 class BatchResultsWriter:
     """Batch results writer class.
 
     Iterates through a :obj:`dict` of :class:`~.DataStoreAnalyser` instances
-    and computes batch run analysis quantites.
+    and computes batch run analysis quantities.
 
     Attributes
     ----------
@@ -236,7 +237,7 @@ class BatchResultsWriter:
         file : :obj:`TextIOWrapper` 
             The file object to write to.
 
-        title : :obj:`str`
+        subtitle : :obj:`str`
             The subtitle string.
         
         Returns

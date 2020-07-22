@@ -7,6 +7,7 @@ class Error(Exception):
     """
     pass
 
+
 class RIDTOSError(Error):
     """The exception raised when RIDT attempts to modify a file but is unable.
 
@@ -20,7 +21,7 @@ class RIDTOSError(Error):
             The object which is not a :class:`~datetime.datetime` object.
 
         """
-        msg = f"The following error was encoutered: \n{error}"
+        msg = f"The following error was encountered: \n{error}"
         super().__init__(msg)
 
 

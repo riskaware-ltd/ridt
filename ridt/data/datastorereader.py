@@ -5,12 +5,12 @@ from numpy import load
 from ridt.base import ComputationalSpace
 from ridt.base import Error
 
-from ridt.config import ConfigFileParser
 from ridt.config import RIDTConfig
 
 from .batchdatastore import BatchDataStore
 from .directoryagent import DirectoryAgent
 from .datastore import DataStore
+
 
 class DataStoreReader:
     """A class that attempts to read a data store from disk.
@@ -105,8 +105,7 @@ class DataStoreReader:
 
         Parameters
         ----------
-
-        settings : :class:`~.RIDTConfig`
+        setting : :class:`~.RIDTConfig`
             The settings for the run output stored in the data store.
 
         directory: :obj:`str`
@@ -149,6 +148,6 @@ class DataStoreParsingError(Error):
 
         """
         msg = f"When loading '{file_name}' from the directory '{directory}'"\
-              f" the following error was encoutered: {error}"
+              f" the following error was encountered: {error}"
         super().__init__(msg)
     

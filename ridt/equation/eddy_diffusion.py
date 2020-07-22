@@ -5,7 +5,6 @@ import numpy
 from typing import List
 from typing import Tuple 
 from typing import Union
-from copy import copy
 
 from itertools import product
 
@@ -20,19 +19,14 @@ from numpy import power
 from numpy import pi
 from numpy import square
 from numpy import nanmean
-from numpy import float64
-from numpy import finfo
 
 from scipy.integrate import cumtrapz
 from scipy.integrate import romberg
 
-from ridt.config import ConfigFileParser
 from ridt.config import RIDTConfig
 from ridt.config import InstantaneousSource
 from ridt.config import InfiniteDurationSource
 from ridt.config import FixedDurationSource 
-
-from ridt.container import Domain
 
 from ridt import bar_args
 
@@ -44,6 +38,7 @@ Source = Union[InstantaneousSource, InfiniteDurationSource, FixedDurationSource]
 Value = Union[ndarray, float]
 
 MAX_IMAGE = 20
+
 
 class EddyDiffusion:
     """The core Eddy Diffusion model class.
@@ -200,7 +195,7 @@ class EddyDiffusion:
         """
         self.shape = grid.shape
     
-    def get_catesian_index_space(self):
+    def get_cartesian_index_space(self):
         """Generate a cartesian product set of all grid indices.
 
         Returns
@@ -324,7 +319,7 @@ class EddyDiffusion:
         """
 
         if self.settings.integration_method == "romberg":
-            for item in self.get_catesian_index_space():
+            for item in self.get_cartesian_index_space():
                 conc[idt][item] += source.rate * self.romberg(rtime, source, *item)
         else:
             conc[idt] += source.rate * self.pointwise(source, rtime)
@@ -538,7 +533,7 @@ class EddyDiffusion:
         """
         fa_rate = self.settings.fresh_air_change_rate
         num = exp(-t * fa_rate / self.volume)
-        den  = 8 * power(pi * self.diff_coeff * t, 3.0 / 2.0)
+        den = 8 * power(pi * self.diff_coeff * t, 3.0 / 2.0)
         return num / den
 
     def diffusion_coefficient(self):

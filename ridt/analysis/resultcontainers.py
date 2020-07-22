@@ -70,7 +70,7 @@ class Maximum(ResultContainer):
     Attributes
     ----------
     index : Tuple[:obj:`int`]
-        The index in the array where the maximum ocurred.
+        The index in the array where the maximum occurred.
 
     value : :obj:`float`    
         The value of the maximum.
@@ -101,7 +101,7 @@ class Maximum(ResultContainer):
             The string id for the quantity stored in the data  store.
 
         index : Tuple[:obj:`int`]
-            The index in the array where the maximum ocurred.
+            The index in the array where the maximum occurred.
     
         value : :obj:`float`    
             The value of the maximum.
@@ -114,7 +114,7 @@ class Maximum(ResultContainer):
     def __lt__(self, other):
         if not isinstance(other, Maximum):
             raise TypeError(
-        f"< not supported between instances of {Maximum} and {type(other)}")
+                f"< not supported between instances of {Maximum} and {type(other)}")
         self.same_geometry(other)
         return True if self.value < other.value else False
     
@@ -127,7 +127,7 @@ class Maximum(ResultContainer):
         factor = getattr(self.units, f"{self.quantity}_factor")
         rv = str()
         if self.index:
-            t, x, y, z = self.domain.values(self.geometry, self.id, self.index)
+            t, x, y, z = self.domain.values(self.id, self.index)
             rv += f"id: {self.id}\n"
             rv += f"time: {t:.2f}{self.units.time}\n"
             rv += f"x: {x:.2f}{self.units.space}\n"
@@ -143,7 +143,6 @@ class Maximum(ResultContainer):
         """:obj:`list` [:obj:`str`] : The list of headers for a csv output.
 
         """
-        rv = str()
         return [
             "id",
             f"time ({self.units.time})",
@@ -160,7 +159,7 @@ class Maximum(ResultContainer):
         """
         factor = getattr(self.units, f"{self.quantity}_factor")
         if self.index:
-            t, x, y, z = self.domain.values(self.geometry, self.id, self.index)
+            t, x, y, z = self.domain.values(self.id, self.index)
             return [self.id, t, x, y, z, self.value / factor]
         else:
             return [self.id, "None", "None", "None", "None"]
@@ -203,7 +202,7 @@ class Exceedance(ResultContainer):
     Attributes
     ----------
     index : Tuple[:obj:`int`]
-        The index in the array where the exceedance ocurred.
+        The index in the array where the exceedance occurred.
 
     threshold : :obj:`float`
         The threshold that was exceeded.
@@ -234,7 +233,7 @@ class Exceedance(ResultContainer):
             The string id for the quantity stored in the data  store.
 
         index : Tuple[:obj:`int`]
-            The index in the array where the exceedance ocurred.
+            The index in the array where the exceedance occurred.
     
         threshold : :obj:`float`
             The threshold that was exceeded.
@@ -258,7 +257,7 @@ class Exceedance(ResultContainer):
         """
         rv = str()
         if self.index:
-            t, x, y, z = self.domain.values(self.geometry, self.id, self.index)
+            t, x, y, z = self.domain.values(self.id, self.index)
             rv += f"id: {self.id}\n"
             rv += f"time: {t:.2f}{self.units.time}\n"
             rv += f"x: {x:.2f}{self.units.space}\n"
@@ -273,7 +272,6 @@ class Exceedance(ResultContainer):
         """:obj:`list` [:obj:`str`] : The list of headers for a csv output.
 
         """
-        rv = str()
         return [
             "id",
             f"time ({self.units.time})",
@@ -288,7 +286,7 @@ class Exceedance(ResultContainer):
 
         """
         if self.index:
-            t, x, y, z = self.domain.values(self.geometry, self.id, self.index)
+            t, x, y, z = self.domain.values(self.id, self.index)
             return [self.id, t, x, y, z]
         else:
             return [self.id, "None", "None", "None"]
@@ -321,13 +319,14 @@ class Exceedance(ResultContainer):
         """
         return True if self.index else False
 
+
 class PercentExceedance(ResultContainer):
     """Result container for the percent threshold exceedance in a domain.
 
     Attributes
     ----------
     index : :obj:`int`
-        The time index in the array where the exceedance ocurred.
+        The time index in the array where the exceedance occurred.
 
     threshold : :obj:`float`
         The threshold that was exceeded.
@@ -362,7 +361,7 @@ class PercentExceedance(ResultContainer):
             The string id for the quantity stored in the data  store.
 
         index : :obj:`int`
-            The time index in the array where the exceedance ocurred.
+            The time index in the array where the exceedance occurred.
     
         threshold : :obj:`float`
             The threshold that was exceeded.
@@ -379,8 +378,8 @@ class PercentExceedance(ResultContainer):
     def __lt__(self, other):
         if not isinstance(other, PercentExceedance):
             raise TypeError(
-        f"< not supported between instances of {PercentExceedance} and"\
-        f" {type(other)}")
+                f"< not supported between instances of {PercentExceedance} and"\
+                f" {type(other)}")
         self.same_geometry
         return True if self.index < other.index else False
     
@@ -448,13 +447,14 @@ class PercentExceedance(ResultContainer):
         """
         return True if self.index else False
 
+
 class MaxPercentExceedance(ResultContainer):
     """Result container for the max percent threshold exceedance in a domain.
 
     Attributes
     ----------
     index : :obj:`int`
-        The time index in the array where the exceedance ocurred.
+        The time index in the array where the exceedance occurred.
 
     threshold : :obj:`float`
         The threshold that was exceeded.
@@ -489,7 +489,7 @@ class MaxPercentExceedance(ResultContainer):
             The string id for the quantity stored in the data  store.
 
         index : :obj:`int`
-            The time index in the array where the exceedance ocurred.
+            The time index in the array where the exceedance occurred.
     
         threshold : :obj:`float`
             The threshold that was exceeded.

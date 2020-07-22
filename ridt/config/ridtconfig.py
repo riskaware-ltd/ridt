@@ -1,22 +1,19 @@
-import sys
-
-import math
-
 from ridt.base import Settings
 from ridt.base import Terminus
 from ridt.base import List
 from ridt.base import Dict
 from ridt.base import Number
 from ridt.base import StringSelection
-from ridt.base import Error
 from ridt.base import ConsistencyError
 
 import warnings
+
 
 def custom_formatwarning(msg, *args, **kwargs):
     return "Warning: " + str(msg) + '\n'
 
 warnings.formatwarning = custom_formatwarning
+
 
 class RIDTConfig(Settings):
     """The settings object for ridt.
@@ -171,13 +168,13 @@ class RIDTConfig(Settings):
                         for item in par:
                             if item < 0 or item > bound:
                                 raise ConsistencyError(
-                            f"{mode} source {key} x position is "
-                            f"outside space domain (0, {bound}).")
+                                    f"{mode} source {key} x position is "
+                                    f"outside space domain (0, {bound}).")
                     else:
                         if par < 0 or par > bound:
                             raise ConsistencyError(
-                        f"{mode} source {key} x position is "
-                        f"outside space domain (0, {bound}).")
+                                f"{mode} source {key} x position is "
+                                f"outside space domain (0, {bound}).")
 
         for mode in ["instantaneous", "infinite_duration"]:
             for key, value in getattr(self.modes, mode).sources.items():
@@ -185,38 +182,38 @@ class RIDTConfig(Settings):
                     for item in value.time:
                         if item > self.total_time:
                             raise ConsistencyError(
-                        f"{mode} source {key} time is "
-                        f"outside time domain [0, {self.total_time}).")
+                                f"{mode} source {key} time is "
+                                f"outside time domain [0, {self.total_time}).")
                 else:
                     if value.time > self.total_time:
                         raise ConsistencyError(
-                    f"{mode} source {key} time is "
-                    f"outside time domain [0, {self.total_time}).")
+                            f"{mode} source {key} time is "
+                            f"outside time domain [0, {self.total_time}).")
 
         for key, value in getattr(self.modes, "fixed_duration").sources.items():
             if isinstance(value.start_time, list):
                 for item in value.start_time:
                     if item > self.total_time:
                         raise ConsistencyError(
-                    f"{mode} source {key} start time is "
-                    f"outside time domain [0, {self.total_time}).")
+                            f"{mode} source {key} start time is "
+                            f"outside time domain [0, {self.total_time}).")
             else:
                 if value.start_time > self.total_time:
                     raise ConsistencyError(
-                f"{mode} source {key} start time is "
-                f"outside time domain [0, {self.total_time}).")
+                        f"{mode} source {key} start time is "
+                        f"outside time domain [0, {self.total_time}).")
 
             if isinstance(value.end_time, list):
                 for item in value.end_time:
                     if item > self.total_time:
                         raise ConsistencyError(
-                    f"{mode} source {key} end time is "
-                    f"outside time domain [0, {self.total_time}).")
+                            f"{mode} source {key} end time is "
+                            f"outside time domain [0, {self.total_time}).")
             else:
                 if value.end_time > self.total_time:
                     raise ConsistencyError(
-                f"{mode} source {key} end time is "
-                f"outside time domain [0, {self.total_time}).")
+                        f"{mode} source {key} end time is "
+                        f"outside time domain [0, {self.total_time}).")
         
         dims = ["x", "y", "z"]
         for plane in self.models.eddy_diffusion.monitor_locations.planes.values():
@@ -232,15 +229,15 @@ class RIDTConfig(Settings):
             for dim in dims:
                 if getattr(point, dim) > getattr(self.dimensions, dim):
                     raise ConsistencyError(
-                f"{key}'s {dim} value, is outside space domain "
-                f"(0, {getattr(self.dimensions, dim)})")
+                        f"{key}'s {dim} value, is outside space domain "
+                        f"(0, {getattr(self.dimensions, dim)})")
 
         for key, line in self.models.eddy_diffusion.monitor_locations.lines.items():
             for dim in dims:
                 if getattr(line.point, dim) > getattr(self.dimensions, dim):
                     raise ConsistencyError(
-                f"{key}'s {dim} value, is outside space domain "
-                f"(0, {getattr(self.dimensions, dim)})")
+                        f"{key}'s {dim} value, is outside space domain "
+                        f"(0, {getattr(self.dimensions, dim)})")
 
         thresh = self.thresholds
         if len(thresh.concentration) > 5 or len(thresh.exposure) > 5:
@@ -251,26 +248,27 @@ class RIDTConfig(Settings):
             for item in line_number:
                 if item > self.time_samples:
                     raise ConsistencyError(
-                f"The number of requrested line plots ({point_number}) cannot exceed the "
-                f"number of time samples ({self.time_samples}).")
+                        f"The number of requested line plots ({point_number}) cannot exceed the "
+                        f"number of time samples ({self.time_samples}).")
         else:
             if line_number > self.time_samples:
                 raise ConsistencyError(
-            f"The number of requrested line plots ({line_number}) cannot exceed the "
-            f"number of time samples ({self.time_samples}).")
+                    f"The number of requested line plots ({line_number}) cannot exceed the "
+                    f"number of time samples ({self.time_samples}).")
  
         contour_number = self.models.eddy_diffusion.planes_plots.number
         if isinstance(contour_number, list):
             for item in contour_number:
                 if item > self.time_samples:
                     raise ConsistencyError(
-                f"The number of requrested contour plots ({item}) cannot exceed the "
-                f"number of time samples ({self.time_samples}.)")
+                        f"The number of requested contour plots ({item}) cannot exceed the "
+                        f"number of time samples ({self.time_samples}.)")
         else:
             if contour_number > self.time_samples:
                 raise ConsistencyError(
-            f"The number of requrested contour plots ({contour_number}) cannot exceed the "
-            f"number of time samples ({self.time_samples}).")
+                    f"The number of requested contour plots ({contour_number}) cannot exceed the "
+                    f"number of time samples ({self.time_samples}).")
+
 
 class TimeSamples(Number):
     """The :class:`~.TimeSamples` class. It inherits from
@@ -357,7 +355,7 @@ class AgentMolecularWeightUnits(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -367,6 +365,7 @@ class AgentMolecularWeightUnits(StringSelection):
     def check(self):
         pass
     
+
 class IntegrationMethod(StringSelection):
     """The integration methods selection class.
 
@@ -383,7 +382,7 @@ class IntegrationMethod(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -411,7 +410,7 @@ class PressureUnits(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -438,7 +437,7 @@ class TemperatureUnits(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -447,7 +446,6 @@ class TemperatureUnits(StringSelection):
     
     def check(self):
         pass
-
 
 
 class FreshAirChangeRate(Number):
@@ -460,7 +458,6 @@ class FreshAirChangeRate(Number):
     @Terminus.assign
     def __init__(self, value: float):
         self.type = float
-
     
     def check(self):
         """Checks that the value is in the required bounds.
@@ -486,7 +483,7 @@ class DispersionModel(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -508,13 +505,13 @@ class ReleaseType(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The ReleaseType class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -537,13 +534,13 @@ class TimeUnits(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The TimeUnits class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -564,13 +561,13 @@ class ConcentrationUnits(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The ConcentrationUnits class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -581,6 +578,7 @@ class ConcentrationUnits(StringSelection):
             "ppb",
             "ppt"
         ]
+
     def check(self):
         pass
 
@@ -595,13 +593,13 @@ class ExposureUnits(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The ExposureUnits class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -623,13 +621,13 @@ class SpatialUnits(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The SpatialUnits class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -650,13 +648,13 @@ class MassUnits(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The MassUnits class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -677,13 +675,13 @@ class FreshAirChangeRateUnits(StringSelection):
 
     """
     @Terminus.assign
-    def __init__(self, valu: str):
+    def __init__(self, value: str):
         """The FreshAirChangeRateUnits class initialiser.
 
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -853,6 +851,7 @@ class InstantaneousReleaseMass(Number):
         self.lower_bound(1e-6)
         self.upper_bound(10.0)
 
+
 class ReleaseRate(Number):
     """The release rate setting.
 
@@ -866,6 +865,7 @@ class ReleaseRate(Number):
     def check(self):
         self.lower_bound(1e-6)
         self.upper_bound(10.0)
+
 
 class InfiniteDurationSettings(Settings):
     """The :class:`~.InfiniteDurationSettings` class. It inherits from
@@ -1206,7 +1206,6 @@ class AnalysisSettings(Settings):
         self.exclude_uncertain_values = bool
 
 
-
 class LinePlots(Settings):
     """The :class:`~.LinePlots` class. It inherits from
     :class:`~.Settings`.
@@ -1258,7 +1257,7 @@ class TimeAxisUnits(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -1301,11 +1300,13 @@ class MonitorLocations(Settings):
             if item not in self.__dict__:
                 raise ConsistencyError(f"{item} is not a type if monitor location")
 
+
 class EvaluateFlags(Dict):
 
     @Settings.assign
     def __init__(self, values: dict):
         self.type = bool
+
 
 class Dimensions(Settings):
     """The :class:`~.Dimensions` class. It inherits from
@@ -1447,7 +1448,7 @@ class CoefficientMode(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -1526,7 +1527,7 @@ class TKEBBound(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
         
         """
         self.options = [
@@ -1537,7 +1538,6 @@ class TKEBBound(StringSelection):
 
     def check(self):
         pass
-
 
 
 class TotalAirChangeRate(Number):
@@ -1604,6 +1604,7 @@ class ImageSourceNumber(Number):
         self.lower_bound(0)
         self.upper_bound(20)
 
+
 class ImageMode(StringSelection):
     """The image mode selection
 
@@ -1620,7 +1621,7 @@ class ImageMode(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -1630,7 +1631,6 @@ class ImageMode(StringSelection):
 
     def check(self):
         pass
-
 
 
 class ContourPlots(Settings):
@@ -1701,7 +1701,7 @@ class RangeMode(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -1729,7 +1729,7 @@ class ScaleType(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -1834,7 +1834,7 @@ class ParallelAxis(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -1891,7 +1891,6 @@ class FullDomain(Dict):
         self.type = bool 
 
 
-
 class Plane(Settings):
     """The :class:`~.Plane` class. It inherits from
     :class:`~.Settings`.
@@ -1934,7 +1933,7 @@ class Axis(StringSelection):
         Parameters
         ----------
         value : :obj:`str`
-            The chosed value.
+            The chosen value.
 
         """
         self.options = [
@@ -2075,6 +2074,7 @@ class PositiveFloat(Number):
         """
         self.lower_bound_exclusive(0.0)
 
+
 class PositiveInt(Number):
     """The :class:`~.PositiveInt` class. It inherits from
     :class:`~.Number`.
@@ -2099,8 +2099,6 @@ class PositiveInt(Number):
             If the value isn't greater than 0.
         """
         self.lower_bound_exclusive(0)
-
-
 
 
 class NonNegativeInteger(Number):

@@ -1,22 +1,16 @@
 import warnings
 
-import math
-
 from os.path import join
 
 from numpy import ndarray
-from numpy import power
 
 from ridt.config import RIDTConfig
 from ridt.config import Units
 
 from ridt.container import Domain
 
-from typing import List
-
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FormatStrFormatter
-from matplotlib import animation
+
 
 class LinePlot:
     """The class that generates line plots over some spatial domain.
@@ -174,16 +168,3 @@ class LinePlot:
         """
         lines = self.settings.models.eddy_diffusion.monitor_locations.lines
         return lines[self.id].parallel_axis
-
-    # def animate(self, data: ndarray):
-    #     fig = plt.figure()
-    #     def init():
-    #         return self.plot(data[0])
-    #     def frame(i):
-    #         return self.plot(data[i])
-    #     anim = animation.FuncAnimation(fig,
-    #                                    frame,
-    #                                    frames=self.settings.time_samples,
-    #                                    init_func=init)
-    #     anim.save("line_test.mp4", fps=5)
-    

@@ -2,16 +2,11 @@ import csv
 
 from io import TextIOWrapper
 
-from os import mkdir
-
 from os.path import join
 
-from typing import Union
 from typing import List
 from typing import Iterable
 from typing import Type
-
-from numpy import sqrt
 
 from ridt.base import RIDTOSError
 
@@ -27,19 +22,13 @@ from ridt.data import DirectoryAgent
 
 from .datastoreanalyser import DataStoreAnalyser
 
-from .resultcontainers import Maximum
-from .resultcontainers import Exceedance
-from .resultcontainers import PercentExceedance
-from .resultcontainers import MaxPercentExceedance
 from .resultcontainers import ResultContainer
-
-FIRST = 0
 
 
 class ResultsWriter:
     """The Results Writer class.
 
-    Iterates through all selected geometries and writes all quantites to disk.
+    Iterates through all selected geometries and writes all quantities to disk.
 
     Attributes
     ----------
@@ -179,7 +168,7 @@ class ResultsWriter:
     def maximum(self):
         """Write the relevant :class:`~.Maximum` results to file.
     
-        Loops through all geometries and writes the Maximuim results to
+        Loops through all geometries and writes the Maximum results to
         a csv file.
 
         Returns
@@ -193,8 +182,8 @@ class ResultsWriter:
             items.sort(reverse=True)
             rows = [item.row for item in items]
             if rows:
-                path = join(self.dir_agent.adir, items[FIRST].fname)
-                self.write(path, items[FIRST].header, rows)
+                path = join(self.dir_agent.adir, items[0].fname)
+                self.write(path, items[0].header, rows)
 
     def exceedance_analysis(self):
         """Write the relevant exceedance results to file.
@@ -222,7 +211,7 @@ class ResultsWriter:
                     items.sort(reverse=reverse)
                     rows = [item.row for item in items]
                     if rows:
-                        path = join(self.dir_agent.adir, items[FIRST].fname)
+                        path = join(self.dir_agent.adir, items[0].fname)
                         self.write(path, items[0].header, rows)
     
     def extrema(self):
@@ -253,10 +242,10 @@ class ResultsWriter:
         except OSError as e:
             raise RIDTOSError(e)
 
-        self.title(f, self.analysis.maximum[FIRST].title)
+        self.title(f, self.analysis.maximum[0].title)
         for geometry in self.geometries:
             items = self.get_valid(geometry, self.analysis.maximum)
-            self.subtitle(f, self.analysis.maximum[FIRST].extreme_title)
+            self.subtitle(f, self.analysis.maximum[0].extreme_title)
             if items:
                 item = max(items)
                 f.write(item.string)
@@ -268,13 +257,13 @@ class ResultsWriter:
         ]
 
         for r, reverse in results:
-            self.title(f, r[FIRST].title)
+            self.title(f, r[0].title)
             for t in self.thresholds:
                 for geometry in self.geometries:
                     valid = self.get_valid(geometry, r)
                     items = [i for i in valid if i.threshold == t]
                     if items:
-                        self.subtitle(f, items[FIRST].extreme_title)
+                        self.subtitle(f, items[0].extreme_title)
                         item = min(items) if not reverse else max(items)
                         f.write(item.string)
         f.close()
@@ -308,7 +297,7 @@ class ResultsWriter:
         file : :obj:`TextIOWrapper` 
             The file object to write to.
 
-        title : :obj:`str`
+        subtitle : :obj:`str`
             The subtitle string.
         
         Returns
@@ -344,7 +333,7 @@ class ResultsWriter:
         if self.setting.models.eddy_diffusion.monitor_locations.evaluate["domain"]:
             ttwm = self.analysis.time_to_well_mixed
             if ttwm:
-                value =  f"{ttwm:.2f}{self.setting.time_units}\n"
+                value = f"{ttwm:.2f}{self.setting.time_units}\n"
             else:
                 value = "not within lifetime of simulation\n"
         else:

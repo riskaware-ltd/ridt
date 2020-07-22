@@ -1,6 +1,5 @@
 from typing import Union
 
-from numpy import cumsum
 from scipy.integrate import cumtrapz
 from numpy import ndarray
 
@@ -8,6 +7,7 @@ from ridt.config import RIDTConfig
 
 from ridt.data import DataStore
 from ridt.data import BatchDataStore
+
 
 class Exposure:
     """The Exposure class
