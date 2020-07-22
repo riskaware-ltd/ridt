@@ -328,7 +328,7 @@ class ResultsWriter:
         f.write(f"\tx: {char_diff['x']:.2f}{self.setting.time_units}\n")
         f.write(f"\ty: {char_diff['y']:.2f}{self.setting.time_units}\n")
         f.write(f"\tz: {char_diff['z']:.2f}{self.setting.time_units}\n")
-        f.write(f"\tsqrt(V): {char_diff['v']:.2f}{self.setting.time_units}\n")
+        f.write(f"\tV^(1/3): {char_diff['v']:.2f}{self.setting.time_units}\n")
         f.write("\n")
         if self.setting.models.eddy_diffusion.monitor_locations.evaluate["domain"]:
             ttwm = self.analysis.time_to_well_mixed

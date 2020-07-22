@@ -128,7 +128,7 @@
 \contentsline {section}{\numberline {7}Run Analysis}{30}{section.7}
 \contentsline {subsection}{\numberline {7.1}Maxium Values}{30}{subsection.7.1}
 \contentsline {subsection}{\numberline {7.2}Time to Threshold Values}{30}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Time for Percent of Domain to Threshold Values}{30}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.3}Time for Percent of Domain to Threshold Values}{31}{subsection.7.3}
 \contentsline {subsection}{\numberline {7.4}Maximum Percent of Domain to Exceed Threshold Values}{31}{subsection.7.4}
 \contentsline {subsection}{\numberline {7.5}Extrema}{31}{subsection.7.5}
 \contentsline {subsection}{\numberline {7.6}Batch Run Analysis}{31}{subsection.7.6}
@@ -136,11 +136,13 @@
 \contentsline {section}{\numberline {B}The Well Mixed Model}{34}{appendix.B}
 \contentsline {subsection}{\numberline {B.1}Instantaneous release}{34}{subsection.B.1}
 \contentsline {subsection}{\numberline {B.2}Constant and continuous release}{34}{subsection.B.2}
-\contentsline {subsection}{\numberline {B.3}Constant release rate with finite duration}{34}{subsection.B.3}
-\contentsline {section}{\numberline {C}Eddy Diffusion Model}{34}{appendix.C}
-\contentsline {subsection}{\numberline {C.1}Instantaneous release}{34}{subsection.C.1}
+\contentsline {subsection}{\numberline {B.3}Constant release rate with finite duration}{35}{subsection.B.3}
+\contentsline {section}{\numberline {C}Eddy Diffusion Model}{35}{appendix.C}
+\contentsline {subsection}{\numberline {C.1}Instantaneous release}{35}{subsection.C.1}
 \contentsline {subsection}{\numberline {C.2}Constant and continuous release}{35}{subsection.C.2}
 \contentsline {subsection}{\numberline {C.3}Constant release rate with finite duration}{35}{subsection.C.3}
 \contentsline {section}{\numberline {D}Equations to calculate the eddy diffusion coefficient}{35}{appendix.D}
-\contentsline {section}{\numberline {E}Time to Well Mixed}{35}{appendix.E}
+\contentsline {section}{\numberline {E}Time to Well Mixed}{36}{appendix.E}
 \contentsline {section}{\numberline {F}Upper Exposure Limit}{36}{appendix.F}
+\contentsline {section}{\numberline {G}Steady State Well Mixed Concentration}{36}{appendix.G}
+\contentsline {section}{\numberline {H}Characteristic Diffusion Time}{36}{appendix.H}
