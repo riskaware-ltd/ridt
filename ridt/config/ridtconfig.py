@@ -103,6 +103,7 @@ class RIDTConfig(Settings):
 
 
         """
+        self.ridt_version = RIDTVersion
         self.well_mixed = bool
         self.eddy_diffusion = bool
         self.compute_exposure = bool
@@ -269,6 +270,33 @@ class RIDTConfig(Settings):
                     f"The number of requested contour plots ({contour_number}) cannot exceed the "
                     f"number of time samples ({self.time_samples}).")
 
+
+class RIDTVersion(StringSelection):
+    """The setting that indicates the version of ridt for the config file
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: str):
+        """The RIDTVersion class initialiser
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosen value.
+
+        """
+        self.options = [
+            "v1.0"
+        ]
+    
+    def check(self):
+        pass
+    
 
 class TimeSamples(Number):
     """The :class:`~.TimeSamples` class. It inherits from

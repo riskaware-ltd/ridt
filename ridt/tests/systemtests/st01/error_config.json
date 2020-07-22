@@ -198,5 +198,6 @@
         }
     },
     "compute_exposure": true,
-    "write_data_to_csv": true
+    "write_data_to_csv": true,
+    "ridt_version": "v1.0"
 }

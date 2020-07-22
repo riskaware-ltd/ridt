@@ -1,4 +1,5 @@
 {
+    "ridt_version": "v1.0",
     "eddy_diffusion": true,
     "well_mixed": true,
     "integration_method": "cumulativetrapezoidal",

@@ -1,4 +1,6 @@
 {
+    // Indicated the version of ridt this file corresponds to.
+    "ridt_version": "v1.0",
     // Determins if the eddy diffusion model will be evaluated.
     "eddy_diffusion": true,
     // Determins if the well mixed model will be evaluated.

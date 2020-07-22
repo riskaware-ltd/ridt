@@ -92,7 +92,7 @@ concentrations and exposures based on an arbitrary set of instantaneous,
 infinite duration, and fixed duration source terms in a cuboid bounded system.
 The Well Mixed model is a set of dimensionless exponential decay equations,
 whereas the Eddy Diffusion model is a variant of the standard solution to the 1D
-diffusion equation solved with closed boundary contiditons, combined in a
+diffusion equation solved with closed boundary conditions, combined in a
 separable product in three dimensions. Details regarding the mathematical
 definitions the Well Mixed and Eddy Diffusion models can be found in Appendices
 \ref{app:wellmixed} and \ref{app:eddydiff} respectively. These models have been
@@ -105,7 +105,7 @@ Science and Technology Laboratories.\\
 \section{Installation}\label{sec:installation}
 
 The following guide is for Windows. However RIDT should function on OSX, and
-linux operating systems.
+Linux operating systems.
 
 \begin{enumerate}
     \item Install Python 3.8.x.
@@ -147,7 +147,7 @@ output:\\
 southwest,sharp corners, before upper={\parindent15pt}]
 \noindent\code{Usage: ridt [OPTIONS] COMMAND [ARGS]...}\\
 
-\indent\code{The rapid indoor diffusion modelling tool (ridt).}\\
+\indent\code{The rapid indoor diffusion modeling tool (ridt).}\\
 
 \noindent\code{Options:}\\
 \indent\code{--help  Show this message and exit.}\\
@@ -155,7 +155,7 @@ southwest,sharp corners, before upper={\parindent15pt}]
 \noindent\code{Commands:}\\
 \indent\code{csv-to-config \HS\HS\HS\HS Merge CSV file to config JSON file.}\\
 \indent\code{init\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS Copy a default 
-config files current working directory.}\\
+config file to current working directory.}\\
 \indent\code{run \HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS Run diffusion model.}
 \end{tcolorbox}
 \end{addmargin}
@@ -203,7 +203,7 @@ two files will be created in the current working directory
 \end{itemize}
 
 \noindent The configuration file, \code{config.json}, is JavaScript Object
-Notation (JSON) format. The means it adhears to strict formatting rules. For
+Notation (JSON) format. The means it adheres to strict formatting rules. For
 detailed information about these rules and the contents of the configuration
 file please see Section \ref{sec:configfile}. The file \code{config.jsonc}
 contains the same information as \code{config.jsonc}, in addition to comments
@@ -216,7 +216,7 @@ do so we can run the command
 \end{itemize}
 
 \noindent where we have provided the path to the configuration file which is in
-the current working directory, and the period at the end indicates the ouptut
+the current working directory, and the period at the end indicates the output
 directory should be the current working directory. If everything runs smoothly
 this will result a some information about the current status of the run being
 output to the console. Once the run is complete the console will output
@@ -296,7 +296,7 @@ The RIDT configuration file is a JSON format document. The basic element of a
 JSON document is the empty JSON \emph{object}, \code{\{\}}. Contained within
 a JSON object can be one or many of the following types
 \begin{itemize}
-    \item a string: "encapuslated in double quotes."
+    \item a string: "encapsulated in double quotes."
     \item a number: floats (1.1123) or integers (23).
     \item an array: [3, 1.1243, "of other types", ["including arrays"]].
     \item a boolean: true or false
@@ -331,7 +331,7 @@ dictionary data structure.\\
 \noindent The standard JSON format does not permit in line comments to be added.
 Standard text editor linters will show any text comments as errors. Furthermore
 any JSON parser will throw an error if it parses anything other that standard
-JSON syntax. As metioned in the previous section, files with the extension
+JSON syntax. As mentioned in the previous section, files with the extension
 \code{.jsonc} can contain comments of the form\\
 \begin{lstlisting}[language=json, firstnumber=1]
 {
@@ -356,8 +356,18 @@ configuration file can be found in Appendix \ref{app:configfile}. We will
 provide snippets of the relevant section of the configuration file for each
 setting.\\
 
-\noindent Note: any units that are not explicity defined by a setting are
+\noindent Note: any units that are not explicitly defined by a setting are
 assumed to be SI units.
+
+\subsubsection{\code{ridt\_version}}
+\begin{itemize}
+    \item[$\diamond$] type: string 
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] "v1.0"
+    \end{itemize}
+\end{itemize}
+This string indicates the version of ridt that the config file corresponds to.
 
 \subsubsection{\code{eddy\_diffusion}}
 \begin{itemize}
@@ -419,7 +429,7 @@ If \code{true} RIDT will write all computed data to csv files.
 This string determines which method of integration to use when evaluating the
 eddy diffusion model. When Romberg is selected, every point in time will be
 integrated from zero, to a high degree of precision. When Cumulative Trapezoidal
-is selected, a cumulative integral is perfomed over all time points evaluated.
+is selected, a cumulative integral is performed over all time points evaluated.
 Use Romberg when you want to evaluate a small number of time points to a high
 degree of precision.
 
@@ -547,7 +557,7 @@ lower bound is always 0.0. The units of this quantity are defined by the
         \item[$\rightarrow$] $>0.0$
     \end{itemize}
 \end{itemize}
-This float defines the upper spatial bound (inclusive) along the y-ayis. The
+This float defines the upper spatial bound (inclusive) along the y-axis. The
 lower bound is always 0.0. The units of this quantity are defined by the
 \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -559,7 +569,7 @@ lower bound is always 0.0. The units of this quantity are defined by the
         \item[$\rightarrow$] $>0.0$
     \end{itemize}
 \end{itemize}
-This float defines the upper spatial bound (inclusive) along the z-azis. The
+This float defines the upper spatial bound (inclusive) along the z-axis. The
 lower bound is always 0.0. The units of this quantity are defined by the
 \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -592,7 +602,7 @@ of order \code{spatial\_samples.x} between zero and \code{dimensions.x} (Section
         \item[$\rightarrow$] $\geq2$
     \end{itemize}
 \end{itemize}
-This integer determines the discretisation of the y-ayis of the simulation. The
+This integer determines the discretisation of the y-axis of the simulation. The
 locations at which the models are evaluated are an evenly spaced discretisation
 of order \code{spatial\_samples.y} between zero and \code{dimensions.y} (Section
 \ref{sec:dimy}), inclusive.
@@ -605,7 +615,7 @@ of order \code{spatial\_samples.y} between zero and \code{dimensions.y} (Section
         \item[$\rightarrow$] $\geq2$
     \end{itemize}
 \end{itemize}
-This integer determines the discretisation of the z-azis of the simulation. The
+This integer determines the discretisation of the z-axis of the simulation. The
 locations at which the models are evaluated are an evenly spaced discretisation
 of order \code{spatial\_samples.z} between zero and \code{dimensions.z} (Section
 \ref{sec:dimz}), inclusive.
@@ -789,7 +799,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the source along the z-azis. It must lie
+This float defines the position of the source along the z-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -853,7 +863,7 @@ contained within the \code{"sources": \{\}} object.
 \end{itemize}
 This object contains settings which define a single fixed\_duration source term to
 be used in the evaluation of the models. Many such sources can be defined in a
-single configuration file in the \code{instantanous.sources} setting (Section
+single configuration file in the \code{instantaneous.sources} setting (Section
 \ref{sec:fixsources}).
 
 \paragraph{\code{fixed\_duration.sources.source.x}}\label{sec:fixsourcex}
@@ -876,7 +886,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the source along the y-ayis. It must lie
+This float defines the position of the source along the y-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -888,7 +898,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the source along the z-azis. It must lie
+This float defines the position of the source along the z-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -974,7 +984,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the source along the y-ayis. It must lie
+This float defines the position of the source along the y-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -986,7 +996,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the source along the z-azis. It must lie
+This float defines the position of the source along the z-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -1157,7 +1167,7 @@ This string determines which which bound of the TKEB coefficient is used
     \end{itemize}
 \end{itemize}
 This float that specifies the value of the total air change rate to use the in
-calclulation of the TKEB coefficient (Section \ref{app:tkeb}).
+calculation of the TKEB coefficient (Section \ref{app:tkeb}).
 
 \paragraph{\code{coefficient.tkeb.number\_of\_supply\_vents}}
 \begin{itemize}
@@ -1168,7 +1178,7 @@ calclulation of the TKEB coefficient (Section \ref{app:tkeb}).
     \end{itemize}
 \end{itemize}
 This integer determines the value of the number of supply vents to use the in
-calclulation of the TKEB coefficient (Section \ref{app:tkeb}).
+calculation of the TKEB coefficient (Section \ref{app:tkeb}).
 
 \subsubsection{\code{models.eddy\_diffusion.images}}
 \begin{itemize}
@@ -1187,7 +1197,7 @@ used in the evaluation of the Eddy Diffusion model (Section \ref{app:eddydiff}).
     \end{itemize}
 \end{itemize}
 This string determines the method by which images sources are added to the
-calculation. If "manual" is chosen the value assiged to the
+calculation. If "manual" is chosen the value assigned to the
 \code{images.quantity} setting  is used (Section
 \ref{sec:imagequant}). If "auto" is chosen then the geometric variance is used
 to determine the corrective degree of a new image source (Section
@@ -1376,7 +1386,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the point along the y-ayis. It must lie
+This float defines the position of the point along the y-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -1388,7 +1398,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
-This float defines the position of the point along the z-azis. It must lie
+This float defines the position of the point along the z-axis. It must lie
 within the spatial bounds of the simulation. The units of this quantity are
 defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
@@ -1558,7 +1568,7 @@ example\\
     }
 }
 \end{lstlisting}
-However, given the fact that the two domains would evalualte the same
+However, given the fact that the two domains would evaluate the same
 information, it is currently only necessary to have a single entry in this
 object.
 
@@ -1582,7 +1592,7 @@ configuration file in the \code{monitor\_locations.domain} setting (Section
         \item[$\rightarrow$] false
     \end{itemize}
 \end{itemize}
-This is a placeholder value and currenly serves no purpose. It must however be
+This is a placeholder value and currently serves no purpose. It must however be
 defined. It does not matter if it is true or false.
 
 \subsubsection{\code{models.eddy\_diffusion.points\_plots}}
@@ -1718,7 +1728,7 @@ generated.
     \item[$\diamond$] type: string 
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] "planear"
+        \item[$\rightarrow$] "linear"
         \item[$\rightarrow$] "logarithmic"
     \end{itemize}
 \end{itemize}
@@ -1759,7 +1769,7 @@ number of time samples.
         \item[$\rightarrow$] "manual"
     \end{itemize}
 \end{itemize}
-If this string is "auto" the the maximum and minimul contours will be
+If this string is "auto" the the maximum and minimal contours will be
 automatically computed from the data. This will be done over the whole time
 domain for a given monitor location, so all separate time correlated plots have
 the same contour range for better comparison. If this string is "manual" the the
@@ -1775,9 +1785,9 @@ minimum and maximum contours defined using the values in the
         \item[$\rightarrow$] $\geq2$
     \end{itemize}
 \end{itemize}
-This integer determins the number of contours used in the contour plots. The
+This integer determines the number of contours used in the contour plots. The
 actual values for the contours a computed relative to a maximum and minimum
-value (either computed from the data of given explicity) and the type of scale
+value (either computed from the data of given explicitly) and the type of scale
 selected.
 
 \paragraph{\code{planes\_plots.contours}}\label{sec:numcontour}
@@ -1810,7 +1820,7 @@ This float is the value used for the manually defined maximum contour. It must
 be greater than the minimum value provided.
 
 \section{Batch Mode}
-RIDT has the ability to perform batch runs of any numerical quantity. To perfrom
+RIDT has the ability to perform batch runs of any numerical quantity. To perform
 a batch run, we must define a quantity in the configuration file as a range.
 For example, take this instantaneous source\\
 \begin{lstlisting}[language=json,firstnumber=1]
@@ -1859,8 +1869,8 @@ implicit range\\
 where in the range values will be evenly spaced between the minimum and maximum
 values, inclusively.\\
 
-\noindent It is possible to define more than one range in a single file. If you
-this is done then the cartesian product of all ranges is evaluated by RIDT. For
+\noindent It is possible to define more than one range in a single file. If 
+this is done then the Cartesian product of all ranges is evaluated by RIDT. For
 example if three ranges are defined, one with 5 values, one with 7 values, and
 one with 10 values, then RIDT will evaluate the model $5\times7\times10=350$
 times with all possible combinations of parameters.\\
@@ -1897,9 +1907,9 @@ be defined. If the length of the ranges with the same match parameter vary, then
 the ranges are only evaluated up to the length of the shortest range. A warning
 will be provided at runtime should matched ranges have different lengths.\\
 
-\noindent When computing the cartesian product of the ranges to construct the
+\noindent When computing the Cartesian product of the ranges to construct the
 computational space for the run, matched ranges form a single axis of the
-cartesian space. For example if we also wish to evaluate a varying $y$ position
+Cartesian space. For example if we also wish to evaluate a varying $y$ position
 for all values in our matched range, we can provide a range for the $y$
 parameter\\
 \begin{lstlisting}[language=json,firstnumber=1]
@@ -1976,7 +1986,7 @@ dimension $2\times2$. The corresponding output directory structure would be
 ├───[1, 0]
 └───[1, 1]
 \end{verbatim}
-where each [i, j] subdirectory containes the run config file, data, plots, and
+where each [i, j] subdirectory contains the run config file, data, plots, and
 analysis for each point in the batch computational space. The file
 \code{batch\_run\_summary.txt} contains a summary of the batch run information,
 including the computational space itself.
@@ -2028,7 +2038,7 @@ the following form
 \noindent where float and string indicate the data type. Each prefix string in the first
 column corresponds to a different item in the configuration file
 \begin{itemize}
-    \item INS: Instantaneous source. These are the ordered corresponcence
+    \item INS: Instantaneous source. These are the ordered correspondence
     between the subsequent values and the source parameters:
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}\hline
@@ -2036,7 +2046,7 @@ column corresponds to a different item in the configuration file
             Prefix & $x$ & $y$ & $z$ & mass & time & \\\hline
         \end{tabular}
     \end{center}
-    \item INF: Infinite duration source. These are the ordered corresponcence
+    \item INF: Infinite duration source. These are the ordered correspondence
     between the subsequent values and the source parameters:
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}\hline
@@ -2044,7 +2054,7 @@ column corresponds to a different item in the configuration file
             Prefix & $x$ & $y$ & $z$ & rate & time & \\\hline
         \end{tabular}
     \end{center}
-    \item FIX: Fixed duration source. These are the ordered corresponcence
+    \item FIX: Fixed duration source. These are the ordered correspondence
     between the subsequent values and the source parameters:
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}\hline
@@ -2052,7 +2062,7 @@ column corresponds to a different item in the configuration file
             Prefix & $x$ & $y$ & $z$ & rate & star time & end time\\\hline
         \end{tabular}
     \end{center}
-    \item POI: Point monitor location. These are the ordered corresponcence
+    \item POI: Point monitor location. These are the ordered correspondence
     between the subsequent values and the source parameters:
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}\hline
@@ -2060,7 +2070,7 @@ column corresponds to a different item in the configuration file
             Prefix & $x$ & $y$ & $z$ & & & \\\hline
         \end{tabular}
     \end{center}
-    \item LIN: Line monitor location. These are the ordered corresponcence
+    \item LIN: Line monitor location. These are the ordered correspondence
     between the subsequent values and the source parameters:
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}\hline
@@ -2068,7 +2078,7 @@ column corresponds to a different item in the configuration file
             Prefix & intercept-$x$ & intercept-$y$ & intercept-$z$ & parallel axis & & \\\hline
         \end{tabular}
     \end{center}
-    \item PLA: Plane monitor location. These are the ordered corresponcence
+    \item PLA: Plane monitor location. These are the ordered correspondence
     between the subsequent values and the source parameters:
     \begin{center}
         \begin{tabular}{|c|c|c|c|c|c|c|}\hline
@@ -2103,7 +2113,7 @@ at 1s intervals, the CSV file will contain
     \item[$\triangleright$] \code{ridt csv-to-config config.json new.csv}
 \end{itemize}
 
-\noindent where \code{new.csv} contains the information desribed in the table above, and
+\noindent where \code{new.csv} contains the information described in the table above, and
 \code{config.json} is our existing configuration file. Assuming the
 configuration file has no existing instantaneous sources defined, after
 executing the command above, the following instantaneous sources will be defined
@@ -2184,7 +2194,7 @@ executing the command above, the following instantaneous sources will be defined
 },
 \end{lstlisting}
 where the sources have been automatically numbered from 0 to 9. Any existing
-items with an idenfier that is the same as one that is automatically generated
+items with an identifier that is the same as one that is automatically generated
 will be overwritten. \\
 
 \noindent Any combination of different prefixes and entries can be in a single
@@ -2192,7 +2202,7 @@ CSV file. RIDT will parse and add them to their respective section of the
 configuration file.
 
 \section{Run Analysis}\label{sec:analysis}
-The following analysis is perfomed on each run for every monitor location
+The following analysis is performed on each run for every monitor location
 defined in the configuration file, that was marked for evaluation, for both
 concentration and exposure data. The data is output in CSV files in the run
 directory, \code{<monitor\_location>/<quantity>/analysis/} where
@@ -2236,7 +2246,7 @@ point is defined, the \code{*\_extrema.txt} will indicate which point recorded
 the maximum value over the entire run. For each threshold, which point reached
 each threshold the fastest, and so on for the other quantities. This is done
 separately for all types of monitor locations, including the full domain, as
-long as they have been marked for evaulation in the configuration file.
+long as they have been marked for evaluation in the configuration file.
 
 \subsection{Batch Run Analysis}
 In the case of a batch run, all of the above analysis is performed and output,

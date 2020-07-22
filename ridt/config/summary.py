@@ -23,6 +23,7 @@ def summary(settings: RIDTConfig) -> str:
     """
     units = Units(settings)
     rv = str()
+    rv += f"RIDT v1.0\n"
 
     rv += f"Models:\n"
     rv += f"\tEddy Diffusion: {settings.eddy_diffusion}\n"

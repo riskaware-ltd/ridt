@@ -1,15 +1,20 @@
 \begin{lstlisting}[language=json,firstnumber=1]
+
 {
     "eddy_diffusion": true,
     "well_mixed": true,
+    "compute_exposure": true,
+    "write_data_to_csv": true,
+
+    "integration_method": "cumulativetrapezoidal",
 
     "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
 
     "time_units": "s",
-    "time_samples": 50,
-    "total_time": 100.0,
+    "time_samples": 21,
+    "total_time": 1000.0,
 
     "spatial_units": "m",
     "dimensions": {
@@ -18,8 +23,8 @@
         "z": 3.0
     },
     "spatial_samples": {
-        "x": 20,
-        "y": 20,
+        "x": 50,
+        "y": 50,
         "z": 10 
     },
 
@@ -54,7 +59,7 @@
                     "x": 10.0,
                     "y": 3.0,
                     "z": 1.0,
-                    "rate": 0.01,
+                    "rate": 0.1,
                     "time": 0.0
                 }
             }
@@ -66,9 +71,9 @@
                     "x": 10.0,
                     "y": 3.0,
                     "z": 1.0,
-                    "rate": 0.01,
-                    "start_time": 1.0,
-                    "end_time": 0.0
+                    "rate": 0.1,
+                    "start_time": 0.0, 
+                    "end_time": 200.0
                 }
             }
         }
@@ -94,8 +99,8 @@
     "models":{
         "eddy_diffusion": {
             "coefficient": {
-                "calculation": "TKEB",
-                "value": 0.001,
+                "calculation": "EXPLICIT",
+                "value": 0.01,
                 "tkeb": {
                     "bound": "lower",
                     "total_air_change_rate": 1.0,
@@ -104,18 +109,19 @@
             },
             "images": {
                 "mode": "auto",
-                "quantity": 3
+                "quantity": 10
             },
             "analysis": {
+                "perform_analysis": true,
                 "percentage_exceedance": 10.0,
-                "exclude_uncertain_values": true
+                "exclude_uncertain_values": true 
             },
             "monitor_locations": {
                 "evaluate": {
                     "points": true,
-                    "lines": true,
-                    "planes": true,
-                    "domain": true 
+                    "lines": false,
+                    "planes": false,
+                    "domain": false
                 },
                 "points": {
                     "point_1": {
@@ -145,24 +151,25 @@
                 }
             },
             "points_plots": {
-                "output": true,
+                "time_axis_units": "s",
+                "output": false,
                 "scale": "logarithmic"
             },
             "lines_plots": {
-                "output": true,
+                "output": false,
                 "scale": "logarithmic",
                 "animate": true,
                 "number": 3 
             },
             "planes_plots": {
-                "output": true,
+                "output": false,
                 "animate": true,
                 "number": 10,
                 "number_of_contours": 10,
                 "range": "auto",
                 "scale": "logarithmic",
                 "contours": {
-                    "min": 0.0,
+                    "min": 1e-10,
                     "max": 1.5
                 }
             }
