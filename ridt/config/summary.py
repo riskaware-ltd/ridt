@@ -30,7 +30,7 @@ def summary(settings: RIDTConfig) -> str:
     rv += f"\tWell Mixed: {settings.well_mixed}\n"
     rv += f"\n"
 
-    rv += f"total time: {settings.total_time}{settings.time_units}\n"
+    rv += f"total time: {settings.total_time} {settings.time_units}\n"
     rv += f"\n"
     rv += f"spatial_dimensions:\n"
     rv += f"\tx: {settings.dimensions.x} {units.space}\n"
@@ -48,11 +48,14 @@ def summary(settings: RIDTConfig) -> str:
             rv += f"\tvents: {coeff.tkeb.number_of_supply_vents}\n"
             rv += f"\ttotal air change rate: {coeff.tkeb.total_air_flow_rate} m3.s-1\n"
             M = EddyDiffusion(settings)
-            rv += f"diffusion coefficient value: {M.diffusion_coefficient()}m2.s-1\n"
-
+            rv += f"diffusion coefficient value: {M.diffusion_coefficient()} m2.s-1\n"
         else:
-             
-            rv += f"diffusion coefficient value: {coeff.value}m2.s-1\n"
+            rv += f"diffusion coefficient value: {coeff.value} m2.s-1\n"
+        if settings.models.eddy_diffusion.images.mode == "manual":
+            rv += f"number of image sources computed (either side of zero): \
+                {settings.models.eddy_diffusion.images.quantity}"
+        else:
+            rv += f"number of image sources computed: auto."
         rv += f"\n"
     if settings.well_mixed:
         dim = settings.dimensions
@@ -81,15 +84,14 @@ def summary(settings: RIDTConfig) -> str:
             rv += f"\t\tsteady state well mix concentration: <various>\n"
         else:
             vol = settings.dimensions.x * settings.dimensions.y * settings.dimensions.z
-            rv += f"\t\tsteady state well mix concentration: {(item.mass / vol):.2e}{units.concentration_si}\n"
+            rv += f"\t\tsteady state well mix concentration: {(item.mass / vol):.2e} {units.concentration_si}\n"
         if isinstance(item.mass, list) or\
            isinstance(settings.fresh_air_flow_rate, list):
             rv += f"\t\tupper exposure limit: <various>\n"
         else:
             if settings.fresh_air_flow_rate:
                 rv += f"\t\tupper exposure limit: \
-                    {(item.mass / settings.fresh_air_flow_rate):.2e}\
-                    {units.exposure_si}\n"
+                    {(item.mass / settings.fresh_air_flow_rate):.2e} {units.exposure_si}\n"
             else:
                 rv += f"\t\tupper exposure limit: infinite.\n"
 
@@ -109,19 +111,18 @@ def summary(settings: RIDTConfig) -> str:
         else:
             if settings.fresh_air_flow_rate:
                 rv += f"\t\tsteady state well mix concentration: \
-                    {(item.rate / settings.fresh_air_flow_rate):.2e}\
-                    {units.concentration_si}\n"
+                    {(item.rate / settings.fresh_air_flow_rate):.2e} {units.concentration_si}\n"
             else:
                 rv += f"\t\tsteady state well mix concentration: infinite\n"
 
         rv += f"\n"
-    rv += "infinite duration:\n"
+    rv += "fixed duration:\n"
     for name, item in settings.modes.fixed_duration.sources.items():
         rv += f"\t{name}\n"
         rv += f"\t\tx: {item.x} {units.space}\n"
         rv += f"\t\ty: {item.y} {units.space}\n"
         rv += f"\t\tz: {item.z} {units.space}\n"
-        rv += f"\t\trate: {item.rate}\n"
+        rv += f"\t\trate: {item.rate} kg.m-3\n"
         rv += f"\t\tstart_time: {item.end_time} {units.time}\n"
         rv += f"\t\tend_time: {item.end_time} {units.time}\n"
         dim = settings.dimensions
@@ -135,8 +136,7 @@ def summary(settings: RIDTConfig) -> str:
         else:
             vol = settings.dimensions.x * settings.dimensions.y * settings.dimensions.z
             rv += f"\t\tsteady state well mix concentration: \
-                {(item.rate * (item.end_time - item.end_time) / vol):.2e}\
-                {units.concentration_si}\n"
+                {(item.rate * (item.end_time - item.end_time) / vol):.2e} {units.concentration_si}\n"
         if isinstance(item.rate, list) or\
            isinstance(item.start_time, list) or\
            isinstance(item.end_time, list) or\
@@ -145,8 +145,7 @@ def summary(settings: RIDTConfig) -> str:
         else:
             if settings.fresh_air_flow_rate:
                 rv += f"\t\tupper exposure limit: \
-                    {(item.rate * (item.end_time - item.end_time) / settings.fresh_air_flow_rate):.2e}\
-                    {units.exposure_si}\n"
+                    {(item.rate * (item.end_time - item.end_time) / settings.fresh_air_flow_rate):.2e} {units.exposure_si}\n"
             else:
                 rv += f"\t\tupper exposure limit: infinite\n"
 

@@ -503,7 +503,13 @@ selections. [Note: more options might be available in later versions.]
 This integer determines the discretisation of the temporal domain of the
 simulation. The times at which the models are evaluated are an evenly spaced
 discretisation of order \code{time\_samples} between zero and \code{total\_time}
-(Section \ref{sec:totaltime}), inclusive.
+(Section \ref{sec:totaltime}), inclusive. When using cumulative trapezoidal
+integration (Section \ref{sec:integrationmethod}) the larger the number of time
+samples the more precise the integration will be. Regardless of the type of
+integration chosen, the exposure is computed using cumulative trapezoidal
+integration over the time domain. Therefore the precision of the exposure is
+dependent on the number of time samples (the more samples, the more precise the
+computed exposure).
 
 \subsubsection{\code{total\_time}}\label{sec:totaltime}
 \begin{itemize}
