@@ -243,11 +243,12 @@ class ContourPlot:
         num_contour = self.config.number_of_contours    
         if self.config.range == "auto":
             min_contour = floor(log10(1e-20)-1)
-            max_contour = ceil(max(ceil(log10(self.max_val)), 1))
+            max_contour = ceil(log10(self.max_val))
         else:
             min_contour = floor(log10(self.config.contours.min)-1)
-            max_contour = ceil(max(ceil(log10(self.config.contours.max)), 1))
+            max_contour = ceil(log10(self.config.contours.max))
         levels = linspace(min_contour, max_contour, num_contour)
+        print(levels)
         return power(10, levels)
 
     def get_linear_scale(self):

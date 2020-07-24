@@ -198,4 +198,3 @@ class UncertaintyMask:
                     for idt, time in enumerate(self.domain.time):
                         rv[idt][idx] = nan
         return rv
-

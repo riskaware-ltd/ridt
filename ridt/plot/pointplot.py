@@ -161,4 +161,3 @@ class PointPlot:
         elif self.config.time_axis_units == 'h':
             return [t / 3600 for t in self.domain.time]
         
-
