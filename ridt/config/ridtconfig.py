@@ -387,7 +387,7 @@ class AgentMolecularWeightUnits(StringSelection):
 
         """
         self.options = [
-            "mol.m-3"
+            "kg.mol-1"
         ]
     
     def check(self):

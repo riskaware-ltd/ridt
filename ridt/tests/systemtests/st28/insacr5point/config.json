@@ -20,7 +20,7 @@
         "z": 10
     },
     "physical_properties": {
-        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight_units": "kg.mol-1",
         "agent_molecular_weight": 1.0,
         "pressure_units": "Pa",
         "pressure": 1.0,

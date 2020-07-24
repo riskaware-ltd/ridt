@@ -450,7 +450,15 @@ degree of precision.
 This string determines the units in which the program ingests and outputs
 concentration quantities. During the execution of RIDT all calculations are done
 using SI units, however it can ingest and output concentration values using any
-of the above selections.
+of the above selections.\\
+
+\noindent The conversion from ppm, ppb, and ppt to kg.m-3 are given by
+\begin{equation}
+    \left[\text{kg.m-3}\right] = \left[\text{ppx}\right]\frac{\left(\text{molecular weight}\right)
+    \times \left(\text{pressure}\right)}{\left(\text{temperature}\right) \times \left(\text{factor}\right)}
+\end{equation}
+
+\noindent where $\text{factor} \in \left\{10^{6}, 10^{9}, 10^{12}\right\}$.
 
 \subsubsection{\code{exposure\_units}}\label{sec:exposureunits}
 \begin{itemize}
