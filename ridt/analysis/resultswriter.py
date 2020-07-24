@@ -245,8 +245,8 @@ class ResultsWriter:
         self.title(f, self.analysis.maximum[0].title)
         for geometry in self.geometries:
             items = self.get_valid(geometry, self.analysis.maximum)
-            self.subtitle(f, self.analysis.maximum[0].extreme_title)
             if items:
+                self.subtitle(f, items[0].extreme_title)
                 item = max(items)
                 f.write(item.string)
 

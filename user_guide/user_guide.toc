@@ -127,7 +127,7 @@
 \contentsline {section}{\numberline {5}Batch Mode}{25}{section.5}
 \contentsline {section}{\numberline {6}\texttt {csv-to-config}}{27}{section.6}
 \contentsline {section}{\numberline {7}Run Analysis}{30}{section.7}
-\contentsline {subsection}{\numberline {7.1}Maxium Values}{30}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.1}Maximum Values}{30}{subsection.7.1}
 \contentsline {subsection}{\numberline {7.2}Time to Threshold Values}{30}{subsection.7.2}
 \contentsline {subsection}{\numberline {7.3}Time for Percent of Domain to Threshold Values}{31}{subsection.7.3}
 \contentsline {subsection}{\numberline {7.4}Maximum Percent of Domain to Exceed Threshold Values}{31}{subsection.7.4}

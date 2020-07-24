@@ -183,7 +183,7 @@ class Maximum(ResultContainer):
         """:obj:`str` : the extremum version of the title for this result.
 
         """
-        return f"Maxium value for {self.geometry}:"
+        return f"Maximum value for {self.geometry}:"
     
     @property
     def valid(self):
