@@ -19,6 +19,7 @@ from matplotlib import cm, ticker
 from matplotlib import colors
 
 from matplotlib.ticker import LogFormatter
+from matplotlib.ticker import FormatStrFormatter
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 
@@ -130,8 +131,9 @@ class ContourPlot:
             **kwargs)
 
         if self.config.scale == "logarithmic":
-            formatter = LogFormatter(10, labelOnlyBase=False)
-            plt.colorbar(ticks=self.get_log_scale(), format=formatter)
+            formatter = LogFormatter(10, labelOnlyBase=False, minor_thresholds=(1, 5))
+            cb = plt.colorbar(ticks=self.get_log_scale(), format=formatter, )
+            cb.ax.yaxis.set_major_formatter((FormatStrFormatter('%.2e')))
         else:
             plt.colorbar()
 
@@ -245,10 +247,9 @@ class ContourPlot:
             min_contour = floor(log10(1e-20)-1)
             max_contour = ceil(log10(self.max_val))
         else:
-            min_contour = floor(log10(self.config.contours.min)-1)
+            min_contour = floor(log10(self.config.contours.min))
             max_contour = ceil(log10(self.config.contours.max))
         levels = linspace(min_contour, max_contour, num_contour)
-        print(levels)
         return power(10, levels)
 
     def get_linear_scale(self):
