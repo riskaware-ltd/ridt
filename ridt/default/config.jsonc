@@ -194,10 +194,12 @@
                 // The percentage used when calculating the percentage threshold
                 // exceedance quantities.
                 "percentage_exceedance": 10.0,
-                // If 'true' then values within a sphere of radius 2m centered
+                // If 'true' then values within a sphere centered
                 // on each source term are excluded from the analysis. Values
                 // within this range are potentially unphysical.
-                "exclude_uncertain_values": true
+                "exclude_uncertain_values": true,
+                // The radius of the exclusion sphere around each source.
+                "exclude_radius_meters": 2.0
             },
             // The definitions of the locations where the model is evaluated.
             "monitor_locations": {

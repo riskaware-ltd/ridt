@@ -5,6 +5,8 @@ from numpy import nanargmax
 from numpy import unravel_index
 from numpy import where
 from numpy import prod
+from numpy import isnan
+from numpy import count_nonzero
 
 from ridt.base import Error
 
@@ -212,12 +214,10 @@ class DataStore:
 
         """
         data = self.get(geometry, id)
-        shape = data.shape
-        try:
-            size = prod(shape[1:])
-        except KeyError:
-            size = 1
-        for time in range(shape[0]):
+        for time in range(data.shape[0]):
+            size = data[time].size - count_nonzero(isnan(data[time]))
+            if not size:
+                continue
             frac = 100 * len(self.zip(where(data[time] >= value))) / size
             if frac >= percent:
                 return time

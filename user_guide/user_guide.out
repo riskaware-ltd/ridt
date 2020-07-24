@@ -79,70 +79,71 @@
 \BOOKMARK [4][-]{paragraph.4.2.29.1}{analysis.perform\137analysis}{subsubsection.4.2.29}% 79
 \BOOKMARK [4][-]{paragraph.4.2.29.2}{analysis.percentage\137exceedance}{subsubsection.4.2.29}% 80
 \BOOKMARK [4][-]{paragraph.4.2.29.3}{analysis.exclude\137uncertain\137values}{subsubsection.4.2.29}% 81
-\BOOKMARK [3][-]{subsubsection.4.2.30}{models.eddy\137diffusion.monitor\137locations}{subsection.4.2}% 82
-\BOOKMARK [3][-]{subsubsection.4.2.31}{monitor\137locations.evaluate}{subsection.4.2}% 83
-\BOOKMARK [4][-]{paragraph.4.2.31.1}{monitor\137locations.evaluate.points}{subsubsection.4.2.31}% 84
-\BOOKMARK [4][-]{paragraph.4.2.31.2}{monitor\137locations.evaluate.lines}{subsubsection.4.2.31}% 85
-\BOOKMARK [4][-]{paragraph.4.2.31.3}{monitor\137locations.evaluate.planes}{subsubsection.4.2.31}% 86
-\BOOKMARK [4][-]{paragraph.4.2.31.4}{monitor\137locations.evaluate.domain}{subsubsection.4.2.31}% 87
-\BOOKMARK [3][-]{subsubsection.4.2.32}{monitor\137locations.points}{subsection.4.2}% 88
-\BOOKMARK [3][-]{subsubsection.4.2.33}{monitor\137locations.points.point}{subsection.4.2}% 89
-\BOOKMARK [4][-]{paragraph.4.2.33.1}{monitor\137locations.points.point.x}{subsubsection.4.2.33}% 90
-\BOOKMARK [4][-]{paragraph.4.2.33.2}{monitor\137locations.points.point.y}{subsubsection.4.2.33}% 91
-\BOOKMARK [4][-]{paragraph.4.2.33.3}{monitor\137locations.points.point.z}{subsubsection.4.2.33}% 92
-\BOOKMARK [3][-]{subsubsection.4.2.34}{monitor\137locations.lines}{subsection.4.2}% 93
-\BOOKMARK [3][-]{subsubsection.4.2.35}{monitor\137locations.lines.line}{subsection.4.2}% 94
-\BOOKMARK [3][-]{subsubsection.4.2.36}{monitor\137locations.lines.line.point}{subsection.4.2}% 95
-\BOOKMARK [4][-]{paragraph.4.2.36.1}{monitor\137locations.lines.line.point.x}{subsubsection.4.2.36}% 96
-\BOOKMARK [4][-]{paragraph.4.2.36.2}{monitor\137locations.lines.line.point.y}{subsubsection.4.2.36}% 97
-\BOOKMARK [4][-]{paragraph.4.2.36.3}{monitor\137locations.lines.line.point.z}{subsubsection.4.2.36}% 98
-\BOOKMARK [4][-]{paragraph.4.2.36.4}{monitor\137locations.lines.line.parallel\137axis}{subsubsection.4.2.36}% 99
-\BOOKMARK [3][-]{subsubsection.4.2.37}{monitor\137locations.planes}{subsection.4.2}% 100
-\BOOKMARK [3][-]{subsubsection.4.2.38}{monitor\137locations.planes.plane}{subsection.4.2}% 101
-\BOOKMARK [4][-]{paragraph.4.2.38.1}{monitor\137locations.planes.plane.axis}{subsubsection.4.2.38}% 102
-\BOOKMARK [4][-]{paragraph.4.2.38.2}{monitor\137locations.planes.plane.distance}{subsubsection.4.2.38}% 103
-\BOOKMARK [3][-]{subsubsection.4.2.39}{monitor\137locations.domain}{subsection.4.2}% 104
-\BOOKMARK [3][-]{subsubsection.4.2.40}{monitor\137locations.domain.domain}{subsection.4.2}% 105
-\BOOKMARK [4][-]{paragraph.4.2.40.1}{monitor\137locations.domain.domain.domain}{subsubsection.4.2.40}% 106
-\BOOKMARK [3][-]{subsubsection.4.2.41}{models.eddy\137diffusion.points\137plots}{subsection.4.2}% 107
-\BOOKMARK [4][-]{paragraph.4.2.41.1}{points\137plots.output}{subsubsection.4.2.41}% 108
-\BOOKMARK [4][-]{paragraph.4.2.41.2}{points\137plots.scale}{subsubsection.4.2.41}% 109
-\BOOKMARK [4][-]{paragraph.4.2.41.3}{points\137plots.time\137axis\137units}{subsubsection.4.2.41}% 110
-\BOOKMARK [3][-]{subsubsection.4.2.42}{models.eddy\137diffusion.lines\137plots}{subsection.4.2}% 111
-\BOOKMARK [4][-]{paragraph.4.2.42.1}{lines\137plots.output}{subsubsection.4.2.42}% 112
-\BOOKMARK [4][-]{paragraph.4.2.42.2}{lines\137plots.scale}{subsubsection.4.2.42}% 113
-\BOOKMARK [4][-]{paragraph.4.2.42.3}{lines\137plots.animate}{subsubsection.4.2.42}% 114
-\BOOKMARK [4][-]{paragraph.4.2.42.4}{lines\137plots.number}{subsubsection.4.2.42}% 115
-\BOOKMARK [3][-]{subsubsection.4.2.43}{models.eddy\137diffusion.planes\137plots}{subsection.4.2}% 116
-\BOOKMARK [4][-]{paragraph.4.2.43.1}{planes\137plots.output}{subsubsection.4.2.43}% 117
-\BOOKMARK [4][-]{paragraph.4.2.43.2}{planes\137plots.scale}{subsubsection.4.2.43}% 118
-\BOOKMARK [4][-]{paragraph.4.2.43.3}{planes\137plots.animate}{subsubsection.4.2.43}% 119
-\BOOKMARK [4][-]{paragraph.4.2.43.4}{planes\137plots.number}{subsubsection.4.2.43}% 120
-\BOOKMARK [4][-]{paragraph.4.2.43.5}{planes\137plots.range}{subsubsection.4.2.43}% 121
-\BOOKMARK [4][-]{paragraph.4.2.43.6}{planes\137plots.number\137of\137contours}{subsubsection.4.2.43}% 122
-\BOOKMARK [4][-]{paragraph.4.2.43.7}{planes\137plots.contours}{subsubsection.4.2.43}% 123
-\BOOKMARK [5][-]{subparagraph.4.2.43.7.1}{planes\137plots.contours.min}{paragraph.4.2.43.7}% 124
-\BOOKMARK [5][-]{subparagraph.4.2.43.7.2}{planes\137plots.contours.max}{paragraph.4.2.43.7}% 125
-\BOOKMARK [1][-]{section.5}{Batch Mode}{}% 126
-\BOOKMARK [1][-]{section.6}{csv-to-config}{}% 127
-\BOOKMARK [1][-]{section.7}{Run Analysis}{}% 128
-\BOOKMARK [2][-]{subsection.7.1}{Maxium Values}{section.7}% 129
-\BOOKMARK [2][-]{subsection.7.2}{Time to Threshold Values}{section.7}% 130
-\BOOKMARK [2][-]{subsection.7.3}{Time for Percent of Domain to Threshold Values}{section.7}% 131
-\BOOKMARK [2][-]{subsection.7.4}{Maximum Percent of Domain to Exceed Threshold Values}{section.7}% 132
-\BOOKMARK [2][-]{subsection.7.5}{Extrema}{section.7}% 133
-\BOOKMARK [2][-]{subsection.7.6}{Batch Run Analysis}{section.7}% 134
-\BOOKMARK [1][-]{appendix.A}{The Full Default Configuration File}{}% 135
-\BOOKMARK [1][-]{appendix.B}{The Well Mixed Model}{}% 136
-\BOOKMARK [2][-]{subsection.B.1}{Instantaneous release}{appendix.B}% 137
-\BOOKMARK [2][-]{subsection.B.2}{Constant and continuous release}{appendix.B}% 138
-\BOOKMARK [2][-]{subsection.B.3}{Constant release rate with finite duration}{appendix.B}% 139
-\BOOKMARK [1][-]{appendix.C}{Eddy Diffusion Model}{}% 140
-\BOOKMARK [2][-]{subsection.C.1}{Instantaneous release}{appendix.C}% 141
-\BOOKMARK [2][-]{subsection.C.2}{Constant and continuous release}{appendix.C}% 142
-\BOOKMARK [2][-]{subsection.C.3}{Constant release rate with finite duration}{appendix.C}% 143
-\BOOKMARK [1][-]{appendix.D}{Equations to calculate the eddy diffusion coefficient}{}% 144
-\BOOKMARK [1][-]{appendix.E}{Time to Well Mixed}{}% 145
-\BOOKMARK [1][-]{appendix.F}{Upper Exposure Limit}{}% 146
-\BOOKMARK [1][-]{appendix.G}{Steady State Well Mixed Concentration}{}% 147
-\BOOKMARK [1][-]{appendix.H}{Characteristic Diffusion Time}{}% 148
+\BOOKMARK [4][-]{paragraph.4.2.29.4}{analysis.exclude\137radius\137meters}{subsubsection.4.2.29}% 82
+\BOOKMARK [3][-]{subsubsection.4.2.30}{models.eddy\137diffusion.monitor\137locations}{subsection.4.2}% 83
+\BOOKMARK [3][-]{subsubsection.4.2.31}{monitor\137locations.evaluate}{subsection.4.2}% 84
+\BOOKMARK [4][-]{paragraph.4.2.31.1}{monitor\137locations.evaluate.points}{subsubsection.4.2.31}% 85
+\BOOKMARK [4][-]{paragraph.4.2.31.2}{monitor\137locations.evaluate.lines}{subsubsection.4.2.31}% 86
+\BOOKMARK [4][-]{paragraph.4.2.31.3}{monitor\137locations.evaluate.planes}{subsubsection.4.2.31}% 87
+\BOOKMARK [4][-]{paragraph.4.2.31.4}{monitor\137locations.evaluate.domain}{subsubsection.4.2.31}% 88
+\BOOKMARK [3][-]{subsubsection.4.2.32}{monitor\137locations.points}{subsection.4.2}% 89
+\BOOKMARK [3][-]{subsubsection.4.2.33}{monitor\137locations.points.point}{subsection.4.2}% 90
+\BOOKMARK [4][-]{paragraph.4.2.33.1}{monitor\137locations.points.point.x}{subsubsection.4.2.33}% 91
+\BOOKMARK [4][-]{paragraph.4.2.33.2}{monitor\137locations.points.point.y}{subsubsection.4.2.33}% 92
+\BOOKMARK [4][-]{paragraph.4.2.33.3}{monitor\137locations.points.point.z}{subsubsection.4.2.33}% 93
+\BOOKMARK [3][-]{subsubsection.4.2.34}{monitor\137locations.lines}{subsection.4.2}% 94
+\BOOKMARK [3][-]{subsubsection.4.2.35}{monitor\137locations.lines.line}{subsection.4.2}% 95
+\BOOKMARK [3][-]{subsubsection.4.2.36}{monitor\137locations.lines.line.point}{subsection.4.2}% 96
+\BOOKMARK [4][-]{paragraph.4.2.36.1}{monitor\137locations.lines.line.point.x}{subsubsection.4.2.36}% 97
+\BOOKMARK [4][-]{paragraph.4.2.36.2}{monitor\137locations.lines.line.point.y}{subsubsection.4.2.36}% 98
+\BOOKMARK [4][-]{paragraph.4.2.36.3}{monitor\137locations.lines.line.point.z}{subsubsection.4.2.36}% 99
+\BOOKMARK [4][-]{paragraph.4.2.36.4}{monitor\137locations.lines.line.parallel\137axis}{subsubsection.4.2.36}% 100
+\BOOKMARK [3][-]{subsubsection.4.2.37}{monitor\137locations.planes}{subsection.4.2}% 101
+\BOOKMARK [3][-]{subsubsection.4.2.38}{monitor\137locations.planes.plane}{subsection.4.2}% 102
+\BOOKMARK [4][-]{paragraph.4.2.38.1}{monitor\137locations.planes.plane.axis}{subsubsection.4.2.38}% 103
+\BOOKMARK [4][-]{paragraph.4.2.38.2}{monitor\137locations.planes.plane.distance}{subsubsection.4.2.38}% 104
+\BOOKMARK [3][-]{subsubsection.4.2.39}{monitor\137locations.domain}{subsection.4.2}% 105
+\BOOKMARK [3][-]{subsubsection.4.2.40}{monitor\137locations.domain.domain}{subsection.4.2}% 106
+\BOOKMARK [4][-]{paragraph.4.2.40.1}{monitor\137locations.domain.domain.domain}{subsubsection.4.2.40}% 107
+\BOOKMARK [3][-]{subsubsection.4.2.41}{models.eddy\137diffusion.points\137plots}{subsection.4.2}% 108
+\BOOKMARK [4][-]{paragraph.4.2.41.1}{points\137plots.output}{subsubsection.4.2.41}% 109
+\BOOKMARK [4][-]{paragraph.4.2.41.2}{points\137plots.scale}{subsubsection.4.2.41}% 110
+\BOOKMARK [4][-]{paragraph.4.2.41.3}{points\137plots.time\137axis\137units}{subsubsection.4.2.41}% 111
+\BOOKMARK [3][-]{subsubsection.4.2.42}{models.eddy\137diffusion.lines\137plots}{subsection.4.2}% 112
+\BOOKMARK [4][-]{paragraph.4.2.42.1}{lines\137plots.output}{subsubsection.4.2.42}% 113
+\BOOKMARK [4][-]{paragraph.4.2.42.2}{lines\137plots.scale}{subsubsection.4.2.42}% 114
+\BOOKMARK [4][-]{paragraph.4.2.42.3}{lines\137plots.animate}{subsubsection.4.2.42}% 115
+\BOOKMARK [4][-]{paragraph.4.2.42.4}{lines\137plots.number}{subsubsection.4.2.42}% 116
+\BOOKMARK [3][-]{subsubsection.4.2.43}{models.eddy\137diffusion.planes\137plots}{subsection.4.2}% 117
+\BOOKMARK [4][-]{paragraph.4.2.43.1}{planes\137plots.output}{subsubsection.4.2.43}% 118
+\BOOKMARK [4][-]{paragraph.4.2.43.2}{planes\137plots.scale}{subsubsection.4.2.43}% 119
+\BOOKMARK [4][-]{paragraph.4.2.43.3}{planes\137plots.animate}{subsubsection.4.2.43}% 120
+\BOOKMARK [4][-]{paragraph.4.2.43.4}{planes\137plots.number}{subsubsection.4.2.43}% 121
+\BOOKMARK [4][-]{paragraph.4.2.43.5}{planes\137plots.range}{subsubsection.4.2.43}% 122
+\BOOKMARK [4][-]{paragraph.4.2.43.6}{planes\137plots.number\137of\137contours}{subsubsection.4.2.43}% 123
+\BOOKMARK [4][-]{paragraph.4.2.43.7}{planes\137plots.contours}{subsubsection.4.2.43}% 124
+\BOOKMARK [5][-]{subparagraph.4.2.43.7.1}{planes\137plots.contours.min}{paragraph.4.2.43.7}% 125
+\BOOKMARK [5][-]{subparagraph.4.2.43.7.2}{planes\137plots.contours.max}{paragraph.4.2.43.7}% 126
+\BOOKMARK [1][-]{section.5}{Batch Mode}{}% 127
+\BOOKMARK [1][-]{section.6}{csv-to-config}{}% 128
+\BOOKMARK [1][-]{section.7}{Run Analysis}{}% 129
+\BOOKMARK [2][-]{subsection.7.1}{Maxium Values}{section.7}% 130
+\BOOKMARK [2][-]{subsection.7.2}{Time to Threshold Values}{section.7}% 131
+\BOOKMARK [2][-]{subsection.7.3}{Time for Percent of Domain to Threshold Values}{section.7}% 132
+\BOOKMARK [2][-]{subsection.7.4}{Maximum Percent of Domain to Exceed Threshold Values}{section.7}% 133
+\BOOKMARK [2][-]{subsection.7.5}{Extrema}{section.7}% 134
+\BOOKMARK [2][-]{subsection.7.6}{Batch Run Analysis}{section.7}% 135
+\BOOKMARK [1][-]{appendix.A}{The Full Default Configuration File}{}% 136
+\BOOKMARK [1][-]{appendix.B}{The Well Mixed Model}{}% 137
+\BOOKMARK [2][-]{subsection.B.1}{Instantaneous release}{appendix.B}% 138
+\BOOKMARK [2][-]{subsection.B.2}{Constant and continuous release}{appendix.B}% 139
+\BOOKMARK [2][-]{subsection.B.3}{Constant release rate with finite duration}{appendix.B}% 140
+\BOOKMARK [1][-]{appendix.C}{Eddy Diffusion Model}{}% 141
+\BOOKMARK [2][-]{subsection.C.1}{Instantaneous release}{appendix.C}% 142
+\BOOKMARK [2][-]{subsection.C.2}{Constant and continuous release}{appendix.C}% 143
+\BOOKMARK [2][-]{subsection.C.3}{Constant release rate with finite duration}{appendix.C}% 144
+\BOOKMARK [1][-]{appendix.D}{Equations to calculate the eddy diffusion coefficient}{}% 145
+\BOOKMARK [1][-]{appendix.E}{Time to Well Mixed}{}% 146
+\BOOKMARK [1][-]{appendix.F}{Upper Exposure Limit}{}% 147
+\BOOKMARK [1][-]{appendix.G}{Steady State Well Mixed Concentration}{}% 148
+\BOOKMARK [1][-]{appendix.H}{Characteristic Diffusion Time}{}% 149

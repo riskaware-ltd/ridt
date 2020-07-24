@@ -1214,7 +1214,11 @@ class AnalysisSettings(Settings):
         calcluations.
     
     exclude_uncertain_values: :obj:`bool`
-        Whether to exclude values within 2m of any source from analysis.
+        Whether to exclude values within a sphere of a given radius centered on
+        all sources from analysis. 
+    
+    exclude_radius_meters: :obj:`bool`
+        The radius of the sphere, inside which to exclude values.
 
     """
     @Settings.assign
@@ -1232,6 +1236,7 @@ class AnalysisSettings(Settings):
         self.perform_analysis = bool
         self.percentage_exceedance = Percentage
         self.exclude_uncertain_values = bool
+        self.exclude_radius_meters = PositiveFloat
 
 
 class LinePlots(Settings):

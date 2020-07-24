@@ -1278,9 +1278,20 @@ percentage exceedance of a given threshold. Please see Section
         \item[$\rightarrow$] false
     \end{itemize}
 \end{itemize}
-If \code{true} this boolean will mean no values within $2m$ of a source term
-will be included in the post run analysis. This is because within $2m$ of any
-source term the Eddy Diffusion model is unphysical.
+If \code{true} this boolean will mean no values within a certain distance of a
+source term will be included in the post run analysis. This is because the eddy
+diffusion model can become unphysical close to source terms. 
+
+\paragraph{\code{analysis.exclude\_radius\_meters}}\label{sec:excludesphereradius}
+\begin{itemize}
+    \item[$\diamond$] type: float
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] $>0.0$
+    \end{itemize}
+\end{itemize}
+The radius of the sphere of excluded values around each source. The units of
+this quantity are in meters. A reasonable value for this quantity is 2 m.
 
 \subsubsection{\code{models.eddy\_diffusion.monitor\_locations}}
 \begin{itemize}

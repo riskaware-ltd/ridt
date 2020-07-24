@@ -30,9 +30,12 @@ class UncertaintyMask:
     
     domain : :class:`~.Domain`
         The instance of :class:`~.Domain` corresponding to :attr:`settings`.
+    
+    radius : :obj:`float`
+        The radius of the sphere around each source, inside which values will be
+        masked.
 
     """
-
     def __init__(self, setting: RIDTConfig):
         """The :class:`~.UncertaintyMask` constructor.
 
@@ -43,6 +46,7 @@ class UncertaintyMask:
 
         """
         self.setting = setting
+        self.radius = setting.models.eddy_diffusion.analysis.exclude_radius_meters
         self.sources = self.get_source_locations()
         self.domain = Domain(setting)
 
@@ -106,7 +110,7 @@ class UncertaintyMask:
         location = self.domain.point_cartesian(point)
         rv = deepcopy(data)
         for s in self.sources:
-            if norm(s - location) <= 2.0:
+            if norm(s - location) <= self.radius:
                 rv.fill(nan)
         return rv
         
@@ -132,7 +136,7 @@ class UncertaintyMask:
         rv = deepcopy(data)
         for idx, location in locations:
             for s in self.sources:
-                if norm(s - array(location)) <= 2.0:
+                if norm(s - array(location)) <= self.radius:
                     for idt, time in enumerate(self.domain.time):
                         rv[idt][idx] = nan
         return rv
@@ -159,7 +163,7 @@ class UncertaintyMask:
         rv = deepcopy(data)
         for idx, location in locations:
             for s in self.sources:
-                if norm(s - array(location)) <= 2.0:
+                if norm(s - array(location)) <= self.radius:
                     for idt, time in enumerate(self.domain.time):
                         rv[idt][idx] = nan
         return rv
@@ -190,7 +194,7 @@ class UncertaintyMask:
         rv = deepcopy(data)
         for idx, location in locations:
             for s in self.sources:
-                if norm(s - array(location)) <= 2.0:
+                if norm(s - array(location)) <= self.radius:
                     for idt, time in enumerate(self.domain.time):
                         rv[idt][idx] = nan
         return rv
