@@ -556,11 +556,11 @@ class EddyDiffusion:
         else:
             tkeb_term = air_flow_rate /\
                 power(self.volume * power(vent_number, 2), 1.0 / 3.0)
-            if bound == "lower":
+            if bound == "upper":
                 return 0.827 * tkeb_term + 0.0565
             elif bound == "regression":
                 return 0.824 * tkeb_term
-            elif bound == "upper": 
+            elif bound == "lower": 
                 return max(0.822 * tkeb_term - 0.0565, 0.001)
 
     def zero_arrays(self):
