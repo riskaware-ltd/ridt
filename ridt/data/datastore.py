@@ -250,12 +250,11 @@ class DataStore:
         max_val = 0.0
         max_time = None
         shape = data.shape
-        try:
-            size = prod(shape[1:])
-        except KeyError:
-            size = 1
 
         for time in range(shape[0]):
+            size = data[time].size - count_nonzero(isnan(data[time]))
+            if not size:
+                continue
             frac = 100 * len(self.zip(where(data[time] >= value))) / size
             if frac > max_val:
                 max_val = frac
