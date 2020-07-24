@@ -219,7 +219,17 @@ do so we can run the command
 the current working directory, and the period at the end indicates the output
 directory should be the current working directory. If everything runs smoothly
 this will result a some information about the current status of the run being
-output to the console. Once the run is complete the console will output
+output to the console. This will include progress bars for various steps in the
+programs execution, e.g.\\
+
+\code{100\%|███████████| 108171/108171 [00:02<00:00,
+40699.95it/s]}\\
+
+\noindent where the formatting of the items in the square brackets is [(time
+elapsed)<(time remaining), (iterations per second)]. One iteration corresponds
+to different things at different points in the execution of RIDT.
+
+Once the run is complete the console will output
 \code{Complete.}\\
 
 \noindent After the above command has successfully execute, there will be a set
@@ -428,10 +438,13 @@ If \code{true} RIDT will write all computed data to csv files.
 \end{itemize}
 This string determines which method of integration to use when evaluating the
 eddy diffusion model. When Romberg is selected, every point in time will be
-integrated from zero, to a high degree of precision. When Cumulative Trapezoidal
+integrated from zero, to a high degree of precision. Romberg should be used when
+it is desirable to know the concentration for a small number of point in time
+with a high degree of precision. This method should not be used if high
+precision exposure data is required. When Cumulative Trapezoidal
 is selected, a cumulative integral is performed over all time points evaluated.
-Use Romberg when you want to evaluate a small number of time points to a high
-degree of precision.
+The precision of this method of integration is dependent on the number of time
+samples defined (Section \ref{sec:timesamples}).
 
 
 \subsubsection{\code{concentration\_units}}\label{sec:concentrationunits}
@@ -592,7 +605,17 @@ lower bound is always 0.0. The units of this quantity are defined by the
     \item[$\diamond$] type: JSON Object 
 \end{itemize}
 This object contains settings which determine the spatial discretisation of the
-simulation.
+simulation.\\
+
+\noindent Depending on the monitor locations selected for evaulation, one, some,
+or all of the following values for the spatial sampling may not be used. For
+example, if only a single point-like monitor location (Section
+\ref{sec:monpoints}) is defined, and full domain 
+evaluation is switched off, then none of the following values are used. This is
+because the point-like monitor locations explicitly define the location at which
+the model is evaluated. Another example would be if a single line-like monitor
+location (Section \ref{sec:monlines}) defined, parallel to the x-axis. Then only
+the x-sampling would be used to discretised the line.
 
 \paragraph{\code{spatial\_samples.x}}
 \begin{itemize}
@@ -606,7 +629,6 @@ This integer determines the discretisation of the x-axis of the simulation. The
 locations at which the models are evaluated are an evenly spaced discretisation
 of order \code{spatial\_samples.x} between zero and \code{dimensions.x} (Section
 \ref{sec:dimx}), inclusive.
-
 
 \paragraph{\code{spatial\_samples.y}}
 \begin{itemize}
@@ -1221,7 +1243,8 @@ to determine the corrective degree of a new image source (Section
 \end{equation}
 Where $C_{\text{old}}$ and $C_{\text{old}}$ are the tensors containing all
 concentrations at a given time over a given domain, before and after adding
-another image source.
+another image source. This means that different number of image sources will be
+used in different calculations, depending on the rate of convergence.
 
 
 \paragraph{\code{images.quantity}}\label{sec:imagequant}
@@ -2234,8 +2257,8 @@ directory, \code{<monitor\_location>/<quantity>/analysis/} where
 \code{<monitor\_location>} is either, points, lines, planes or domains, and
 \code{<analysis>} is either concentration or exposure.\\
 
-If specified in the configuration file (Section \ref{sec:excludevalues}), points
-within 2m of any source term will be excluded from the calculation.
+\noindent If specified in the configuration file (Section \ref{sec:excludevalue}), points
+within a sphere of a given radius centered on all source terms will be excluded from the calculation.\\
 
 \subsection{Maximum Values}
 The maximum value achieved during the course of the run. The time, location, and
@@ -2243,8 +2266,8 @@ value are povided. These values can be found in\\
 
 \code{<monitor\_location>\_maximums.csv}. \\
 
-If specified in the configuration file (Section \ref{sec:excludevalues}), points
-within 2m of any source term will be excluded from the calculation.
+\noindent If specified in the configuration file (Section \ref{sec:excludevalue}), points
+within a sphere of a given radius centered on all source terms will be excluded from the calculation.\\
 
 \subsection{Time to Threshold Values}
 For all thresholds defined in the configuration file, the time during the
@@ -2253,11 +2276,11 @@ These values can be found in \\
 
 \code{<monitor\_location>\_exceeds\_<threshold>.csv}.\\
 
-If multiple points in space reach the threshold at the same time, only one will
+\noindent If multiple points in space reach the threshold at the same time, only one will
 be returned (The first in the enumerated cartesian product space).\\
 
-If specified in the configuration file (Section \ref{sec:excludevalues}), points
-within 2m of any source term will be excluded from the calculation.
+\noindent If specified in the configuration file (Section \ref{sec:excludevalue}), points
+within a sphere of a given radius centered on all source terms will be excluded from the calculation.\\
 
 \subsection{Time for Percent of Domain to Threshold Values}
 For all thresholds defined in the configuration file, the time during the
@@ -2266,7 +2289,11 @@ percentage is specified in the
 \code{percentage\_exceedance} setting (Section
 \ref{sec:percex}). These values can be found in\\
 
-\code{<percentage>\%\_of\_<monitor\_location>\_exceeds\_<threshold>.csv} 
+\code{<percentage>\%\_of\_<monitor\_location>\_exceeds\_<threshold>.csv} \\
+
+\noindent If specified in the configuration file (Section \ref{sec:excludevalue}), points
+within a sphere of a given radius centered on all source terms will be excluded
+from the calculation.\\
 
 \subsection{Maximum Percent of Domain to Exceed Threshold Values}
 For all thresholds defined in the configuration file the maximum percentage of
@@ -2275,8 +2302,8 @@ values can be found in\\
 
 \code{<monitor\_location>\_max\%\_exceeds\_<threshold>.csv} \\
 
-If specified in the configuration file (Section \ref{sec:excludevalues}), points
-within 2m of any source term will be excluded from the calculation.\\
+\noindent If specified in the configuration file (Section \ref{sec:excludevalue}), points
+within a sphere of a given radius centered on all source terms will be excluded from the calculation.\\
 
 \subsection{Extrema}
 \noindent For each run, a file \code{*\_extrema.txt} is saved to the output directory that
