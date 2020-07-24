@@ -1511,13 +1511,12 @@ class ExplicitCoefficient(Number):
 
     def check(self):
         """Abstract method from :class:`~.Terminus`.
-        Raises
-        ------
-        ValueError
-            If the value isn't greater than 1e-3.
+
         """
-        self.lower_bound(1e-3)
-        self.upper_bound(1.0)
+        if self.value < 1e-3:
+            warnings.warn("The diffusion coefficient < 1e-3.")
+        if self.value > 1.0:
+            warnings.warn("The diffusion coefficient > 1.0.")
 
 
 class TKEB(Settings):
