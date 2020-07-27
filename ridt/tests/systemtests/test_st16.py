@@ -32,7 +32,7 @@ class ST16(unittest.TestCase):
             self.explicit.diffusion_coefficient(), 0.001
         )
         self.assertEqual(
-            self.tkeb.diffusion_coefficient(), 0.8835
+            self.tkeb.diffusion_coefficient(), 0.7655
         )
 
 

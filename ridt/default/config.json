@@ -2,13 +2,19 @@
     "ridt_version": "v1.0",
     "eddy_diffusion": true,
     "well_mixed": true,
+    "compute_exposure": true,
+    "write_data_to_csv": true,
+
     "integration_method": "cumulativetrapezoidal",
+
     "concentration_units": "kg.m-3",
     "exposure_units": "kg.s.m-3",
     "mass_units": "kg",
+
     "time_units": "s",
-    "time_samples": 50,
-    "total_time": 100.0,
+    "time_samples": 21,
+    "total_time": 1000.0,
+
     "spatial_units": "m",
     "dimensions": {
         "x": 50.0,
@@ -16,12 +22,14 @@
         "z": 3.0
     },
     "spatial_samples": {
-        "x": 20,
-        "y": 20,
-        "z": 10
+        "x": 50,
+        "y": 50,
+        "z": 10 
     },
+
     "fresh_air_flow_rate_units": "m3.s-1",
     "fresh_air_flow_rate": 5.0,
+
     "physical_properties": {
         "agent_molecular_weight_units": "kg.mol-1",
         "agent_molecular_weight": 1.0,
@@ -30,9 +38,10 @@
         "temperature_units": "K",
         "temperature": 273.0
     },
+
     "modes": {
         "instantaneous": {
-            "sources": {
+            "sources":{
                 "source_1": {
                     "x": 10.0,
                     "y": 3.0,
@@ -42,51 +51,55 @@
                 }
             }
         },
+
         "infinite_duration": {
             "sources": {
                 "source_1": {
                     "x": 10.0,
                     "y": 3.0,
                     "z": 1.0,
-                    "rate": 0.01,
+                    "rate": 0.1,
                     "time": 0.0
                 }
             }
         },
+
         "fixed_duration": {
             "sources": {
                 "source_1": {
                     "x": 10.0,
                     "y": 3.0,
                     "z": 1.0,
-                    "rate": 0.01,
-                    "start_time": 1.0,
-                    "end_time": 0.0
+                    "rate": 0.1,
+                    "start_time": 0.0, 
+                    "end_time": 200.0
                 }
             }
         }
     },
+
     "thresholds": {
         "concentration": [
             1e-10,
-            1e-05,
-            0.01,
-            0.1,
+            1e-5,
+            1e-2,
+            1e-1,
             1.0
         ],
         "exposure": [
             1e-10,
-            1e-05,
-            0.01,
-            0.1,
+            1e-5,
+            1e-2,
+            1e-1,
             1.0
         ]
     },
-    "models": {
+
+    "models":{
         "eddy_diffusion": {
             "coefficient": {
-                "calculation": "TKEB",
-                "value": 0.001,
+                "calculation": "EXPLICIT",
+                "value": 0.01,
                 "tkeb": {
                     "bound": "lower",
                     "total_air_flow_rate": 1.0,
@@ -95,35 +108,25 @@
             },
             "images": {
                 "mode": "auto",
-                "quantity": 3
+                "quantity": 10
             },
             "analysis": {
+                "perform_analysis": true,
                 "percentage_exceedance": 10.0,
                 "exclude_uncertain_values": true,
-                "perform_analysis": true,
                 "exclude_radius_meters": 2.0
             },
             "monitor_locations": {
                 "evaluate": {
                     "points": true,
-                    "lines": true,
-                    "planes": true,
-                    "domain": true
+                    "lines": false,
+                    "planes": false,
+                    "domain": false
                 },
                 "points": {
                     "point_1": {
                         "x": 10.0,
                         "y": 5.0,
-                        "z": 1.0
-                    },
-                    "point_2": {
-                        "x": 10.0,
-                        "y": 10.0,
-                        "z": 1.0
-                    },
-                    "point_3": {
-                        "x": 10.0,
-                        "y": 15.0,
                         "z": 1.0
                     }
                 },
@@ -132,23 +135,7 @@
                         "point": {
                             "x": 10.0,
                             "y": 5.0,
-                            "z": 1.0
-                        },
-                        "parallel_axis": "x"
-                    },
-                    "line_2": {
-                        "point": {
-                            "x": 10.0,
-                            "y": 10.0,
-                            "z": 1.0
-                        },
-                        "parallel_axis": "x"
-                    },
-                    "line_3": {
-                        "point": {
-                            "x": 10.0,
-                            "y": 15.0,
-                            "z": 1.0
+                            "z": 1.0 
                         },
                         "parallel_axis": "x"
                     }
@@ -160,25 +147,22 @@
                     }
                 },
                 "domain": {
-                    "domain": true
+                    "domain": true 
                 }
             },
             "points_plots": {
                 "time_axis_units": "s",
-                "output": true,
-                "scale": "logarithmic",
-                "number": 3
+                "output": false,
+                "scale": "logarithmic"
             },
             "lines_plots": {
-                "output": true,
+                "output": false,
                 "scale": "logarithmic",
                 "animate": true,
-                "number": 3
+                "number": 3 
             },
             "planes_plots": {
-                "output": true,
-                "concentration": true,
-                "exposure": true,
+                "output": false,
                 "animate": true,
                 "number": 10,
                 "number_of_contours": 10,
@@ -186,11 +170,9 @@
                 "scale": "logarithmic",
                 "contours": {
                     "min": 1e-10,
-                    "max": 1.5
+                    "max": 1.0
                 }
             }
         }
-    },
-    "compute_exposure": true,
-    "write_data_to_csv": true
+    }
 }
