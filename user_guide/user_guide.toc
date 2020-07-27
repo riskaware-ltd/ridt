@@ -1,4 +1,4 @@
-\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {1}Introduction}{4}{section.1}
 \contentsline {section}{\numberline {2}Installation}{4}{section.2}
 \contentsline {section}{\numberline {3}Basic Usage}{4}{section.3}
 \contentsline {section}{\numberline {4}The RIDT Configuration File}{6}{section.4}
@@ -7,143 +7,145 @@
 \contentsline {subsubsection}{\numberline {4.2.1}\texttt {ridt\_version}}{7}{subsubsection.4.2.1}
 \contentsline {subsubsection}{\numberline {4.2.2}\texttt {eddy\_diffusion}}{7}{subsubsection.4.2.2}
 \contentsline {subsubsection}{\numberline {4.2.3}\texttt {well\_mixed}}{7}{subsubsection.4.2.3}
-\contentsline {subsubsection}{\numberline {4.2.4}\texttt {compute\_exposure}}{7}{subsubsection.4.2.4}
+\contentsline {subsubsection}{\numberline {4.2.4}\texttt {compute\_exposure}}{8}{subsubsection.4.2.4}
 \contentsline {subsubsection}{\numberline {4.2.5}\texttt {write\_data\_to\_csv}}{8}{subsubsection.4.2.5}
 \contentsline {subsubsection}{\numberline {4.2.6}\texttt {integration\_method}}{8}{subsubsection.4.2.6}
 \contentsline {subsubsection}{\numberline {4.2.7}\texttt {concentration\_units}}{8}{subsubsection.4.2.7}
 \contentsline {subsubsection}{\numberline {4.2.8}\texttt {exposure\_units}}{8}{subsubsection.4.2.8}
-\contentsline {subsubsection}{\numberline {4.2.9}\texttt {mass\_units}}{8}{subsubsection.4.2.9}
+\contentsline {subsubsection}{\numberline {4.2.9}\texttt {mass\_units}}{9}{subsubsection.4.2.9}
 \contentsline {subsubsection}{\numberline {4.2.10}\texttt {time\_units}}{9}{subsubsection.4.2.10}
 \contentsline {subsubsection}{\numberline {4.2.11}\texttt {time\_samples}}{9}{subsubsection.4.2.11}
 \contentsline {subsubsection}{\numberline {4.2.12}\texttt {total\_time}}{9}{subsubsection.4.2.12}
 \contentsline {subsubsection}{\numberline {4.2.13}\texttt {spatial\_units}}{9}{subsubsection.4.2.13}
 \contentsline {subsubsection}{\numberline {4.2.14}\texttt {dimensions}}{9}{subsubsection.4.2.14}
-\contentsline {paragraph}{\numberline {4.2.14.1}\texttt {dimensions.x}}{9}{paragraph.4.2.14.1}
-\contentsline {paragraph}{\numberline {4.2.14.2}\texttt {dimensions.y}}{9}{paragraph.4.2.14.2}
+\contentsline {paragraph}{\numberline {4.2.14.1}\texttt {dimensions.x}}{10}{paragraph.4.2.14.1}
+\contentsline {paragraph}{\numberline {4.2.14.2}\texttt {dimensions.y}}{10}{paragraph.4.2.14.2}
 \contentsline {paragraph}{\numberline {4.2.14.3}\texttt {dimensions.z}}{10}{paragraph.4.2.14.3}
 \contentsline {subsubsection}{\numberline {4.2.15}\texttt {spatial\_samples}}{10}{subsubsection.4.2.15}
 \contentsline {paragraph}{\numberline {4.2.15.1}\texttt {spatial\_samples.x}}{10}{paragraph.4.2.15.1}
 \contentsline {paragraph}{\numberline {4.2.15.2}\texttt {spatial\_samples.y}}{10}{paragraph.4.2.15.2}
 \contentsline {paragraph}{\numberline {4.2.15.3}\texttt {spatial\_samples.z}}{10}{paragraph.4.2.15.3}
-\contentsline {subsubsection}{\numberline {4.2.16}\texttt {fresh\_air\_flow\_rate\_units}}{10}{subsubsection.4.2.16}
+\contentsline {subsubsection}{\numberline {4.2.16}\texttt {fresh\_air\_flow\_rate\_units}}{11}{subsubsection.4.2.16}
 \contentsline {subsubsection}{\numberline {4.2.17}\texttt {fresh\_air\_flow\_rate}}{11}{subsubsection.4.2.17}
 \contentsline {subsubsection}{\numberline {4.2.18}\texttt {physical\_properties}}{11}{subsubsection.4.2.18}
 \contentsline {paragraph}{\numberline {4.2.18.1}\texttt {agent\_molecular\_weight\_units}}{11}{paragraph.4.2.18.1}
 \contentsline {paragraph}{\numberline {4.2.18.2}\texttt {agent\_molecular\_weight}}{11}{paragraph.4.2.18.2}
 \contentsline {paragraph}{\numberline {4.2.18.3}\texttt {pressure\_units}}{11}{paragraph.4.2.18.3}
 \contentsline {paragraph}{\numberline {4.2.18.4}\texttt {pressure}}{11}{paragraph.4.2.18.4}
-\contentsline {paragraph}{\numberline {4.2.18.5}\texttt {temperature\_units}}{11}{paragraph.4.2.18.5}
+\contentsline {paragraph}{\numberline {4.2.18.5}\texttt {temperature\_units}}{12}{paragraph.4.2.18.5}
 \contentsline {paragraph}{\numberline {4.2.18.6}\texttt {temperature}}{12}{paragraph.4.2.18.6}
+\contentsline {paragraph}{\numberline {4.2.18.7}\texttt {air\_density\_units}}{12}{paragraph.4.2.18.7}
+\contentsline {paragraph}{\numberline {4.2.18.8}\texttt {air\_density}}{12}{paragraph.4.2.18.8}
 \contentsline {subsubsection}{\numberline {4.2.19}\texttt {modes}}{12}{subsubsection.4.2.19}
 \contentsline {subsubsection}{\numberline {4.2.20}\texttt {instantaneous}}{12}{subsubsection.4.2.20}
 \contentsline {paragraph}{\numberline {4.2.20.1}\texttt {instantaneous.sources}}{12}{paragraph.4.2.20.1}
-\contentsline {paragraph}{\numberline {4.2.20.2}\texttt {instantaneous.sources.source}}{12}{paragraph.4.2.20.2}
-\contentsline {paragraph}{\numberline {4.2.20.3}\texttt {instantaneous.sources.source.x}}{12}{paragraph.4.2.20.3}
-\contentsline {paragraph}{\numberline {4.2.20.4}\texttt {instantaneous.sources.source.y}}{12}{paragraph.4.2.20.4}
+\contentsline {paragraph}{\numberline {4.2.20.2}\texttt {instantaneous.sources.source}}{13}{paragraph.4.2.20.2}
+\contentsline {paragraph}{\numberline {4.2.20.3}\texttt {instantaneous.sources.source.x}}{13}{paragraph.4.2.20.3}
+\contentsline {paragraph}{\numberline {4.2.20.4}\texttt {instantaneous.sources.source.y}}{13}{paragraph.4.2.20.4}
 \contentsline {paragraph}{\numberline {4.2.20.5}\texttt {instantaneous.sources.source.z}}{13}{paragraph.4.2.20.5}
 \contentsline {paragraph}{\numberline {4.2.20.6}\texttt {instantaneous.sources.source.mass}}{13}{paragraph.4.2.20.6}
 \contentsline {paragraph}{\numberline {4.2.20.7}\texttt {instantaneous.sources.source.time}}{13}{paragraph.4.2.20.7}
 \contentsline {subsubsection}{\numberline {4.2.21}\texttt {fixed\_duration}}{13}{subsubsection.4.2.21}
-\contentsline {paragraph}{\numberline {4.2.21.1}\texttt {fixed\_duration.sources}}{13}{paragraph.4.2.21.1}
-\contentsline {paragraph}{\numberline {4.2.21.2}\texttt {fixed\_duration.sources.source}}{13}{paragraph.4.2.21.2}
-\contentsline {paragraph}{\numberline {4.2.21.3}\texttt {fixed\_duration.sources.source.x}}{13}{paragraph.4.2.21.3}
+\contentsline {paragraph}{\numberline {4.2.21.1}\texttt {fixed\_duration.sources}}{14}{paragraph.4.2.21.1}
+\contentsline {paragraph}{\numberline {4.2.21.2}\texttt {fixed\_duration.sources.source}}{14}{paragraph.4.2.21.2}
+\contentsline {paragraph}{\numberline {4.2.21.3}\texttt {fixed\_duration.sources.source.x}}{14}{paragraph.4.2.21.3}
 \contentsline {paragraph}{\numberline {4.2.21.4}\texttt {fixed\_duration.sources.source.y}}{14}{paragraph.4.2.21.4}
 \contentsline {paragraph}{\numberline {4.2.21.5}\texttt {fixed\_duration.sources.source.z}}{14}{paragraph.4.2.21.5}
 \contentsline {paragraph}{\numberline {4.2.21.6}\texttt {fixed\_duration.sources.source.rate}}{14}{paragraph.4.2.21.6}
-\contentsline {paragraph}{\numberline {4.2.21.7}\texttt {fixed\_duration.sources.source.time}}{14}{paragraph.4.2.21.7}
-\contentsline {subsubsection}{\numberline {4.2.22}\texttt {infinite\_duration}}{14}{subsubsection.4.2.22}
-\contentsline {paragraph}{\numberline {4.2.22.1}\texttt {infinite\_duration.sources}}{14}{paragraph.4.2.22.1}
-\contentsline {paragraph}{\numberline {4.2.22.2}\texttt {infinite\_duration.sources.source}}{14}{paragraph.4.2.22.2}
+\contentsline {paragraph}{\numberline {4.2.21.7}\texttt {fixed\_duration.sources.source.time}}{15}{paragraph.4.2.21.7}
+\contentsline {subsubsection}{\numberline {4.2.22}\texttt {infinite\_duration}}{15}{subsubsection.4.2.22}
+\contentsline {paragraph}{\numberline {4.2.22.1}\texttt {infinite\_duration.sources}}{15}{paragraph.4.2.22.1}
+\contentsline {paragraph}{\numberline {4.2.22.2}\texttt {infinite\_duration.sources.source}}{15}{paragraph.4.2.22.2}
 \contentsline {paragraph}{\numberline {4.2.22.3}\texttt {infinite\_duration.sources.source.x}}{15}{paragraph.4.2.22.3}
 \contentsline {paragraph}{\numberline {4.2.22.4}\texttt {infinite\_duration.sources.source.y}}{15}{paragraph.4.2.22.4}
 \contentsline {paragraph}{\numberline {4.2.22.5}\texttt {infinite\_duration.sources.source.z}}{15}{paragraph.4.2.22.5}
-\contentsline {paragraph}{\numberline {4.2.22.6}\texttt {infinite\_duration.sources.source.rate}}{15}{paragraph.4.2.22.6}
-\contentsline {paragraph}{\numberline {4.2.22.7}\texttt {infinite\_duration.sources.source.start\_time}}{15}{paragraph.4.2.22.7}
-\contentsline {paragraph}{\numberline {4.2.22.8}\texttt {infinite\_duration.sources.source.end\_time}}{15}{paragraph.4.2.22.8}
-\contentsline {subsubsection}{\numberline {4.2.23}\texttt {thresholds}}{15}{subsubsection.4.2.23}
+\contentsline {paragraph}{\numberline {4.2.22.6}\texttt {infinite\_duration.sources.source.rate}}{16}{paragraph.4.2.22.6}
+\contentsline {paragraph}{\numberline {4.2.22.7}\texttt {infinite\_duration.sources.source.start\_time}}{16}{paragraph.4.2.22.7}
+\contentsline {paragraph}{\numberline {4.2.22.8}\texttt {infinite\_duration.sources.source.end\_time}}{16}{paragraph.4.2.22.8}
+\contentsline {subsubsection}{\numberline {4.2.23}\texttt {thresholds}}{16}{subsubsection.4.2.23}
 \contentsline {paragraph}{\numberline {4.2.23.1}\texttt {thresholds.concentration}}{16}{paragraph.4.2.23.1}
 \contentsline {paragraph}{\numberline {4.2.23.2}\texttt {thresholds.exposure}}{16}{paragraph.4.2.23.2}
-\contentsline {subsubsection}{\numberline {4.2.24}\texttt {models}}{16}{subsubsection.4.2.24}
-\contentsline {subsubsection}{\numberline {4.2.25}\texttt {models.eddy\_diffusion}}{16}{subsubsection.4.2.25}
-\contentsline {subsubsection}{\numberline {4.2.26}\texttt {models.eddy\_diffusion.coefficient}}{16}{subsubsection.4.2.26}
-\contentsline {paragraph}{\numberline {4.2.26.1}\texttt {coefficient.calculation}}{16}{paragraph.4.2.26.1}
+\contentsline {subsubsection}{\numberline {4.2.24}\texttt {models}}{17}{subsubsection.4.2.24}
+\contentsline {subsubsection}{\numberline {4.2.25}\texttt {models.eddy\_diffusion}}{17}{subsubsection.4.2.25}
+\contentsline {subsubsection}{\numberline {4.2.26}\texttt {models.eddy\_diffusion.coefficient}}{17}{subsubsection.4.2.26}
+\contentsline {paragraph}{\numberline {4.2.26.1}\texttt {coefficient.calculation}}{17}{paragraph.4.2.26.1}
 \contentsline {paragraph}{\numberline {4.2.26.2}\texttt {coefficient.value}}{17}{paragraph.4.2.26.2}
 \contentsline {subsubsection}{\numberline {4.2.27}\texttt {coefficient.tkeb}}{17}{subsubsection.4.2.27}
 \contentsline {paragraph}{\numberline {4.2.27.1}\texttt {coefficient.tkeb.bound}}{17}{paragraph.4.2.27.1}
-\contentsline {paragraph}{\numberline {4.2.27.2}\texttt {coefficient.tkeb.total\_air\_flow\_rate}}{17}{paragraph.4.2.27.2}
-\contentsline {paragraph}{\numberline {4.2.27.3}\texttt {coefficient.tkeb.number\_of\_supply\_vents}}{17}{paragraph.4.2.27.3}
-\contentsline {subsubsection}{\numberline {4.2.28}\texttt {models.eddy\_diffusion.images}}{17}{subsubsection.4.2.28}
-\contentsline {paragraph}{\numberline {4.2.28.1}\texttt {images.mode}}{17}{paragraph.4.2.28.1}
+\contentsline {paragraph}{\numberline {4.2.27.2}\texttt {coefficient.tkeb.total\_air\_flow\_rate}}{18}{paragraph.4.2.27.2}
+\contentsline {paragraph}{\numberline {4.2.27.3}\texttt {coefficient.tkeb.number\_of\_supply\_vents}}{18}{paragraph.4.2.27.3}
+\contentsline {subsubsection}{\numberline {4.2.28}\texttt {models.eddy\_diffusion.images}}{18}{subsubsection.4.2.28}
+\contentsline {paragraph}{\numberline {4.2.28.1}\texttt {images.mode}}{18}{paragraph.4.2.28.1}
 \contentsline {paragraph}{\numberline {4.2.28.2}\texttt {images.quantity}}{18}{paragraph.4.2.28.2}
 \contentsline {subsubsection}{\numberline {4.2.29}\texttt {models.eddy\_diffusion.analysis}}{18}{subsubsection.4.2.29}
 \contentsline {paragraph}{\numberline {4.2.29.1}\texttt {analysis.perform\_analysis}}{18}{paragraph.4.2.29.1}
-\contentsline {paragraph}{\numberline {4.2.29.2}\texttt {analysis.percentage\_exceedance}}{18}{paragraph.4.2.29.2}
-\contentsline {paragraph}{\numberline {4.2.29.3}\texttt {analysis.exclude\_uncertain\_values}}{18}{paragraph.4.2.29.3}
-\contentsline {paragraph}{\numberline {4.2.29.4}\texttt {analysis.exclude\_radius\_meters}}{18}{paragraph.4.2.29.4}
-\contentsline {subsubsection}{\numberline {4.2.30}\texttt {models.eddy\_diffusion.monitor\_locations}}{18}{subsubsection.4.2.30}
-\contentsline {subsubsection}{\numberline {4.2.31}\texttt {monitor\_locations.evaluate}}{18}{subsubsection.4.2.31}
+\contentsline {paragraph}{\numberline {4.2.29.2}\texttt {analysis.percentage\_exceedance}}{19}{paragraph.4.2.29.2}
+\contentsline {paragraph}{\numberline {4.2.29.3}\texttt {analysis.exclude\_uncertain\_values}}{19}{paragraph.4.2.29.3}
+\contentsline {paragraph}{\numberline {4.2.29.4}\texttt {analysis.exclude\_radius\_meters}}{19}{paragraph.4.2.29.4}
+\contentsline {subsubsection}{\numberline {4.2.30}\texttt {models.eddy\_diffusion.monitor\_locations}}{19}{subsubsection.4.2.30}
+\contentsline {subsubsection}{\numberline {4.2.31}\texttt {monitor\_locations.evaluate}}{19}{subsubsection.4.2.31}
 \contentsline {paragraph}{\numberline {4.2.31.1}\texttt {monitor\_locations.evaluate.points}}{19}{paragraph.4.2.31.1}
 \contentsline {paragraph}{\numberline {4.2.31.2}\texttt {monitor\_locations.evaluate.lines}}{19}{paragraph.4.2.31.2}
-\contentsline {paragraph}{\numberline {4.2.31.3}\texttt {monitor\_locations.evaluate.planes}}{19}{paragraph.4.2.31.3}
-\contentsline {paragraph}{\numberline {4.2.31.4}\texttt {monitor\_locations.evaluate.domain}}{19}{paragraph.4.2.31.4}
-\contentsline {subsubsection}{\numberline {4.2.32}\texttt {monitor\_locations.points}}{19}{subsubsection.4.2.32}
-\contentsline {subsubsection}{\numberline {4.2.33}\texttt {monitor\_locations.points.point}}{19}{subsubsection.4.2.33}
+\contentsline {paragraph}{\numberline {4.2.31.3}\texttt {monitor\_locations.evaluate.planes}}{20}{paragraph.4.2.31.3}
+\contentsline {paragraph}{\numberline {4.2.31.4}\texttt {monitor\_locations.evaluate.domain}}{20}{paragraph.4.2.31.4}
+\contentsline {subsubsection}{\numberline {4.2.32}\texttt {monitor\_locations.points}}{20}{subsubsection.4.2.32}
+\contentsline {subsubsection}{\numberline {4.2.33}\texttt {monitor\_locations.points.point}}{20}{subsubsection.4.2.33}
 \contentsline {paragraph}{\numberline {4.2.33.1}\texttt {monitor\_locations.points.point.x}}{20}{paragraph.4.2.33.1}
 \contentsline {paragraph}{\numberline {4.2.33.2}\texttt {monitor\_locations.points.point.y}}{20}{paragraph.4.2.33.2}
-\contentsline {paragraph}{\numberline {4.2.33.3}\texttt {monitor\_locations.points.point.z}}{20}{paragraph.4.2.33.3}
-\contentsline {subsubsection}{\numberline {4.2.34}\texttt {monitor\_locations.lines}}{20}{subsubsection.4.2.34}
-\contentsline {subsubsection}{\numberline {4.2.35}\texttt {monitor\_locations.lines.line}}{20}{subsubsection.4.2.35}
-\contentsline {subsubsection}{\numberline {4.2.36}\texttt {monitor\_locations.lines.line.point}}{20}{subsubsection.4.2.36}
-\contentsline {paragraph}{\numberline {4.2.36.1}\texttt {monitor\_locations.lines.line.point.x}}{20}{paragraph.4.2.36.1}
+\contentsline {paragraph}{\numberline {4.2.33.3}\texttt {monitor\_locations.points.point.z}}{21}{paragraph.4.2.33.3}
+\contentsline {subsubsection}{\numberline {4.2.34}\texttt {monitor\_locations.lines}}{21}{subsubsection.4.2.34}
+\contentsline {subsubsection}{\numberline {4.2.35}\texttt {monitor\_locations.lines.line}}{21}{subsubsection.4.2.35}
+\contentsline {subsubsection}{\numberline {4.2.36}\texttt {monitor\_locations.lines.line.point}}{21}{subsubsection.4.2.36}
+\contentsline {paragraph}{\numberline {4.2.36.1}\texttt {monitor\_locations.lines.line.point.x}}{21}{paragraph.4.2.36.1}
 \contentsline {paragraph}{\numberline {4.2.36.2}\texttt {monitor\_locations.lines.line.point.y}}{21}{paragraph.4.2.36.2}
-\contentsline {paragraph}{\numberline {4.2.36.3}\texttt {monitor\_locations.lines.line.point.z}}{21}{paragraph.4.2.36.3}
-\contentsline {paragraph}{\numberline {4.2.36.4}\texttt {monitor\_locations.lines.line.parallel\_axis}}{21}{paragraph.4.2.36.4}
-\contentsline {subsubsection}{\numberline {4.2.37}\texttt {monitor\_locations.planes}}{21}{subsubsection.4.2.37}
-\contentsline {subsubsection}{\numberline {4.2.38}\texttt {monitor\_locations.planes.plane}}{21}{subsubsection.4.2.38}
-\contentsline {paragraph}{\numberline {4.2.38.1}\texttt {monitor\_locations.planes.plane.axis}}{21}{paragraph.4.2.38.1}
+\contentsline {paragraph}{\numberline {4.2.36.3}\texttt {monitor\_locations.lines.line.point.z}}{22}{paragraph.4.2.36.3}
+\contentsline {paragraph}{\numberline {4.2.36.4}\texttt {monitor\_locations.lines.line.parallel\_axis}}{22}{paragraph.4.2.36.4}
+\contentsline {subsubsection}{\numberline {4.2.37}\texttt {monitor\_locations.planes}}{22}{subsubsection.4.2.37}
+\contentsline {subsubsection}{\numberline {4.2.38}\texttt {monitor\_locations.planes.plane}}{22}{subsubsection.4.2.38}
+\contentsline {paragraph}{\numberline {4.2.38.1}\texttt {monitor\_locations.planes.plane.axis}}{22}{paragraph.4.2.38.1}
 \contentsline {paragraph}{\numberline {4.2.38.2}\texttt {monitor\_locations.planes.plane.distance}}{22}{paragraph.4.2.38.2}
-\contentsline {subsubsection}{\numberline {4.2.39}\texttt {monitor\_locations.domain}}{22}{subsubsection.4.2.39}
-\contentsline {subsubsection}{\numberline {4.2.40}\texttt {monitor\_locations.domain.domain}}{22}{subsubsection.4.2.40}
-\contentsline {paragraph}{\numberline {4.2.40.1}\texttt {monitor\_locations.domain.domain.domain}}{22}{paragraph.4.2.40.1}
-\contentsline {subsubsection}{\numberline {4.2.41}\texttt {models.eddy\_diffusion.points\_plots}}{22}{subsubsection.4.2.41}
-\contentsline {paragraph}{\numberline {4.2.41.1}\texttt {points\_plots.output}}{22}{paragraph.4.2.41.1}
+\contentsline {subsubsection}{\numberline {4.2.39}\texttt {monitor\_locations.domain}}{23}{subsubsection.4.2.39}
+\contentsline {subsubsection}{\numberline {4.2.40}\texttt {monitor\_locations.domain.domain}}{23}{subsubsection.4.2.40}
+\contentsline {paragraph}{\numberline {4.2.40.1}\texttt {monitor\_locations.domain.domain.domain}}{23}{paragraph.4.2.40.1}
+\contentsline {subsubsection}{\numberline {4.2.41}\texttt {models.eddy\_diffusion.points\_plots}}{23}{subsubsection.4.2.41}
+\contentsline {paragraph}{\numberline {4.2.41.1}\texttt {points\_plots.output}}{23}{paragraph.4.2.41.1}
 \contentsline {paragraph}{\numberline {4.2.41.2}\texttt {points\_plots.scale}}{23}{paragraph.4.2.41.2}
-\contentsline {paragraph}{\numberline {4.2.41.3}\texttt {points\_plots.time\_axis\_units}}{23}{paragraph.4.2.41.3}
-\contentsline {subsubsection}{\numberline {4.2.42}\texttt {models.eddy\_diffusion.lines\_plots}}{23}{subsubsection.4.2.42}
-\contentsline {paragraph}{\numberline {4.2.42.1}\texttt {lines\_plots.output}}{23}{paragraph.4.2.42.1}
-\contentsline {paragraph}{\numberline {4.2.42.2}\texttt {lines\_plots.scale}}{23}{paragraph.4.2.42.2}
-\contentsline {paragraph}{\numberline {4.2.42.3}\texttt {lines\_plots.animate}}{23}{paragraph.4.2.42.3}
-\contentsline {paragraph}{\numberline {4.2.42.4}\texttt {lines\_plots.number}}{23}{paragraph.4.2.42.4}
+\contentsline {paragraph}{\numberline {4.2.41.3}\texttt {points\_plots.time\_axis\_units}}{24}{paragraph.4.2.41.3}
+\contentsline {subsubsection}{\numberline {4.2.42}\texttt {models.eddy\_diffusion.lines\_plots}}{24}{subsubsection.4.2.42}
+\contentsline {paragraph}{\numberline {4.2.42.1}\texttt {lines\_plots.output}}{24}{paragraph.4.2.42.1}
+\contentsline {paragraph}{\numberline {4.2.42.2}\texttt {lines\_plots.scale}}{24}{paragraph.4.2.42.2}
+\contentsline {paragraph}{\numberline {4.2.42.3}\texttt {lines\_plots.animate}}{24}{paragraph.4.2.42.3}
+\contentsline {paragraph}{\numberline {4.2.42.4}\texttt {lines\_plots.number}}{24}{paragraph.4.2.42.4}
 \contentsline {subsubsection}{\numberline {4.2.43}\texttt {models.eddy\_diffusion.planes\_plots}}{24}{subsubsection.4.2.43}
-\contentsline {paragraph}{\numberline {4.2.43.1}\texttt {planes\_plots.output}}{24}{paragraph.4.2.43.1}
-\contentsline {paragraph}{\numberline {4.2.43.2}\texttt {planes\_plots.scale}}{24}{paragraph.4.2.43.2}
-\contentsline {paragraph}{\numberline {4.2.43.3}\texttt {planes\_plots.animate}}{24}{paragraph.4.2.43.3}
-\contentsline {paragraph}{\numberline {4.2.43.4}\texttt {planes\_plots.number}}{24}{paragraph.4.2.43.4}
-\contentsline {paragraph}{\numberline {4.2.43.5}\texttt {planes\_plots.range}}{24}{paragraph.4.2.43.5}
-\contentsline {paragraph}{\numberline {4.2.43.6}\texttt {planes\_plots.number\_of\_contours}}{24}{paragraph.4.2.43.6}
-\contentsline {paragraph}{\numberline {4.2.43.7}\texttt {planes\_plots.contours}}{25}{paragraph.4.2.43.7}
-\contentsline {subparagraph}{\numberline {4.2.43.7.1}\texttt {planes\_plots.contours.min}}{25}{subparagraph.4.2.43.7.1}
-\contentsline {subparagraph}{\numberline {4.2.43.7.2}\texttt {planes\_plots.contours.max}}{25}{subparagraph.4.2.43.7.2}
-\contentsline {section}{\numberline {5}Batch Mode}{25}{section.5}
-\contentsline {section}{\numberline {6}\texttt {csv-to-config}}{27}{section.6}
-\contentsline {section}{\numberline {7}Run Analysis}{30}{section.7}
-\contentsline {subsection}{\numberline {7.1}Maximum Values}{30}{subsection.7.1}
-\contentsline {subsection}{\numberline {7.2}Time to Threshold Values}{30}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Time for Percent of Domain to Threshold Values}{31}{subsection.7.3}
-\contentsline {subsection}{\numberline {7.4}Maximum Percent of Domain to Exceed Threshold Values}{31}{subsection.7.4}
-\contentsline {subsection}{\numberline {7.5}Extrema}{31}{subsection.7.5}
-\contentsline {subsection}{\numberline {7.6}Batch Run Analysis}{31}{subsection.7.6}
-\contentsline {section}{\numberline {A}The Full Default Configuration File}{31}{appendix.A}
-\contentsline {section}{\numberline {B}The Well Mixed Model}{34}{appendix.B}
-\contentsline {subsection}{\numberline {B.1}Instantaneous release}{34}{subsection.B.1}
-\contentsline {subsection}{\numberline {B.2}Constant and continuous release}{34}{subsection.B.2}
-\contentsline {subsection}{\numberline {B.3}Constant release rate with finite duration}{35}{subsection.B.3}
-\contentsline {section}{\numberline {C}Eddy Diffusion Model}{35}{appendix.C}
-\contentsline {subsection}{\numberline {C.1}Instantaneous release}{35}{subsection.C.1}
-\contentsline {subsection}{\numberline {C.2}Constant and continuous release}{35}{subsection.C.2}
-\contentsline {subsection}{\numberline {C.3}Constant release rate with finite duration}{35}{subsection.C.3}
-\contentsline {section}{\numberline {D}Equations to calculate the eddy diffusion coefficient}{35}{appendix.D}
-\contentsline {section}{\numberline {E}Time to Well Mixed}{36}{appendix.E}
-\contentsline {section}{\numberline {F}Upper Exposure Limit}{36}{appendix.F}
-\contentsline {section}{\numberline {G}Steady State Well Mixed Concentration}{36}{appendix.G}
-\contentsline {section}{\numberline {H}Characteristic Diffusion Time}{36}{appendix.H}
+\contentsline {paragraph}{\numberline {4.2.43.1}\texttt {planes\_plots.output}}{25}{paragraph.4.2.43.1}
+\contentsline {paragraph}{\numberline {4.2.43.2}\texttt {planes\_plots.scale}}{25}{paragraph.4.2.43.2}
+\contentsline {paragraph}{\numberline {4.2.43.3}\texttt {planes\_plots.animate}}{25}{paragraph.4.2.43.3}
+\contentsline {paragraph}{\numberline {4.2.43.4}\texttt {planes\_plots.number}}{25}{paragraph.4.2.43.4}
+\contentsline {paragraph}{\numberline {4.2.43.5}\texttt {planes\_plots.range}}{25}{paragraph.4.2.43.5}
+\contentsline {paragraph}{\numberline {4.2.43.6}\texttt {planes\_plots.number\_of\_contours}}{25}{paragraph.4.2.43.6}
+\contentsline {paragraph}{\numberline {4.2.43.7}\texttt {planes\_plots.contours}}{26}{paragraph.4.2.43.7}
+\contentsline {subparagraph}{\numberline {4.2.43.7.1}\texttt {planes\_plots.contours.min}}{26}{subparagraph.4.2.43.7.1}
+\contentsline {subparagraph}{\numberline {4.2.43.7.2}\texttt {planes\_plots.contours.max}}{26}{subparagraph.4.2.43.7.2}
+\contentsline {section}{\numberline {5}Batch Mode}{26}{section.5}
+\contentsline {section}{\numberline {6}\texttt {csv-to-config}}{28}{section.6}
+\contentsline {section}{\numberline {7}Run Analysis}{31}{section.7}
+\contentsline {subsection}{\numberline {7.1}Maximum Values}{31}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Time to Threshold Values}{31}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Time for Percent of Domain to Threshold Values}{32}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Maximum Percent of Domain to Exceed Threshold Values}{32}{subsection.7.4}
+\contentsline {subsection}{\numberline {7.5}Extrema}{32}{subsection.7.5}
+\contentsline {subsection}{\numberline {7.6}Batch Run Analysis}{32}{subsection.7.6}
+\contentsline {section}{\numberline {A}The Full Default Configuration File}{32}{appendix.A}
+\contentsline {section}{\numberline {B}The Well Mixed Model}{35}{appendix.B}
+\contentsline {subsection}{\numberline {B.1}Instantaneous release}{35}{subsection.B.1}
+\contentsline {subsection}{\numberline {B.2}Constant and continuous release}{35}{subsection.B.2}
+\contentsline {subsection}{\numberline {B.3}Constant release rate with finite duration}{36}{subsection.B.3}
+\contentsline {section}{\numberline {C}Eddy Diffusion Model}{36}{appendix.C}
+\contentsline {subsection}{\numberline {C.1}Instantaneous release}{36}{subsection.C.1}
+\contentsline {subsection}{\numberline {C.2}Constant and continuous release}{36}{subsection.C.2}
+\contentsline {subsection}{\numberline {C.3}Constant release rate with finite duration}{36}{subsection.C.3}
+\contentsline {section}{\numberline {D}Equations to calculate the eddy diffusion coefficient}{36}{appendix.D}
+\contentsline {section}{\numberline {E}Time to Well Mixed}{37}{appendix.E}
+\contentsline {section}{\numberline {F}Upper Exposure Limit}{37}{appendix.F}
+\contentsline {section}{\numberline {G}Steady State Well Mixed Concentration}{37}{appendix.G}
+\contentsline {section}{\numberline {H}Characteristic Diffusion Time}{37}{appendix.H}

@@ -45,7 +45,9 @@
         "pressure_units": "Pa",
         "pressure": 1.0,
         "temperature_units": "K",
-        "temperature": 273.0
+        "temperature": 273.0,
+        "air_density_units": "kg.m-3",
+        "air_density": 1.292
     },
     "thresholds": {
         "concentration": [

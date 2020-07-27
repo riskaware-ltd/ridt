@@ -347,6 +347,12 @@ class PhysicalProperties(Settings):
 
     temperature: :class:`~.Temperature`
         The temperature of the atmosphere.
+    
+    air_density_units: :class:`~.AirDensityUnits`
+        The air density units
+    
+    air_density: :class:`~.AirDensity`
+        The air density.
 
     """
     @Settings.assign
@@ -360,11 +366,13 @@ class PhysicalProperties(Settings):
 
         """
         self.agent_molecular_weight_units = AgentMolecularWeightUnits
-        self.agent_molecular_weight = NonNegativeFloat 
+        self.agent_molecular_weight = PositiveFloat 
         self.pressure_units = PressureUnits
-        self.pressure = NonNegativeFloat
+        self.pressure = PositiveFloat 
         self.temperature_units = TemperatureUnits
-        self.temperature = NonNegativeFloat
+        self.temperature = PositiveFloat
+        self.air_density_units = AirDensityUnits
+        self.air_density = PositiveFloat 
 
 
 class AgentMolecularWeightUnits(StringSelection):
@@ -474,6 +482,33 @@ class TemperatureUnits(StringSelection):
     
     def check(self):
         pass
+
+class AirDensityUnits(StringSelection):
+    """The air density units selection class.
+
+    Attributes
+    ----------
+    options : :obj:`list` [:obj:`str`]
+        The list of allowed options.
+
+    """
+    @Terminus.assign
+    def __init__(self, value: str):
+        """The AirDensityUnits class initialiser.
+
+        Parameters
+        ----------
+        value : :obj:`str`
+            The chosen value.
+
+        """
+        self.options = [
+            "kg.m-3"
+        ]
+    
+    def check(self):
+        pass
+
 
 
 class FreshAirFlowRate(Number):

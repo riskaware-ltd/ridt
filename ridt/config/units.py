@@ -64,6 +64,7 @@ class Units:
         self.temperature = setting.physical_properties.temperature
         self.pressure = setting.physical_properties.pressure
         self.molecular_weight = setting.physical_properties.agent_molecular_weight
+        self.air_density = setting.physical_properties.air_density
         self.nmol = self.pressure / (self.temperature * R)
 
     @property
@@ -88,7 +89,7 @@ class Units:
         if self.concentration == "kg.m-3":
             return 1.0
         elif self.concentration == "kg.kg-1":
-            return 1 / D
+            return 1 * self.air_density
         elif self.concentration == "mg.m-3":
             return 1e-6
         elif self.concentration == "ppm":

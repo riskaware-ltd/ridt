@@ -468,7 +468,7 @@ of the above selections.\\
 \noindent The conversion from ppm, ppb, and ppt to kg.m-3 are given by
 \begin{equation}
     \left[\text{kg.m-3}\right] = \left[\text{ppx}\right]\frac{\left(\text{molecular weight}\right)
-    \times \left(\text{pressure}\right)}{\left(\text{temperature}\right) \times \left(\text{factor}\right)}
+    \times \left(\text{pressure}\right)}{\left(\text{temperature}\right) \times \left(\text{universal gas constant}\right) \times \left(\text{factor}\right)}
 \end{equation}
 
 \noindent where $\text{factor} \in \left\{10^{6}, 10^{9}, 10^{12}\right\}$.
@@ -716,7 +716,7 @@ This float determines the value of agent molecular weight.
     \item[$\diamond$] type: string 
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] "mol.m-3"
+        \item[$\rightarrow$] "Pa"
     \end{itemize}
 \end{itemize}
 This string determines the units in which the program ingests and outputs the
@@ -739,7 +739,7 @@ This float determines the value of the pressure of the atmosphere.
     \item[$\diamond$] type: string 
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] "mol.m-3"
+        \item[$\rightarrow$] "K"
     \end{itemize}
 \end{itemize}
 This string determines the units in which the program ingests and outputs the
@@ -756,6 +756,29 @@ selections. [Note: more options might be available in later versions.]
     \end{itemize}
 \end{itemize}
 This float determines the value of the temperature of the atmosphere.
+
+\paragraph{\code{air\_density\_units}}\label{sec:air_densityunits}
+\begin{itemize}
+    \item[$\diamond$] type: string 
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] "K"
+    \end{itemize}
+\end{itemize}
+This string determines the units in which the program ingests and outputs the
+air density. During the execution of RIDT all calculations are done using SI units,
+however it can ingest and output air density values using any of the above
+selections. [Note: more options might be available in later versions.]
+
+\paragraph{\code{air\_density}}\label{sec:air_density}
+\begin{itemize}
+    \item[$\diamond$] type: float 
+    \item[$\diamond$] allowed values:
+    \begin{itemize}
+        \item[$\rightarrow$] $>0.0$ 
+    \end{itemize}
+\end{itemize}
+This float determines the value of the air density of the atmosphere.
 
 \subsubsection{\code{modes}}
 \begin{itemize}
