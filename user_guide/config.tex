@@ -1,6 +1,6 @@
 \begin{lstlisting}[language=json,firstnumber=1]
-
 {
+    "ridt_version": "v1.0",
     "eddy_diffusion": true,
     "well_mixed": true,
     "compute_exposure": true,
@@ -32,12 +32,14 @@
     "fresh_air_flow_rate": 5.0,
 
     "physical_properties": {
-        "agent_molecular_weight_units": "mol.m-3",
+        "agent_molecular_weight_units": "kg.mol-1",
         "agent_molecular_weight": 1.0,
         "pressure_units": "Pa",
         "pressure": 1.0,
         "temperature_units": "K",
-        "temperature": 273.0
+        "temperature": 273.0,
+        "air_density_units": "kg.m-3",
+        "air_density": 1.292
     },
 
     "modes": {
@@ -114,7 +116,8 @@
             "analysis": {
                 "perform_analysis": true,
                 "percentage_exceedance": 10.0,
-                "exclude_uncertain_values": true 
+                "exclude_uncertain_values": true,
+                "exclude_radius_meters": 2.0
             },
             "monitor_locations": {
                 "evaluate": {
@@ -170,7 +173,7 @@
                 "scale": "logarithmic",
                 "contours": {
                     "min": 1e-10,
-                    "max": 1.5
+                    "max": 1.0
                 }
             }
         }
