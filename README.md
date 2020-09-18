@@ -1,6 +1,6 @@
 # ridt
 
-RIDT (rapid indoor diffusion tool) is a Python implementation of two different
+RIDT (rapid indoor dispersion tool) is a Python implementation of two different
 analytical dispersion models, Eddy Diffusion and Well Mixed. It allows the
 calculation of concentrations and exposures based on an arbitrary set of
 instantaneous, infinite duration, and fixed duration source terms in a cuboid
