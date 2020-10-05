@@ -10,6 +10,8 @@ from ridt.config import RIDTConfig
 
 import numpy as np
 
+FloatList = List[float]
+
 
 class WellMixed:
     """The core Well Mixed model class.
@@ -56,7 +58,7 @@ class WellMixed:
         self.shape = (self.settings.time_samples,)
         self.conc = zeros(self.shape)
 
-    def __call__(self, t: List[float]):
+    def __call__(self, t: FloatList):
         """This call method is used to evaluate the model.
 
         t : :obj:`List`[:obj:`float`]

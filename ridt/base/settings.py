@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import builtins
 import operator
 import itertools
@@ -11,6 +9,7 @@ from collections.abc import Iterable
 from typing import Union
 from typing import TypeVar
 from typing import Type
+from typing import Dict 
 from typing import List
 
 from abc import ABC
@@ -36,6 +35,9 @@ warnings.formatwarning = custom_formatwarning
 
 
 T = TypeVar("T")
+
+StringDict = Dict[str, str]
+StringList = List[str]
 
 
 class Settings:
@@ -962,7 +964,7 @@ class ComputationalSpace:
     
     """
 
-    def __init__(self, setting: Type[Settings], restrict: Dict[str, str]):
+    def __init__(self, setting: Type[Settings], restrict: StringDict):
         """The constructor for the :class:`ComputationalSpace` class.
 
         Parameters
@@ -988,7 +990,7 @@ class ComputationalSpace:
         self.explore(self.setting, list())
         self.build_space()
 
-    def get_by_address(self, root: dict, address: List[str]):
+    def get_by_address(self, root: dict, address: StringList):
         return reduce(operator.getitem, address, root)
 
     def set_by_address(self, root: dict, address, value):
@@ -1094,7 +1096,7 @@ class ComputationalSpace:
         for item, space in zip(self.addresses, self.values):
             print(self.build_path(item), space)
 
-    def build_path(self, elements: List[str]):
+    def build_path(self, elements: StringList):
         rv = ""
         for item in elements:
             rv += f"{item} -> "
@@ -1178,7 +1180,7 @@ class SettingStringSelectionError(Error):
     passed an invalid value.
 
     """
-    def __init__(self, allowed: List[str]):
+    def __init__(self, allowed: StringList):
         """The constructor for the :class:`SettingRangeTypeError` class.
 
         """
@@ -1241,7 +1243,7 @@ class SettingErrorMessage(Error):
     """
     def __init__(self,
                  current_name: str,
-                 branch_error: SettingErrorMessage = None,
+                 branch_error = None,
                  original_error: Union[SettingCheckError, SettingTypeError] = None):
         """The constructor for the :class::`SettingTypeError` class.
 

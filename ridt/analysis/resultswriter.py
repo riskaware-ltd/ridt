@@ -24,6 +24,8 @@ from .datastoreanalyser import DataStoreAnalyser
 
 from .resultcontainers import ResultContainer
 
+StringList = List[str]
+
 
 class ResultsWriter:
     """The Results Writer class.
@@ -113,7 +115,7 @@ class ResultsWriter:
         tld = [t.value for t in getattr(self.setting.thresholds, self.quantity)]
         return getattr(self.units, f"{self.quantity}_converter")(tld)
 
-    def write(self, file_path: str, header: List[str], lines: Iterable) -> None:
+    def write(self, file_path: str, header: StringList, lines: Iterable) -> None:
         """Write array of values to csv file.
 
         Parameters

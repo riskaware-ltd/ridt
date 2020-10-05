@@ -36,6 +36,7 @@ numpy.seterr(invalid='ignore')
 
 Source = Union[InstantaneousSource, InfiniteDurationSource, FixedDurationSource]
 Value = Union[ndarray, float]
+FloatList = List[float]
 
 MAX_IMAGE = 20
 
@@ -114,7 +115,7 @@ class EddyDiffusion:
         self.diff_coeff = self.diffusion_coefficient()
         self.modes = ["instantaneous", "infinite_duration", "fixed_duration"]
 
-    def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: List[float]):
+    def __call__(self, x: ndarray, y: ndarray,  z: ndarray, t: FloatList):
         """This call method is used to evaluate the model.
 
         Parameters
@@ -151,7 +152,7 @@ class EddyDiffusion:
 
         return self.rv
     
-    def assign_grids(self, x: ndarray, y: ndarray,  z: ndarray, t: List[float]) -> None:
+    def assign_grids(self, x: ndarray, y: ndarray,  z: ndarray, t: FloatList) -> None:
         """Assign the meshgrids to the relevant attributes.
 
         Parameters
