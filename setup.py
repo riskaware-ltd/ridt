@@ -20,7 +20,7 @@ setup(
     ],
     install_requires=[
         'click',
-        'numpy',
+        'numpy==1.19.3',
         'scipy',
         'matplotlib',
         'tqdm'
