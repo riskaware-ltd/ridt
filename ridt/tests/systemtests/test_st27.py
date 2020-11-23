@@ -19,10 +19,10 @@ class ST27(unittest.TestCase):
        via a command line interface."""
 
     def setUp(self) -> None:
-        self.config_path = "tests\systemtests\st27\config.json"
-        self.csv_path = "tests\systemtests\st27\csv_to_config.csv"
+        self.config_path = "tests\\systemtests\\st27\\config.json"
+        self.csv_path = "tests\\systemtests\\st27\\csv_to_config.csv"
 
-        self.output_dir = "tests\systemtests\st27\data"
+        self.output_dir = "tests\\systemtests\\st27\\data"
         self.virtualenv_path = ".venv"
 
     def tearDown(self) -> None:
@@ -44,7 +44,7 @@ class ST27(unittest.TestCase):
 
     def test_run(self):
         try:
-            system(f"{self.virtualenv_path}\Scripts\\activate")
+            system(f"{self.virtualenv_path}\\Scripts\\activate")
             system(f"ridt run {self.config_path} {self.output_dir}")
 
             output = False
@@ -65,7 +65,7 @@ class ST27(unittest.TestCase):
             inf = {"x": 1.0, "y": 1.0, "z": 1.0, "rate": 1.0, "time": 1.0}
             fix = {"x": 1.0, "y": 1.0, "z": 1.0, "rate": 1.0, "start_time": 1.0, "end_time": 2.0}
 
-            system(f"{self.virtualenv_path}\Scripts\\activate")
+            system(f"{self.virtualenv_path}\\Scripts\\activate")
             system(f"ridt csv-to-config {self.config_path} {self.csv_path}")
 
             config = ConfigFileParser("tests/systemtests/st27/new_config.json")

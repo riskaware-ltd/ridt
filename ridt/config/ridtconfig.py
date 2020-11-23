@@ -6,6 +6,8 @@ from ridt.base import Number
 from ridt.base import StringSelection
 from ridt.base import ConsistencyError
 
+from numpy import min
+
 import warnings
 
 
@@ -164,7 +166,7 @@ class RIDTConfig(Settings):
                 dim = self.dimensions
                 for axis in ["x", "y", "z"]:
                     par = getattr(value, axis)
-                    bound = getattr(dim, axis)
+                    bound = min(getattr(dim, axis))
                     if isinstance(par, list):
                         for item in par:
                             if item < 0 or item > bound:
@@ -220,22 +222,22 @@ class RIDTConfig(Settings):
         for plane in self.models.eddy_diffusion.monitor_locations.planes.values():
             dim = [axis for axis in dims if axis not in str(plane.axis)][0]
             if isinstance(plane.distance, list):
-                if max(plane.distance) > getattr(self.dimensions, dim):
+                if max(plane.distance) > min(getattr(self.dimensions, dim)):
                     raise ConsistencyError(f"{plane} is outside the space domain")
             else:
-                if plane.distance > getattr(self.dimensions, dim):
+                if plane.distance > min(getattr(self.dimensions, dim)):
                     raise ConsistencyError(f"{plane} is outside the space domain")
 
         for key, point in self.models.eddy_diffusion.monitor_locations.points.items():
             for dim in dims:
-                if getattr(point, dim) > getattr(self.dimensions, dim):
+                if getattr(point, dim) > min(getattr(self.dimensions, dim)):
                     raise ConsistencyError(
                         f"{key}'s {dim} value, is outside space domain "
                         f"(0, {getattr(self.dimensions, dim)})")
 
         for key, line in self.models.eddy_diffusion.monitor_locations.lines.items():
             for dim in dims:
-                if getattr(line.point, dim) > getattr(self.dimensions, dim):
+                if getattr(line.point, dim) > min(getattr(self.dimensions, dim)):
                     raise ConsistencyError(
                         f"{key}'s {dim} value, is outside space domain "
                         f"(0, {getattr(self.dimensions, dim)})")
@@ -249,7 +251,7 @@ class RIDTConfig(Settings):
             for item in line_number:
                 if item > self.time_samples:
                     raise ConsistencyError(
-                        f"The number of requested line plots ({point_number}) cannot exceed the "
+                        f"The number of requested line plots ({line_number}) cannot exceed the "
                         f"number of time samples ({self.time_samples}).")
         else:
             if line_number > self.time_samples:

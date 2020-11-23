@@ -1373,4 +1373,3 @@ class ConsistencyError(Error):
         """
         self.msg = msg
         super().__init__(msg)
-
