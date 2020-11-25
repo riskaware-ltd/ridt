@@ -26,11 +26,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install pytest
         python -m pip install --editable .
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |
         cd ridt
         ls
-        pytest
+        python -m unittest discover
