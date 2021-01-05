@@ -38,7 +38,7 @@ class ST19(unittest.TestCase):
         output_types = ["concentration", "exposure"]
         for output in output_types:
             _path = join(self.output_dir, "points", output, "plots")
-            for idx, img in enumerate(listdir(_path)):
+            for idx, img in enumerate(sorted(listdir(_path))):
                 self.assertEqual(img, f"point_{idx + 1}.png")
 
 
