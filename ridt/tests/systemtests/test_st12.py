@@ -1,6 +1,7 @@
 import unittest
 import os
 import shutil
+from pathlib import Path
 
 from ridt.base import ComputationalSpace
 
@@ -24,6 +25,8 @@ class ST12(unittest.TestCase):
 
         this_dir = os.path.dirname(os.path.abspath(__file__))
         self.directory = os.path.join(this_dir, "st12")
+        Path(self.directory).mkdir(parents=True, exist_ok=True)
+
 
         with ConfigFileParser(os.path.join(this_dir, "st11/config.json")) as cfp:
             self.c = cfp
@@ -32,14 +35,7 @@ class ST12(unittest.TestCase):
         self.space = ComputationalSpace(self.c, restrict)
 
     def tearDown(self) -> None:
-
-        for element in os.listdir(self.directory):
-            if not element.endswith(".gitkeep"):
-                path = os.path.join(self.directory, element)
-                try:
-                    shutil.rmtree(path)
-                except WindowsError:
-                    os.remove(path)
+        shutil.rmtree(self.directory)
 
     def test_verify(self):
 

@@ -4,6 +4,7 @@ from os import listdir
 from os.path import join
 from os import remove
 import shutil
+from pathlib import Path
 
 from ridt.config import ConfigFileParser
 
@@ -27,16 +28,11 @@ class ST19(unittest.TestCase):
         self.bds = BatchDataStore()
         self.domain = Domain(self.c)
         self.output_dir = os.path.join(this_dir, "st19/plots")
+        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         self.edr = EddyDiffusionRun(self.c, self.output_dir)
 
     def tearDown(self) -> None:
-        for element in listdir(self.output_dir):
-            if not element.endswith(".gitkeep"):
-                path = join(self.output_dir, element)
-                try:
-                    shutil.rmtree(path)
-                except WindowsError:
-                    remove(path)
+        shutil.rmtree(self.output_dir)
 
     def test_verify(self):
         output_types = ["concentration", "exposure"]

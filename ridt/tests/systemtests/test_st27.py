@@ -6,6 +6,7 @@ from os import remove
 from os import system
 import shutil
 import json
+from pathlib import Path
 
 from ridt.config import ConfigFileParser
 
@@ -26,16 +27,11 @@ class ST27(unittest.TestCase):
         self.csv_path = join(self.this_dir, "st27/csv_to_config.csv")
 
         self.output_dir = join(self.this_dir, "st27/data")
+        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         self.virtualenv_path = ".venv"
 
     def tearDown(self) -> None:
-        for element in listdir(self.output_dir):
-            if not element.endswith(".gitkeep"):
-                path = join(self.output_dir, element)
-                try:
-                    shutil.rmtree(path)
-                except WindowsError:
-                    remove(path)
+        shutil.rmtree(self.output_dir)
 
         with open(self.config_path) as f:
             config = json.load(f)

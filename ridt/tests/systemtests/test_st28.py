@@ -10,6 +10,8 @@ from os import listdir
 from os import system
 from os import unlink
 
+from pathlib import Path
+
 from numpy import genfromtxt
 from numpy import load
 from numpy import delete
@@ -25,7 +27,7 @@ from ridt.config.ridtconfig import InfiniteDurationSource
 
 
 def delete_folder_contents(path: str):
-    for filename in listdir(path):
+    for filename in [f for f in listdir(path) if not f.endswith(".gitkeep")]:
         file_path = join(path, filename)
         try:
             if isfile(file_path) or islink(file_path):

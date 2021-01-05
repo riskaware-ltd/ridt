@@ -3,6 +3,7 @@ import os
 from os import listdir
 from os.path import join
 from os import remove
+from pathlib import Path
 
 import shutil
 
@@ -30,17 +31,12 @@ class ST18(unittest.TestCase):
         self.bds = BatchDataStore()
         self.domain = Domain(self.c)
         self.output_dir = os.path.join(this_dir, "st18")
+        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         self.edr = EddyDiffusionRun(self.c, self.output_dir)
         self.list_dir = listdir(self.output_dir)
 
     def tearDown(self) -> None:
-        for element in listdir(self.output_dir):
-            if not element.endswith(".gitkeep"):
-                path = join(self.output_dir, element)
-                try:
-                    shutil.rmtree(path)
-                except WindowsError:
-                    remove(path)
+        shutil.rmtree(self.output_dir)
 
     def test_write(self):
 
