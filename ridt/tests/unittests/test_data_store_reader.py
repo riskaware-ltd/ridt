@@ -21,12 +21,13 @@ class TestDataStoreReader(unittest.TestCase):
         which is used within the tests. Additionally it
         instantiates the :class:`~.ConfigFileWriter` class."""
 
-        self.out_dir = "tests/unittests/test_resources/datastorereader"
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.out_dir = os.path.join(this_dir, "test_resources/datastorereader")
         self.point_name = "point_1"
         self.line_name = "line_1"
         self.plane_name = "plane_1"
 
-        with open("tests/unittests/test_resources/test_config.json") as f:
+        with open(os.path.join(this_dir, "test_resources/test_config.json")) as f:
             loaded_json = json.load(f)
 
         self.config = RIDTConfig(loaded_json)

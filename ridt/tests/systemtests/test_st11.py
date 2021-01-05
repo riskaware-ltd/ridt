@@ -1,5 +1,7 @@
 import unittest
 
+import os
+
 from ridt.base import ComputationalSpace
 from ridt.config import ConfigFileParser
 from ridt.config import RIDTConfig
@@ -17,7 +19,9 @@ class ST11(unittest.TestCase):
            :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
-        with ConfigFileParser("tests/systemtests/st11/config.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(this_dir, "st11/config.json")
+        with ConfigFileParser(path) as cfp:
             self.c = cfp
 
             restrict = {"models": "well_mixed"}

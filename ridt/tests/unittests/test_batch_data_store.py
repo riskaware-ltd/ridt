@@ -1,5 +1,6 @@
 import unittest
 import json
+import os
 
 from ridt.data import BatchDataStore
 from ridt.data import DataStore
@@ -16,7 +17,9 @@ class TestBatchDataStore(unittest.TestCase):
         """setUp method which instantiates the :class:`~.RIDTConfig` class,
         and the :class:`~.BatchDataStore` class."""
 
-        with open("default/config.json") as f:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(this_dir, "../../default/config.json")
+        with open(path) as f:
             loaded_json = json.load(f)
 
         self.config = RIDTConfig(loaded_json)

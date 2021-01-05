@@ -1,5 +1,6 @@
 import unittest
 import json
+import os
 
 import numpy as np
 
@@ -24,12 +25,13 @@ class TestConfigFileWriter(unittest.TestCase):
         """Tests the write method to ensure that what is written
         into the json matches the given :obj:`dict`"""
 
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
         ConfigFileWriter(
-            "tests/unittests/test_resources",
+            os.path.join(self.this_dir, "test_resources"),
             "configfilewritertest.json",
             self.data)
 
-        with open("tests/unittests/test_resources/configfilewritertest.json") as f:
+        with open(os.path.join(self.this_dir, "test_resources/configfilewritertest.json")) as f:
             test_file = json.load(f)
         self.assertEqual(test_file, self.data)
 

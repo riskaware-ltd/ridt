@@ -19,12 +19,13 @@ class TestContourPlot(unittest.TestCase):
         the :class:`~.ContourPlot` class, and creates some initial
         variables."""
 
-        with open("tests/unittests/test_resources/test_config.json") as f:
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(self.this_dir, "test_resources/test_config.json")) as f:
             loaded_json = json.load(f)
 
         self.config = RIDTConfig(loaded_json)
 
-        self.cp = ContourPlot(self.config, "tests/unittests/test_resources", "concentration")
+        self.cp = ContourPlot(self.config, os.path.join(self.this_dir, "test_resources", "concentration"))
 
         self.time_array = np.linspace(0, 10, 10)
         self.x_array = np.linspace(0, 10, 10)
@@ -36,10 +37,10 @@ class TestContourPlot(unittest.TestCase):
         """tearDown method which removes and changes made in the
         tests."""
 
-        resource_list = os.listdir("tests/unittests/test_resources")
+        resource_list = os.listdir(os.path.join(self.this_dir, "test_resources"))
         for file in resource_list:
             if file.endswith(".pdf"):
-                os.remove(f"tests/unittests/test_resources/{file}")
+                os.remove(os.path.join(self.this_dir, f"tests/unittests/test_resources/{file}"))
 
 if __name__ == "__main__":
     unittest.main()

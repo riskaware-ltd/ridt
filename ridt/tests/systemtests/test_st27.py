@@ -1,10 +1,12 @@
 import unittest
+import os
 from os import listdir
 from os.path import join
 from os import remove
 from os import system
 import shutil
 import json
+from pathlib import Path
 
 from ridt.config import ConfigFileParser
 
@@ -19,20 +21,17 @@ class ST27(unittest.TestCase):
        via a command line interface."""
 
     def setUp(self) -> None:
-        self.config_path = "tests\\systemtests\\st27\\config.json"
-        self.csv_path = "tests\\systemtests\\st27\\csv_to_config.csv"
 
-        self.output_dir = "tests\\systemtests\\st27\\data"
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.config_path = join(self.this_dir, "st27/config.json")
+        self.csv_path = join(self.this_dir, "st27/csv_to_config.csv")
+
+        self.output_dir = join(self.this_dir, "st27/data")
+        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         self.virtualenv_path = ".venv"
 
     def tearDown(self) -> None:
-        for element in listdir(self.output_dir):
-            if not element.endswith(".gitkeep"):
-                path = join(self.output_dir, element)
-                try:
-                    shutil.rmtree(path)
-                except WindowsError:
-                    remove(path)
+        shutil.rmtree(self.output_dir)
 
         with open(self.config_path) as f:
             config = json.load(f)
@@ -68,7 +67,7 @@ class ST27(unittest.TestCase):
             system(f"{self.virtualenv_path}\\Scripts\\activate")
             system(f"ridt csv-to-config {self.config_path} {self.csv_path}")
 
-            config = ConfigFileParser("tests/systemtests/st27/new_config.json")
+            config = ConfigFileParser(os.path.join(self.this_dir, "st27/new_config.json"))
             for mode in modes:
                 m = getattr(config.modes, mode)
                 for source in m.sources.values():

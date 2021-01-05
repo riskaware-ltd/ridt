@@ -1,5 +1,7 @@
 import unittest
 
+import os
+
 import numpy as np
 
 from ridt.config import ConfigFileParser
@@ -19,9 +21,10 @@ class ST16(unittest.TestCase):
            :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
-        with ConfigFileParser("tests/systemtests/st16/explicit.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        with ConfigFileParser(os.path.join(this_dir, "st16/explicit.json")) as cfp:
             self.e = cfp
-        with ConfigFileParser("tests/systemtests/st16/tkeb.json") as cfp:
+        with ConfigFileParser(os.path.join(this_dir, "st16/tkeb.json")) as cfp:
             self.t = cfp
 
         self.explicit = EddyDiffusion(self.e)

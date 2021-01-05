@@ -1,5 +1,6 @@
 import unittest
 import json
+import os
 
 import numpy as np
 
@@ -11,7 +12,8 @@ class TestWellMixed(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        with open("tests/unittests/test_resources/test_config.json") as f:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(this_dir, "test_resources/test_config.json")) as f:
             loaded_json = json.load(f)
 
         self.config = RIDTConfig(loaded_json)

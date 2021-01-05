@@ -1,5 +1,7 @@
 import unittest
 
+import os
+
 from ridt.base import ConsistencyError
 from ridt.config import RIDTConfig
 from ridt.config import ConfigFileParser
@@ -18,7 +20,8 @@ class ST01(unittest.TestCase):
         Configures a valid config file and a config
         file with an error in."""
 
-        with ConfigFileParser("default/config.json") as cfp:
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
+        with ConfigFileParser(os.path.join(self.this_dir, "../../default/config.json")) as cfp:
             self.c = cfp
 
     def test_parse(self):
@@ -28,7 +31,7 @@ class ST01(unittest.TestCase):
 
         self.c.consistency_check()
         with self.assertRaises(ConsistencyError):
-            ConfigFileParser("tests/systemtests/st01/error_config.json")
+            ConfigFileParser(os.path.join(self.this_dir, "st01/error_config.json"))
 
     def test_verify(self):
 
