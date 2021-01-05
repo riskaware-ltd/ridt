@@ -31,5 +31,4 @@ jobs:
     - name: Test with pytest
       run: |
         cd ridt
-        ls
-        python -m unittest discover tests
+        pytest
