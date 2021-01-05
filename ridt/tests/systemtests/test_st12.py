@@ -22,9 +22,10 @@ class ST12(unittest.TestCase):
            :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
-        self.directory = "tests/systemtests/st12"
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.directory = os.path.join(this_dir, "st12")
 
-        with ConfigFileParser("tests/systemtests/st11/config.json") as cfp:
+        with ConfigFileParser(os.path.join(this_dir, "st11/config.json")) as cfp:
             self.c = cfp
 
         restrict = {"models": "well_mixed"}

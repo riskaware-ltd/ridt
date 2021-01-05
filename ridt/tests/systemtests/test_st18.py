@@ -1,4 +1,5 @@
 import unittest
+import os
 from os import listdir
 from os.path import join
 from os import remove
@@ -22,12 +23,13 @@ class ST18(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        with ConfigFileParser("tests/systemtests/st16/explicit.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        with ConfigFileParser(os.path.join(this_dir, "st16/explicit.json")) as cfp:
             self.c = cfp
 
         self.bds = BatchDataStore()
         self.domain = Domain(self.c)
-        self.output_dir = "tests/systemtests/st18"
+        self.output_dir = os.path.join(this_dir, "st18")
         self.edr = EddyDiffusionRun(self.c, self.output_dir)
         self.list_dir = listdir(self.output_dir)
 

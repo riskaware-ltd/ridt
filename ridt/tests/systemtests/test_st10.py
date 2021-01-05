@@ -1,5 +1,7 @@
 import unittest
 
+import os
+
 from ridt.config import ConfigFileParser
 
 
@@ -11,7 +13,9 @@ class ST10(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        with ConfigFileParser("default/config.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(this_dir, "../../default/config.json")
+        with ConfigFileParser(path) as cfp:
             self.c = cfp
 
     def test_verify(self):

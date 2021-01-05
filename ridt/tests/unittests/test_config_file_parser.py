@@ -1,4 +1,5 @@
 import unittest
+import os
 
 from ridt.config import RIDTConfig
 from ridt.config.configfileparser import ConfigFileParser
@@ -16,6 +17,7 @@ class TestConfigFileParser(unittest.TestCase):
         """setUp method which instantiates the :class:`~.RIDTConfig` class,
         and the :class:`~.ConfigFileParser` class."""
 
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
         self.ridt = RIDTConfig
 
     def test_parse_file(self):
@@ -29,7 +31,7 @@ class TestConfigFileParser(unittest.TestCase):
             ConfigFileParser("random_path")
 
         with self.assertRaises(ConfigFileParserJSONError):
-            ConfigFileParser("tests/unittests/test_resources/decode_error_config.json")
+            ConfigFileParser(os.path.join(self.this_dir, "test_resources/decode_error_config.json"))
 
     def test_instantiate_settings(self):
 
@@ -37,7 +39,7 @@ class TestConfigFileParser(unittest.TestCase):
         error passes when there is a missing input within the config file."""
 
         with self.assertRaises(ConfigFileParserValidationError):
-            ConfigFileParser("tests/unittests/test_resources/missing_input_config.json")
+            ConfigFileParser(os.path.join(self.this_dir, "test_resources/missing_input_config.json"))
 
 
 if __name__ == "__main__":

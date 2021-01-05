@@ -1,4 +1,5 @@
 import unittest
+import os
 from os import listdir
 from os.path import join
 from os import remove
@@ -26,8 +27,9 @@ class ST17(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        self.output_dir = "tests/systemtests/st17"
-        with ConfigFileParser("tests/systemtests/st16/explicit.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.output_dir = os.path.join(this_dir, "st17")
+        with ConfigFileParser(os.path.join(this_dir, "st16/explicit.json")) as cfp:
             self.c = cfp
 
         self.bds = BatchDataStore()

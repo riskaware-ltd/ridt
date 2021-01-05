@@ -28,9 +28,10 @@ class ST14(unittest.TestCase):
            :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
-        self.out_dir = "tests/systemtests/st14/run"
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.out_dir = os.path.join(self.this_dir, "st14/run")
 
-        with ConfigFileParser("tests/systemtests/st14/config.json") as cfp:
+        with ConfigFileParser(os.path.join(self.this_dir, "st14/config.json")) as cfp:
             self.c = cfp
 
         restrict = {"models": "well_mixed"}
@@ -69,7 +70,7 @@ class ST14(unittest.TestCase):
             "batch_run_summary.txt", os.listdir(f"{self.out_dir}")
         )
 
-        with open("tests/systemtests/st14/run/batch_run_summary.txt") as f:
+        with open(os.path.join(self.this_dir, "st14/run/batch_run_summary.txt")) as f:
             txt = f.read()
 
         self.assertIn(

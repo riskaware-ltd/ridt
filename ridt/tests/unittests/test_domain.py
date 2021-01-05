@@ -1,5 +1,6 @@
 import unittest
 import json
+import os
 
 import numpy as np
 
@@ -12,7 +13,9 @@ class TestDomain(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        with open("default/config.json") as f:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(this_dir, "../../default/config.json")
+        with open(path) as f:
             loaded_json = json.load(f)
 
         self.config = RIDTConfig(loaded_json)

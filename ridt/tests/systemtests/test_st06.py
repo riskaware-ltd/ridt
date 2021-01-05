@@ -1,6 +1,8 @@
 import unittest
 import json
 
+import os
+
 from ridt.config import ConfigFileParser
 from ridt.config.ridtconfig import ConsistencyError
 from ridt.config.configfileparser import ConfigFileParserValidationError
@@ -16,11 +18,15 @@ class ST06(unittest.TestCase):
         """setUp method that instantiates the
         :class:`~.RIDTConfig` class."""
 
-        self.config_path = "tests/systemtests/st06/config.json"
+
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.config_path = os.path.join(this_dir, "st06/config.json")
         with open(self.config_path) as f:
             self.default = json.load(f)
 
-        with ConfigFileParser("default/config.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(this_dir, "../../default/config.json")
+        with ConfigFileParser(path) as cfp:
             self.c = cfp
 
     def tearDown(self) -> None:

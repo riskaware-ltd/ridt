@@ -1,5 +1,7 @@
 import unittest
 
+import os
+
 import numpy as np
 
 from ridt.config import ConfigFileParser
@@ -21,7 +23,8 @@ class ST15(unittest.TestCase):
            :class:`~.RIDTConfig` class and the
            :class:`~.ComputationalSpace` class."""
 
-        with ConfigFileParser("tests/systemtests/st15/config.json") as cfp:
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        with ConfigFileParser(os.path.join(this_dir, "st15/config.json")) as cfp:
             self.c = cfp
 
         self.time_array = np.linspace(

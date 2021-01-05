@@ -1,4 +1,5 @@
 import unittest
+import os
 from os import listdir
 from os.path import join
 from os import remove
@@ -19,10 +20,12 @@ class ST27(unittest.TestCase):
        via a command line interface."""
 
     def setUp(self) -> None:
-        self.config_path = "tests\\systemtests\\st27\\config.json"
-        self.csv_path = "tests\\systemtests\\st27\\csv_to_config.csv"
 
-        self.output_dir = "tests\\systemtests\\st27\\data"
+        self.this_dir = os.path.dirname(os.path.abspath(__file__))
+        self.config_path = join(self.this_dir, "st27/config.json")
+        self.csv_path = join(self.this_dir, "st27/csv_to_config.csv")
+
+        self.output_dir = join(self.this_dir, "st27/data")
         self.virtualenv_path = ".venv"
 
     def tearDown(self) -> None:
@@ -68,7 +71,7 @@ class ST27(unittest.TestCase):
             system(f"{self.virtualenv_path}\\Scripts\\activate")
             system(f"ridt csv-to-config {self.config_path} {self.csv_path}")
 
-            config = ConfigFileParser("tests/systemtests/st27/new_config.json")
+            config = ConfigFileParser(os.path.join(self.this_dir, "st27/new_config.json"))
             for mode in modes:
                 m = getattr(config.modes, mode)
                 for source in m.sources.values():
