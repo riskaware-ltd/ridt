@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='ridt',
-    version='1.1.2',
+    version='1.1.5',
     author="Riskaware Ltd",
     packages=find_packages(),
     description="Rapid Indoor Diffusion Tool",
@@ -20,7 +20,8 @@ setup(
     ],
     install_requires=[
         'click',
-        'numpy==1.16.5',
+        "numpy==1.16.5 ; python_version<'3.8'",
+        "numpy==1.19.3 ; python_version>='3.8'",
         'scipy',
         'matplotlib',
         'tqdm'

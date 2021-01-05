@@ -55,5 +55,4 @@ docs/_build/
 .vscode/
 
 # Working test dir
-run/
 val/
