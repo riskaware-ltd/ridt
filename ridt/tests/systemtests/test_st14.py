@@ -31,7 +31,7 @@ class ST14(unittest.TestCase):
 
         self.this_dir = os.path.dirname(os.path.abspath(__file__))
         self.out_dir = os.path.join(self.this_dir, "st14/run")
-        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
+        Path(self.out_dir).mkdir(parents=True, exist_ok=True)
 
         with ConfigFileParser(os.path.join(self.this_dir, "st14/config.json")) as cfp:
             self.c = cfp
@@ -40,7 +40,7 @@ class ST14(unittest.TestCase):
         self.space = ComputationalSpace(self.c, restrict)
 
     def tearDown(self) -> None:
-        shutil.rmtree(self.output_dir)
+        shutil.rmtree(self.out_dir)
 
     def test_verify(self):
 
