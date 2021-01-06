@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='ridt',
-    version='1.1.6',
+    version='1.1.7',
     author="Riskaware Ltd",
     packages=find_packages(),
     description="Rapid Indoor Diffusion Tool",
@@ -13,6 +13,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/riskaware-ltd/ridt",
     include_package_data=True,
+    package_data={
+        "": ["*.json", "*.jsonc"],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
