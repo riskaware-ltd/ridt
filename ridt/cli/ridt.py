@@ -33,7 +33,7 @@ def init():
     """
     try:
         source_path = join(dirname(__file__), "..", "default")
-        for item in listdir(source_path):
+        for item in [f for f in listdir(source_path) if "__init__.py" not in f]:
             s = join(source_path, item)
             d = join(getcwd(), item)
             if isdir(s):
