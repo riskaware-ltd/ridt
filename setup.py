@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='ridt',
-    version='1.1.7',
+    version='1.1.8',
     author="Riskaware Ltd",
     packages=find_packages(),
     description="Rapid Indoor Diffusion Tool",
