@@ -13,9 +13,6 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/riskaware-ltd/ridt",
     include_package_data=True,
-    package_data={
-        "": ["*.json", "*.jsonc"],
-    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
