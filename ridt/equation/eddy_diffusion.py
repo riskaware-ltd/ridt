@@ -1,3 +1,5 @@
+from multiprocessing import current_process
+
 import warnings
 
 import numpy
@@ -241,7 +243,10 @@ class EddyDiffusion:
             The :mod:`tqdm` iterable over the :attr:`time` iterable
             
         """
-        return tqdm(enumerate(self.t), total=len(self.t), **bar_args)
+        p = current_process()
+        i = p._identity[0]
+        # return tqdm(enumerate(self.t), position=(i % self.position_mod) + 1, total=len(self.t), desc=self.descriptor+f"/{i%self.position_mod}", **bar_args)
+        return enumerate(self.t)
 
     def romberg(self, time: float, source: Source, idx: int, idy: int, idz: int) -> float:
         """ Performs romberg integration at the given grid location.
@@ -360,7 +365,7 @@ class EddyDiffusion:
         None
 
         """
-        print(f"Evaluating {name} source (id: {id}) for each time...") 
+        pass
 
     def instantaneous(self): 
         """Evaluate all instanteneous sources.

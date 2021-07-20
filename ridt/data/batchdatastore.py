@@ -1,3 +1,5 @@
+from multiprocessing import Manager
+
 from ridt.base import Error
 
 from ridt.config import RIDTConfig
@@ -19,11 +21,12 @@ class BatchDataStore:
 
     """
 
-    def __init__(self):
+    def __init__(self, manager: Manager):
         """The :class:`BatchDataStore` constructor.
 
         """
-        self.store = dict()
+        self.manager = manager
+        self.store = manager.dict()
 
     def add_run(self, setting: RIDTConfig) -> None:
         """Add a new empty data store for a new settings instance.
@@ -41,7 +44,7 @@ class BatchDataStore:
 
         """
         if setting not in self.store:
-            self.store[setting] = DataStore()
+            self.store[setting] = DataStore(self.manager)
         else:
             pass
     

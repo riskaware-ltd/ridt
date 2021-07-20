@@ -1,4 +1,7 @@
+from multiprocessing import Manager
+
 from typing import Tuple
+from typing import Dict
 
 from numpy import ndarray
 from numpy import nanargmax
@@ -46,15 +49,18 @@ class DataStore:
         planes = 3
         domain = 4
 
-    def __init__(self):
+    def __init__(self, manager: Manager):
         """The :class:`DataStore` constructor.
 
         """
-        self.points = dict()
-        self.lines = dict()
-        self.planes = dict()
-        self.domain = dict()
+        self.points = manager.dict()
+        self.lines = manager.dict()
+        self.planes = manager.dict()
+        self.domain = manager.dict()
     
+    def get_sub_store(self, geometry: str) -> Dict[str, ndarray]:
+        return getattr(self, geometry).copy()
+
     def add(self, geometry: str, id: str, data: ndarray)-> None:
         """Adds a new item to the data store.
 

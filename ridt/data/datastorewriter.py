@@ -95,5 +95,5 @@ class DataStoreWriter:
         ConfigFileWriter(self.dir_agent.outdir, "config.json", self.setting.__source__)
         for geometry in self.geometries:
             self.dir_agent.create_data_dir(geometry, self.quantity)
-            for id in getattr(data_store, geometry):
+            for id in data_store.get_sub_store(geometry):
                 save(join(self.dir_agent.ddir, id), data_store.get(geometry, id))

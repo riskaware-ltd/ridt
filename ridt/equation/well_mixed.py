@@ -70,7 +70,6 @@ class WellMixed:
             The calculated concentration values.
 
         """
-
         modes = ["instantaneous", "infinite_duration", "fixed_duration"]
 
         for mode in modes:

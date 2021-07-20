@@ -120,7 +120,7 @@ Linux operating systems.
         \code{python -V} you should see Python 3.8.x, where x is the subversion
         of Python 3.8 you downloaded.
         \item You should also have access to the Python package manager pip. If
-        you run the command \code{pip}, you should see usage instructions appear. 
+        you run the command \code{pip}, you should see usage instructions appear.
     \end{itemize}
     \item Install ridt.
     \begin{itemize}
@@ -128,14 +128,14 @@ Linux operating systems.
         \code{pip install ridt} to install the latest version of ridt.
     \end{itemize}
 \end{enumerate}
-  
+
 
 \section{Basic Usage}
 
 RIDT is a command line interface tool that ingests a configuration file and
 outputs various data to a specified output directory. Assuming you have RIDT
 installed on your device as detailed in Section \ref{sec:installation}, entering
-the command 
+the command
 \begin{itemize}
     \item[$\triangleright$] \code{ridt}
 \end{itemize}
@@ -154,7 +154,7 @@ southwest,sharp corners, before upper={\parindent15pt}]
 
 \noindent\code{Commands:}\\
 \indent\code{csv-to-config \HS\HS\HS\HS Merge CSV file to config JSON file.}\\
-\indent\code{init\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS Copy a default 
+\indent\code{init\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS Copy a default
 config file to current working directory.}\\
 \indent\code{run \HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS\HS Run diffusion model.}
 \end{tcolorbox}
@@ -162,7 +162,7 @@ config file to current working directory.}\\
 \medskip
 
 \noindent We see that there are three sub commands, \code{csv-to-config},
-\code{init}, and \code{run}. If we enter the command 
+\code{init}, and \code{run}. If we enter the command
 
 \begin{itemize}
     \item[$\triangleright$] \code{ridt run --help}
@@ -210,7 +210,7 @@ contains the same information as \code{config.jsonc}, in addition to comments
 comments giving a brief explanation of what each setting does.\\
 
 \noindent We now have everything we need to run RIDT with default settings. To
-do so we can run the command 
+do so we can run the command
 \begin{itemize}
     \item[$\triangleright$] \code{ridt run config.json .}
 \end{itemize}
@@ -356,7 +356,7 @@ JSON syntax. As mentioned in the previous section, files with the extension
 your text editor if you want to see syntax highlighting in \code{.jsonc} files.
 This commented form of JSON will not work as an input file for RIDT,
 however it can provide useful annotations for other users, or notes for
-yourself. 
+yourself.
 
 
 \subsection{Settings Summary}
@@ -371,7 +371,7 @@ assumed to be SI units.
 
 \subsubsection{\code{ridt\_version}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "v1.0"
@@ -429,7 +429,7 @@ If \code{true} RIDT will write all computed data to csv files.
 
 \subsubsection{\code{integration\_method}}\label{sec:integrationmethod}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "cumulativetrapezoidal"
@@ -449,7 +449,7 @@ samples defined (Section \ref{sec:timesamples}).
 
 \subsubsection{\code{concentration\_units}}\label{sec:concentrationunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "kg.m-3"
@@ -475,7 +475,7 @@ of the above selections.\\
 
 \subsubsection{\code{exposure\_units}}\label{sec:exposureunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "mg.min.m-3"
@@ -489,7 +489,7 @@ of the above selections.
 
 \subsubsection{\code{mass\_units}}\label{sec:massunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "kg"
@@ -502,7 +502,7 @@ selections. [Note: more options might be available in later versions.]
 
 \subsubsection{\code{time\_units}}\label{sec:timeunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "s"
@@ -515,7 +515,7 @@ selections. [Note: more options might be available in later versions.]
 
 \subsubsection{\code{time\_samples}}\label{sec:timesamples}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq1$
@@ -534,7 +534,7 @@ computed exposure).
 
 \subsubsection{\code{total\_time}}\label{sec:totaltime}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq1.0$
@@ -546,7 +546,7 @@ Its units are defined by the \code{time\_units} setting (Section
 
 \subsubsection{\code{spatial\_units}}\label{sec:spatialunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "m"
@@ -559,14 +559,14 @@ selections. [Note: more options might be available in later versions.]
 
 \subsubsection{\code{dimensions}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which determine the spatial bounds of the
 simulation.
 
 \paragraph{\code{dimensions.x}}\label{sec:dimx}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0.0$
@@ -578,7 +578,7 @@ lower bound is always 0.0. The units of this quantity are defined by the
 
 \paragraph{\code{dimensions.y}}\label{sec:dimy}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0.0$
@@ -590,7 +590,7 @@ lower bound is always 0.0. The units of this quantity are defined by the
 
 \paragraph{\code{dimensions.z}}\label{sec:dimz}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0.0$
@@ -602,7 +602,7 @@ lower bound is always 0.0. The units of this quantity are defined by the
 
 \subsubsection{\code{spatial\_samples}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which determine the spatial discretisation of the
 simulation.\\
@@ -610,7 +610,7 @@ simulation.\\
 \noindent Depending on the monitor locations selected for evaulation, one, some,
 or all of the following values for the spatial sampling may not be used. For
 example, if only a single point-like monitor location (Section
-\ref{sec:monpoints}) is defined, and full domain 
+\ref{sec:monpoints}) is defined, and full domain
 evaluation is switched off, then none of the following values are used. This is
 because the point-like monitor locations explicitly define the location at which
 the model is evaluated. Another example would be if a single line-like monitor
@@ -619,7 +619,7 @@ the x-sampling would be used to discretised the line.
 
 \paragraph{\code{spatial\_samples.x}}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq2$
@@ -632,7 +632,7 @@ of order \code{spatial\_samples.x} between zero and \code{dimensions.x} (Section
 
 \paragraph{\code{spatial\_samples.y}}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq2$
@@ -645,7 +645,7 @@ of order \code{spatial\_samples.y} between zero and \code{dimensions.y} (Section
 
 \paragraph{\code{spatial\_samples.z}}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq2$
@@ -658,7 +658,7 @@ of order \code{spatial\_samples.z} between zero and \code{dimensions.z} (Section
 
 \subsubsection{\code{fresh\_air\_flow\_rate\_units}}\label{sec:freshairchangerateunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "m3.s-1"
@@ -672,7 +672,7 @@ versions.]
 
 \subsubsection{\code{fresh\_air\_flow\_rate}}\label{sec:freshairchangerate}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>=0.0$
@@ -682,14 +682,14 @@ This setting determines the value of the fresh air change rate.
 
 \subsubsection{\code{physical\_properties}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which determine the physical quantities that are
 needed in the calculation of some quantities (Section \ref{sec:analysis})
 
 \paragraph{\code{agent\_molecular\_weight\_units}}\label{sec:agentmolweightunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "kg.mol-1"
@@ -703,17 +703,17 @@ later versions.]
 
 \paragraph{\code{agent\_molecular\_weight}}\label{sec:agentmolweight}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] $>0.0$ 
+        \item[$\rightarrow$] $>0.0$
     \end{itemize}
 \end{itemize}
 This float determines the value of agent molecular weight.
 
 \paragraph{\code{pressure\_units}}\label{sec:pressureunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "Pa"
@@ -726,17 +726,17 @@ selections. [Note: more options might be available in later versions.]
 
 \paragraph{\code{pressure}}\label{sec:pressure}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] $>0.0$ 
+        \item[$\rightarrow$] $>0.0$
     \end{itemize}
 \end{itemize}
 This float determines the value of the pressure of the atmosphere.
 
 \paragraph{\code{temperature\_units}}\label{sec:temperatureunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "K"
@@ -749,17 +749,17 @@ selections. [Note: more options might be available in later versions.]
 
 \paragraph{\code{temperature}}\label{sec:temperature}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] $>0.0$ 
+        \item[$\rightarrow$] $>0.0$
     \end{itemize}
 \end{itemize}
 This float determines the value of the temperature of the atmosphere.
 
 \paragraph{\code{air\_density\_units}}\label{sec:air_densityunits}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "K"
@@ -772,31 +772,31 @@ selections. [Note: more options might be available in later versions.]
 
 \paragraph{\code{air\_density}}\label{sec:air_density}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] $>0.0$ 
+        \item[$\rightarrow$] $>0.0$
     \end{itemize}
 \end{itemize}
 This float determines the value of the air density of the atmosphere.
 
 \subsubsection{\code{modes}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define the source terms to be used in the
 evaluation of the models.
 
 \subsubsection{\code{instantaneous}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define the instantaneous source terms to be
 used in the evaluation of the models.
 
 \paragraph{\code{instantaneous.sources}}\label{sec:instsources}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains definitions of each instantaneous source (Section
 \ref{sec:instsource}) to be evaluated during the run. It contains items which
@@ -819,7 +819,7 @@ contained within the \code{"sources": \{\}} object.
 
 \paragraph{\code{instantaneous.sources.source}}\label{sec:instsource}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a single instantaneous source term to
 be used in the evaluation of the models. Many such sources can be defined in a
@@ -828,7 +828,7 @@ single configuration file in the \code{instantanous.sources} setting (Section
 
 \paragraph{\code{instantaneous.sources.source.x}}\label{sec:instsourcex}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -840,7 +840,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{instantaneous.sources.source.y}}\label{sec:instsourcey}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -852,7 +852,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{instantaneous.sources.source.z}}\label{sec:instsourcez}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -864,7 +864,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{instantaneous.sources.source.mass}}\label{sec:instsourcemass}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -876,7 +876,7 @@ are defined by the \code{mass\_units} setting (Section
 
 \paragraph{\code{instantaneous.sources.source.time}}\label{sec:instsourcetime}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -888,14 +888,14 @@ temporal bounds of the simulation. The units of this quantity are defined by the
 
 \subsubsection{\code{fixed\_duration}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define the fixed\_duration source terms to be
 used in the evaluation of the models.
 
 \paragraph{\code{fixed\_duration.sources}}\label{sec:fixsources}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains definitions of each fixed\_duration source (Section
 \ref{sec:fixsource}) to be evaluated during the run. It contains items which
@@ -918,7 +918,7 @@ contained within the \code{"sources": \{\}} object.
 
 \paragraph{\code{fixed\_duration.sources.source}}\label{sec:fixsource}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a single fixed\_duration source term to
 be used in the evaluation of the models. Many such sources can be defined in a
@@ -927,7 +927,7 @@ single configuration file in the \code{instantaneous.sources} setting (Section
 
 \paragraph{\code{fixed\_duration.sources.source.x}}\label{sec:fixsourcex}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -939,7 +939,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{fixed\_duration.sources.source.y}}\label{sec:fixsourcey}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -951,7 +951,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{fixed\_duration.sources.source.z}}\label{sec:fixsourcez}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -963,7 +963,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{fixed\_duration.sources.source.rate}}\label{sec:fixsourcerate}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -974,7 +974,7 @@ are SI (kg.s-1).
 
 \paragraph{\code{fixed\_duration.sources.source.time}}\label{sec:fixsourcetime}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -986,14 +986,14 @@ temporal bounds of the simulation. The units of this quantity are defined by the
 
 \subsubsection{\code{infinite\_duration}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define the infinite\_duration source terms to be
 used in the evaluation of the models.
 
 \paragraph{\code{infinite\_duration.sources}}\label{sec:infsources}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains definitions of each infinite\_duration source (Section
 \ref{sec:infsource}) to be evaluated during the run. It contains items which
@@ -1016,7 +1016,7 @@ contained within the \code{"sources": \{\}} object.
 
 \paragraph{\code{infinite\_duration.sources.source}}\label{sec:infsource}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a single infinite\_duration source term to
 be used in the evaluation of the models. Many such sources can be defined in a
@@ -1025,7 +1025,7 @@ single configuration file in the \code{instantanous.sources} setting (Section
 
 \paragraph{\code{infinite\_duration.sources.source.x}}\label{sec:infsourcex}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1037,7 +1037,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{infinite\_duration.sources.source.y}}\label{sec:infsourcey}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1049,7 +1049,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{infinite\_duration.sources.source.z}}\label{sec:infsourcez}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1061,7 +1061,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{infinite\_duration.sources.source.rate}}\label{sec:infsourcerate}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1072,7 +1072,7 @@ are SI (kg.s-1).
 
 \paragraph{\code{infinite\_duration.sources.source.start\_time}}\label{sec:infsourcestarttime}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1086,28 +1086,28 @@ time. The units of this quantity are defined by the \code{time\_units} setting
 
 \paragraph{\code{infinite\_duration.sources.source.end\_time}}\label{sec:infsourceendtime}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
 This float determines the time the source's release ends. It must lie within
-the temporal bounds of the simulation. The end time must be after the start 
+the temporal bounds of the simulation. The end time must be after the start
 time. The units of this quantity are defined by the \code{time\_units} setting
 (Section \ref{sec:timeunits}).
 
 \subsubsection{\code{thresholds}}
 
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which specify any threshold values which will be
-used during the analysis phase of RIDT. 
+used during the analysis phase of RIDT.
 
 \paragraph{\code{thresholds.concentration}}\label{sec:concentrationthresholds}
 \begin{itemize}
-    \item[$\diamond$] type: [float] 
+    \item[$\diamond$] type: [float]
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0.0$
@@ -1129,7 +1129,7 @@ quantities are defined by the \code{concentration\_units} setting (Section
 
 \paragraph{\code{thresholds.exposure}}\label{sec:exposurethresholds}
 \begin{itemize}
-    \item[$\diamond$] type: [float] 
+    \item[$\diamond$] type: [float]
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0.0$
@@ -1151,27 +1151,27 @@ quantities are defined by the \code{exposure\_units} setting (Section
 
 \subsubsection{\code{models}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which determine many model specific settings.
 
 \subsubsection{\code{models.eddy\_diffusion}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings that control the way the Eddy Diffusion model is
 evaluated.
 
 \subsubsection{\code{models.eddy\_diffusion.coefficient}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains settings pertaining to the selection of the means
 of computing the eddy diffusion coefficient.
 
 \paragraph{\code{coefficient.calculation}}\label{sec:coeffcalc}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "TKEB"
@@ -1180,14 +1180,14 @@ of computing the eddy diffusion coefficient.
 \end{itemize}
 This string determines which which method is used to calculate the eddy
 diffusion coefficient. If "TKEB" is selected then the coefficient is computed
-from the TKEB equation (Section \ref{app:tkeb}). If "EXPLICIT" is selected 
+from the TKEB equation (Section \ref{app:tkeb}). If "EXPLICIT" is selected
 the value used in the \code{coefficient.value} setting
 (Section \ref{sec:coeffvalue}).
 
 
 \paragraph{\code{coefficient.value}}\label{sec:coeffvalue}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.001$
@@ -1199,14 +1199,14 @@ This float is the value used for the eddy diffusion coefficient if the
 
 \subsubsection{\code{coefficient.tkeb}}\label{sec:coefftkeb}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains settings pertaining to the calculation of the TKEB
 coefficient.
 
 \paragraph{\code{coefficient.tkeb.bound}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "lower"
@@ -1230,7 +1230,7 @@ calculation of the TKEB coefficient (Section \ref{app:tkeb}).
 
 \paragraph{\code{coefficient.tkeb.number\_of\_supply\_vents}}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq 1$
@@ -1241,14 +1241,14 @@ calculation of the TKEB coefficient (Section \ref{app:tkeb}).
 
 \subsubsection{\code{models.eddy\_diffusion.images}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains settings pertaining to number of images sources
 used in the evaluation of the Eddy Diffusion model (Section \ref{app:eddydiff}).
 
 \paragraph{\code{images.mode}}\label{sec:imagemode}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "auto"
@@ -1272,7 +1272,7 @@ used in different calculations, depending on the rate of convergence.
 
 \paragraph{\code{images.quantity}}\label{sec:imagequant}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq 0$
@@ -1286,7 +1286,7 @@ of the Eddy Diffusion model. It is used if the
 
 \subsubsection{\code{models.eddy\_diffusion.analysis}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains settings pertaining to the analysis performed on
 the data after the models have been evaluated.
@@ -1326,7 +1326,7 @@ percentage exceedance of a given threshold. Please see Section
 \end{itemize}
 If \code{true} this boolean will mean no values within a certain distance of a
 source term will be included in the post run analysis. This is because the eddy
-diffusion model can become unphysical close to source terms. 
+diffusion model can become unphysical close to source terms.
 
 \paragraph{\code{analysis.exclude\_radius\_meters}}\label{sec:excludesphereradius}
 \begin{itemize}
@@ -1341,14 +1341,14 @@ this quantity are in meters. A reasonable value for this quantity is 2 m.
 
 \subsubsection{\code{models.eddy\_diffusion.monitor\_locations}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains settings pertaining to the spatial domains, or
 geometries, over which to compute the Eddy Diffusion model.
 
 \subsubsection{\code{monitor\_locations.evaluate}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains other boolean settings that switch on or off the
 evaluation of certain domain geometries classes.
@@ -1402,12 +1402,12 @@ evaluated by the model.
     \end{itemize}
 \end{itemize}
 If \code{true} this boolean will mean the full domain  will be evaluated by the
-model. 
+model.
 
 
 \subsubsection{\code{monitor\_locations.points}}\label{sec:monpoints}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains all point-like monitor locations that are to be
 evaluated by the eddy diffusion model. It contains items which
@@ -1430,7 +1430,7 @@ entries contained within the \code{"points": \{\}} object.
 
 \subsubsection{\code{monitor\_locations.points.point}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a point in space at which to evaluate
 the Eddy Diffusion model. Many such points can be defined in a
@@ -1439,7 +1439,7 @@ single configuration file in the \code{monitor\_locations.points} setting (Secti
 
 \paragraph{\code{monitor\_locations.points.point.x}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1451,7 +1451,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{monitor\_locations.points.point.y}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1463,7 +1463,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \paragraph{\code{monitor\_locations.points.point.z}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1475,7 +1475,7 @@ defined by the \code{spatial\_units} setting (Section \ref{sec:spatialunits}).
 
 \subsubsection{\code{monitor\_locations.lines}}\label{sec:monlines}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains all line-like monitor locations that are to be
 evaluated by the eddy diffusion model. It contains items which
@@ -1498,7 +1498,7 @@ entries contained within the \code{"lines": \{\}} object.
 
 \subsubsection{\code{monitor\_locations.lines.line}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a line in space at which to evaluate
 the Eddy Diffusion model. Many such lines can be defined in a single
@@ -1507,14 +1507,14 @@ configuration file in the \code{monitor\_locations.lines} setting (Section
 
 \subsubsection{\code{monitor\_locations.lines.line.point}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define the point in space through which the
 line passes.
 
 \paragraph{\code{monitor\_locations.lines.line.point.x}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1527,7 +1527,7 @@ are defined by the \code{spatial\_units} setting (Section
 
 \paragraph{\code{monitor\_locations.lines.line.point.y}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1540,7 +1540,7 @@ are defined by the \code{spatial\_units} setting (Section
 
 \paragraph{\code{monitor\_locations.lines.line.point.z}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1554,7 +1554,7 @@ are defined by the \code{spatial\_units} setting (Section
 
 \paragraph{\code{monitor\_locations.lines.line.parallel\_axis}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "x"
@@ -1566,7 +1566,7 @@ This string determines which axis lies parallel to this line.
 
 \subsubsection{\code{monitor\_locations.planes}}\label{sec:monplanes}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains all plane-like monitor locations that are to be
 evaluated by the eddy diffusion model. It contains items which
@@ -1589,7 +1589,7 @@ entries contained within the \code{"planes": \{\}} object.
 
 \subsubsection{\code{monitor\_locations.planes.plane}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a plane in space at which to evaluate
 the Eddy Diffusion model. Many such planes can be defined in a single
@@ -1598,7 +1598,7 @@ configuration file in the \code{monitor\_locations.planes} setting (Section
 
 \paragraph{\code{monitor\_locations.planes.plane.axis}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "xy"
@@ -1610,10 +1610,10 @@ This string determines which axes lie parallel to this plane.
 
 \paragraph{\code{monitor\_locations.planes.plane.distance}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
-        \item[$\rightarrow$] $\geq0.0$ 
+        \item[$\rightarrow$] $\geq0.0$
     \end{itemize}
 \end{itemize}
 This float defines the position of this plane intercept point along the
@@ -1623,7 +1623,7 @@ units of this quantity are defined by the \code{spatial\_units} setting (Section
 
 \subsubsection{\code{monitor\_locations.domain}}\label{sec:mondomain}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This settings object contains information about the full computational domain.
 It contains items which are themselves JSON objects. This setting is different
@@ -1646,7 +1646,7 @@ object.
 
 \subsubsection{\code{monitor\_locations.domain.domain}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which define a plane in space at which to evaluate
 the Eddy Diffusion model. Many such full domain can be defined in a single
@@ -1656,7 +1656,7 @@ configuration file in the \code{monitor\_locations.domain} setting (Section
 
 \paragraph{\code{monitor\_locations.domain.domain.domain}}
 \begin{itemize}
-    \item[$\diamond$] type: bool 
+    \item[$\diamond$] type: bool
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] true
@@ -1668,14 +1668,14 @@ defined. It does not matter if it is true or false.
 
 \subsubsection{\code{models.eddy\_diffusion.points\_plots}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which control in what manner plots of point-like
-monitor locations are produced for each run. 
+monitor locations are produced for each run.
 
 \paragraph{\code{points\_plots.output}}
 \begin{itemize}
-    \item[$\diamond$] type: bool 
+    \item[$\diamond$] type: bool
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] true
@@ -1690,7 +1690,7 @@ type are generated.
 
 \paragraph{\code{points\_plots.scale}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "linear"
@@ -1702,7 +1702,7 @@ concentration, in the plots of point-like monitor locations.
 
 \paragraph{\code{points\_plots.time\_axis\_units}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "s"
@@ -1714,14 +1714,14 @@ This string determines the units of the time axis.
 
 \subsubsection{\code{models.eddy\_diffusion.lines\_plots}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which control in what manner and how many graph
-plots of line-like monitor locations are produced for each run. 
+plots of line-like monitor locations are produced for each run.
 
 \paragraph{\code{lines\_plots.output}}
 \begin{itemize}
-    \item[$\diamond$] type: bool 
+    \item[$\diamond$] type: bool
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] true
@@ -1735,7 +1735,7 @@ generated.
 
 \paragraph{\code{lines\_plots.scale}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "linear"
@@ -1747,7 +1747,7 @@ concentration, in the plots of line-like monitor locations.
 
 \paragraph{\code{lines\_plots.animate}}
 \begin{itemize}
-    \item[$\diamond$] type: bool 
+    \item[$\diamond$] type: bool
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] true
@@ -1760,7 +1760,7 @@ a function of time might be added in a later version.
 
 \paragraph{\code{lines\_plots.number}}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0$
@@ -1775,14 +1775,14 @@ number of time samples.
 
 \subsubsection{\code{models.eddy\_diffusion.planes\_plots}}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
-This object contains settings which control in what manner and how many contour 
-plots of plane-like monitor locations are produced for each run. 
+This object contains settings which control in what manner and how many contour
+plots of plane-like monitor locations are produced for each run.
 
 \paragraph{\code{planes\_plots.output}}
 \begin{itemize}
-    \item[$\diamond$] type: bool 
+    \item[$\diamond$] type: bool
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] true
@@ -1796,7 +1796,7 @@ generated.
 
 \paragraph{\code{planes\_plots.scale}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "linear"
@@ -1807,7 +1807,7 @@ This string determines the type of scale to use for contours.
 
 \paragraph{\code{planes\_plots.animate}}
 \begin{itemize}
-    \item[$\diamond$] type: bool 
+    \item[$\diamond$] type: bool
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] true
@@ -1819,7 +1819,7 @@ a function of time might be added in a later version.
 
 \paragraph{\code{planes\_plots.number}}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $>0$
@@ -1833,7 +1833,7 @@ number of time samples.
 
 \paragraph{\code{planes\_plots.range}}
 \begin{itemize}
-    \item[$\diamond$] type: string 
+    \item[$\diamond$] type: string
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] "auto"
@@ -1850,7 +1850,7 @@ minimum and maximum contours defined using the values in the
 
 \paragraph{\code{planes\_plots.number\_of\_contours}}\label{sec:numcontour}
 \begin{itemize}
-    \item[$\diamond$] type: integer 
+    \item[$\diamond$] type: integer
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq2$
@@ -1863,14 +1863,14 @@ selected.
 
 \paragraph{\code{planes\_plots.contours}}\label{sec:numcontour}
 \begin{itemize}
-    \item[$\diamond$] type: JSON Object 
+    \item[$\diamond$] type: JSON Object
 \end{itemize}
 This object contains settings which control the maximum and minimum contour
 values.
 
 \subparagraph{\code{planes\_plots.contours.min}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1881,7 +1881,7 @@ be less than the maximum value provided.
 
 \subparagraph{\code{planes\_plots.contours.max}}
 \begin{itemize}
-    \item[$\diamond$] type: float 
+    \item[$\diamond$] type: float
     \item[$\diamond$] allowed values:
     \begin{itemize}
         \item[$\rightarrow$] $\geq0.0$
@@ -1940,7 +1940,7 @@ implicit range\\
 where in the range values will be evenly spaced between the minimum and maximum
 values, inclusively.\\
 
-\noindent It is possible to define more than one range in a single file. If 
+\noindent It is possible to define more than one range in a single file. If
 this is done then the Cartesian product of all ranges is evaluated by RIDT. For
 example if three ranges are defined, one with 5 values, one with 7 values, and
 one with 10 values, then RIDT will evaluate the model $5\times7\times10=350$
@@ -2005,7 +2005,7 @@ parameter\\
 \medskip
 In this case we have two matched ranges and a third range. If the two ranges
 were not matched then the computational space would be of size
-$4\times4\times2=32$. However because they are matched, the computational space 
+$4\times4\times2=32$. However because they are matched, the computational space
 is of size $4\times2=8$.\\
 
 \noindent When in batch mode, the output directory will contain a number of indexed
@@ -2382,18 +2382,18 @@ release \cite{keil09}
 \begin{eqnarray}\label{eq:WMCont}
 	C(t) = \frac{S}{Q_f} \left[1 - \exp\left( -\lambda_f\:t\right) \right],
 \end{eqnarray}
-where $S$ [\SI{}{\kilo\gram\per\second}] is the release rate. 
+where $S$ [\SI{}{\kilo\gram\per\second}] is the release rate.
 
 \subsection{Constant release rate with finite duration}\label{sec:WMFinite}
 
 Equation for concentration in a well-mixed from a constant release rate with a
 finite duration.
 \begin{equation}\label{eq:WMFinite}
-	C(t) = 
-	\begin{cases} 
+	C(t) =
+	\begin{cases}
 		C(t) = \frac{S}{Q_f} \left[1 - \exp\left( -\lambda_f\:t\right) \right]								& (t \leq t_{end}) \\
 		C(t) = C_{t_{end}} \exp\left[-\lambda_f\:(t - t_{end})\right]											& (t > t_{end}),
-	\end{cases} 
+	\end{cases}
 \end{equation}
 where $t_{end}$ [s] is the duration of the release, when the release starts at
 $t$ = 0.
@@ -2433,13 +2433,13 @@ following:
 Where $n$ is the number of image sources, $x$ [m], $y$ [m] and $z$ [m] are the
 coordinates of the location which is being interrogated. $x_0$ [m], $y_0$ [m]
 and $z_0$ [m] are the coordinates of the source and $L$ [m], $L$ [m] and $H$ [m]
-are the length, width and height of the room. 
+are the length, width and height of the room.
 
 \subsection{Constant and continuous release}\label{sec:EddyCont}
 
 The equation for concentration, $C_{cont}(t)$
 [\SI{}{\kilo\gram\per\meter\cubed}], resulting in a cuboid bounded space
-\cite{cheng11}. 
+\cite{cheng11}.
 \begin{equation}\label{eq:modelCont}
 	C_{cont}(t) = \int^{t}_0  \frac{S\: \exp(-\lambda_f\:t)}{8(\pi\:D_e\:t)^{\frac{3}{2}}} r_{x}(t) r_{y}(t) r_{z}(t)\:dt
 \end{equation}
@@ -2450,11 +2450,11 @@ The equation for concentration, $C_{finite}(t)$
 [\SI{}{\kilo\gram\per\meter\cubed}], resulting from a finite duration point
 release in a cuboid bounded space \cite{foat20},
 \begin{equation}\label{eq:modelFiniteDuration}
-	C_{finite}(t) = 
-	\begin{cases} 
+	C_{finite}(t) =
+	\begin{cases}
 		C_{cont}(t)															& (t \leq t_{end}) \\
 		C_{cont}(t) - C_{cont}(t - t_{end})			& (t > t_{end})
-	\end{cases} 
+	\end{cases}
 \end{equation}
 
 \section{Equations to calculate the eddy diffusion coefficient}\label{app:tkeb}
@@ -2463,7 +2463,7 @@ The turbulent kinetic energy balance (TKEB) relationship to calculate $D_e$ is
 given below. There are three equations as there is some uncertainty over what
 what value $D_e$ should take. The upper prediction interval (PI) equation gives
 the upper value for $D_e$, the lower PI equation gives the lower value and the
-regression equation gives the mid-point value \cite{foat20}. 
+regression equation gives the mid-point value \cite{foat20}.
 \begin{equation}\label{eq:karlUpper}
 	D_e(\text{upper PI}) = 0.827 \frac{Q}{\sqrt[3]{V\:N^2}} + 0.0565\:\frac{\text{m}^2}{\text{s}},
 \end{equation}
@@ -2475,7 +2475,7 @@ regression equation gives the mid-point value \cite{foat20}.
 \end{equation}
 where $Q$ [\SI{}{\meter\cubed\per\second}] is the total supply flow rate and $N$
 is the number of supply vents. A lower bound for $D_e$ should be applied when
-using these equations, which is \SI{1e-3}{\meter\squared\per\second}. 
+using these equations, which is \SI{1e-3}{\meter\squared\per\second}.
 
 \section{Time to Well Mixed}\label{app:timetowellmixed}
 The equation used to calculate the time taken for the room to become well mixed,
@@ -2505,13 +2505,13 @@ computed in the following way, assuming that $\lambda_{f} = 0$,
     C_{\text{steady}} = \frac{M}{V}
 \end{equation}
 
-\noindent For a fixed duration source, assuming that $\lambda_{f}\neq 0$, 
+\noindent For a fixed duration source, assuming that $\lambda_{f}\neq 0$,
 \begin{equation}
     C_{\text{steady}} = \frac{M}{Q_{f}}
 \end{equation}
 
 \section{Characteristic Diffusion Time}\label{app:chardifftime}
-The characteristic diffusion time for a given diffusion coefficient is given by 
+The characteristic diffusion time for a given diffusion coefficient is given by
 \begin{equation}
     t_{\text{diff}} = \frac{L_{\text{char}}^{2}}{D_{e}}
 \end{equation}
@@ -2531,11 +2531,11 @@ coffcient with air change rate}, Environ. Sci. Technol. \textbf{45} 9
     204-214 (1995).
     \bibitem{foat20} T. Foat \emph{et al.} \emph{A relationship for the diffusion coefficient
     in eddy diffusion based indoor dispersion modelling}, Building and
-    Environment \textbf{169} 106591 (2020) 
+    Environment \textbf{169} 106591 (2020)
     \bibitem{parker16} Parker, S., \emph{et al.}, \emph{Visual assessment
     of contaminant impacts in multizone buildings}. Building and Environment,
-    \textbf{102}, 39-53 (2016).  
-    
+    \textbf{102}, 39-53 (2016).
+
     \bibitem{keil09} C.B. Keil \emph{et al.}, \emph{Mathematical Models for Estimating
 Occupational Exposure to Chemicals}, AIHA, Fairfax, VA, 2009.
 \end{thebibliography}

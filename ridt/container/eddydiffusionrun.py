@@ -1,5 +1,17 @@
+from multiprocessing import Manager
+from multiprocessing import Pool
+from multiprocessing import current_process
+from multiprocessing.managers import DictProxy
+
+from tqdm import tqdm
+
+from miniutils import parallel_progbar
+
+from typing import List
+
 from numpy import squeeze 
 
+from ridt import bar_args
 from ridt.base import ComputationalSpace
 
 from ridt.config import RIDTConfig
@@ -14,6 +26,37 @@ from ridt.container import Domain
 
 from ridt.analysis import BatchDataStoreAnalyser
 from ridt.analysis import Exposure
+
+
+def run(setting: RIDTConfig, data_store: DictProxy, geometries: List[str]) -> None:
+        """Evaluates the model for a set of parameters, for all geometries.
+
+        Loops over all monitor locations that have been selected for evaluation
+        and evaluates them over their respective domains. Writes output to
+        :attr:`data_store`.
+
+        Parameters
+        ----------
+        settings : :class:`~.RIDTConfig`
+            The settings for the run in question.
+
+        Returns
+        -------
+        None
+
+        """
+
+        domain = Domain(setting)
+        solver = EddyDiffusion(setting)
+        locations = setting.models.eddy_diffusion.monitor_locations
+
+        for geometry in geometries:
+            # print(f"Evaluating {geometry} monitor locations...")
+            for name, item in getattr(locations, geometry).items():
+                # print(f"Evaluating {name}...")
+                space = getattr(domain, geometry)(item)
+                output = solver(*getattr(domain, geometry)(item), domain.time)
+                data_store[setting].add(geometry, name, squeeze(output))
 
 
 class EddyDiffusionRun:
@@ -52,7 +95,8 @@ class EddyDiffusionRun:
         """
         self.settings = settings
         self.outdir = outdir
-        self.data_store = BatchDataStore()
+        self.manager = Manager()
+        self.data_store = BatchDataStore(self.manager)
         self.exposure_store = None
         self.space = self.prepare()
         self.evaluate()
@@ -93,10 +137,18 @@ class EddyDiffusionRun:
         None
 
         """
-        for setting in self.space.space:
-            count = f"{self.space.linear_index(setting) + 1}/{len(self.space)}"
-            print(f"Evaluating computational space element {count}")
-            self.run(setting)
+        pool = Pool(2)
+        inp = []
+        for item in self.space.space:
+            self.data_store.add_run(item)
+            inp.append((item, self.data_store.store, self.geometries))
+
+        parallel_progbar(run, inp, nprocs=6, starmap=True, **bar_args)
+        pool.close()
+        # for setting in self.space.space:
+        #     count = f"{self.space.linear_index(setting) + 1}/{len(self.space)}"
+        #     print(f"Evaluating computational space element {count}")
+        #     self.run(setting)
 
     def run(self, setting: RIDTConfig) -> None:
         """Evaluates the model for a set of parameters, for all geometries.

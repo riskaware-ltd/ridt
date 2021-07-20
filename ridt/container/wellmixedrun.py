@@ -1,3 +1,7 @@
+from multiprocessing import Manager
+from multiprocessing import Pool
+from multiprocessing.managers import DictProxy
+
 from ridt.base import ComputationalSpace
 from ridt.equation import WellMixed
 
@@ -13,6 +17,27 @@ from ridt.container import Domain
 
 
 BF = '{l_bar}{bar:30}{r_bar}{bar:-10b}'
+
+
+def run(setting: RIDTConfig, data_store: DictProxy) -> None:
+        """Evaluates the model for a set of parameters.
+
+        Writes output to :attr:`data_store`.
+
+        Parameters
+        ----------
+        settings : :class:`~.RIDTConfig`
+            The settings for the run in question.
+
+        Returns
+        -------
+        None
+
+        """
+        domain = Domain(setting)
+        solver = WellMixed(setting)
+        output = solver(domain.time)
+        data_store[setting].add("points", "well_mixed", output)
 
 
 class WellMixedRun:
@@ -51,7 +76,8 @@ class WellMixedRun:
         """
         self.settings = settings
         self.outdir = output_dir
-        self.data_store = BatchDataStore()
+        self.manager = Manager()
+        self.data_store = BatchDataStore(self.manager)
         self.exposure_store = None
         self.space = self.prepare()
         self.evaluate()
@@ -84,21 +110,32 @@ class WellMixedRun:
 
         """
         print("Evaluating model over domain... ")
-        for setting in self.space.space:
-            count = f"{self.space.linear_index(setting) + 1}/{len(self.space)}"
-            print(f"Evaluating computational space element {count}")
-            self.run(setting)
+        count = 4
+        inp = []
+        for item in self.space.space:
+            self.data_store.add_run(item)
+            inp.append((item, self.data_store.store))
+        with Pool(processes=4) as pool:
+            pool.starmap(run, inp)
+        # for setting in self.space.space:
+        #     count = f"{self.space.linear_index(setting) + 1}/{len(self.space)}"
+        #     print(f"Evaluating computational space element {count}")
+        #     self.run(setting)
+        # for setting in self.space.space:
+        #     count = f"{self.space.linear_index(setting) + 1}/{len(self.space)}"
+        #     print(f"Evaluating computational space element {count}")
+        #     self.run(setting)
 
     def run(self, setting: RIDTConfig) -> None:
         """Evaluates the model for a set of parameters.
-    
+
         Writes output to :attr:`data_store`.
 
         Parameters
         ----------
         settings : :class:`~.RIDTConfig`
             The settings for the run in question.
-        
+
         Returns
         -------
         None
@@ -109,7 +146,7 @@ class WellMixedRun:
         solver = WellMixed(setting)
         output = solver(domain.time)
         self.data_store[setting].add("points", "well_mixed", output)
-    
+
     def compute_exposure(self):
         """Computes the exposure from the concentration data.
 
