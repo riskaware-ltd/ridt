@@ -21,7 +21,7 @@ setup(
     install_requires=[
         'click',
         "numpy==1.16.5 ; python_version<'3.8'",
-        "numpy==1.19.3 ; python_version>='3.8'",
+        "numpy==1.22.0 ; python_version>='3.8'",
         'scipy',
         'matplotlib',
         'tqdm'
